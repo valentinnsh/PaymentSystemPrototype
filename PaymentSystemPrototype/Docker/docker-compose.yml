@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5431:5431"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./../sql/DbGenerator.sql:/docker-entrypoint-initdb.d/DbGenerator.sql
+    environment:
+      - POSTGRES_USER=pgtest
+      - POSTGRES_DB=pgtest
+      - POSTGRES_PASSWORD=pgtest
+      - APP_DB_USER=docker
+      - APP_DB_PASS=docker
+      - APP_DB_NAME=docker
+      - PGDATA=/var/lib/postgresql/data/pgdata
+volumes:
+  pgdata:
