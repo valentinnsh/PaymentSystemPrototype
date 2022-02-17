@@ -3,15 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace PaymentSystemPrototype.Controllers;
 
 [Route("auth")]
-public class LoginController : Controller
+public class AuthControllers : Controller
 {
     private readonly AppDbContext _context;
 
-    public LoginController(AppDbContext context)
+    public AuthControllers(AppDbContext context)
     {
         _context = context;
     }
-    // GET
+    
     [HttpGet("get-gmails")]
     public object Get()
     {
