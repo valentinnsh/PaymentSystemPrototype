@@ -13,9 +13,6 @@ services:
       - POSTGRES_USER=pgtest
       - POSTGRES_DB=pgtest
       - POSTGRES_PASSWORD=pgtest
-      - APP_DB_USER=docker
-      - APP_DB_PASS=docker
-      - APP_DB_NAME=docker
-      - PGDATA=/var/lib/postgresql/data/pgdata
+      - DB_CONNECTION_STRING="host=192.168.112.2;port=5432;database=pgtest;username=pgtest;password=pgtest"
 volumes:
   pgdata:
