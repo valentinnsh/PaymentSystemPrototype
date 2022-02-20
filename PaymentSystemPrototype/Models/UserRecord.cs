@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PaymentSystemPrototype.Models;
 
-public class User
+public class UserRecord
 {
     public int Id { get; set; }
     public string FirstName { get; set; }
