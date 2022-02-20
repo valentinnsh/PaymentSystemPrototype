@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PaymentSystemPrototype.Controllers;
@@ -12,6 +13,7 @@ public class AuthControllers : Controller
         _context = context;
     }
     
+    [Authorize]
     [HttpGet("get-gmails")]
     public object Get()
     {
