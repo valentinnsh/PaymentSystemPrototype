@@ -5,6 +5,7 @@ create table if not exists users
  first_name    varchar(50) not null,
  last_name     varchar(50) not null,
  email         varchar(50) not null,
+ password      varchar(50) not null,
  registered_at timestamp not null,
  primary key ( id )
 );
@@ -22,5 +23,5 @@ create index if not exists user_email_index on users
  email
 );
 
-insert into users(id,first_name,last_name,email,registered_at) 
-values(1,'Igor', 'Igorev', 'Igor@gmail.com', to_timestamp('2017-03-31 9:30:20','YYYY-MM-DD HH:MI:SS')); 
+insert into users(id,first_name,last_name,email, password, registered_at) 
+values(1,'Igor', 'Igorev', 'Igor@gmail.com', 'password', to_timestamp('2017-03-31 9:30:20','YYYY-MM-DD HH:MI:SS')); 

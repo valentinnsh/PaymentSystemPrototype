@@ -10,7 +10,7 @@ public class TestBase
 {
     protected TestEnvironment Env { get; set; }
     protected HttpClient Client { get; set; }
-    protected HttpClient AuthUserClient { get; set; }
+    protected HttpClient AuthUserClient { get; set; } // TODO 
 
     [OneTimeSetUp]
     public void Init()
@@ -31,15 +31,6 @@ public class TestBase
     {
         Env.Prepare();
         Client = Env.WebAppHost.GetClient();
-        //AliceClient = CreateAuthorizedClientAsync("alice@mailinator.com").GetAwaiter().GetResult();
-        //BobClient = CreateAuthorizedClientAsync("bob@mailinator.com").GetAwaiter().GetResult();
     }
-
-    // protected async Task<HttpClient> CreateAuthorizedClientAsync(string login)
-    // {
-    //     var client = Env.WebAppHost.GetClient();
-    //     var res = await client.SignInAsync(login);
-    //     client.DefaultRequestHeaders.Add(HeaderNames.Cookie, res.Headers.GetValues(HeaderNames.SetCookie));
-    //     return client;
-    // }
+    
 }
