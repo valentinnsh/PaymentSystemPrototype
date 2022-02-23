@@ -25,10 +25,27 @@ public class AuthTests : TestBase
             {"Email", $"{email}"},
             {"Password", $"{password}"}
         };
-        //string payload = $"{email}";
+        
         string strPayload = JsonConvert.SerializeObject(payload);
         var cont = new StringContent(strPayload, Encoding.UTF8, "application/json");
         var result = Client.PostAsync("auth/log_in", cont).Result;
+        result.StatusCode.Should().Be(expectedResult);
+    }
+
+    [TestCase("Ivan","Ivanov","ivan@gmail.com", "qwerty", HttpStatusCode.OK)]
+    public void SignUpTest(string firstName, string lastName, string email, string password,
+        HttpStatusCode expectedResult)
+    {
+        var payload = new Dictionary<string, string>
+        {
+            {"FirstName", $"{firstName}"},
+            {"LastName", $"{lastName}"},
+            {"Email", $"{email}"},
+            {"Password", $"{password}"}
+        };
+        string strPayload = JsonConvert.SerializeObject(payload);
+        var cont = new StringContent(strPayload, Encoding.UTF8, "application/json");
+        var result = Client.PostAsync("auth/sign_up", cont).Result;
         result.StatusCode.Should().Be(expectedResult);
     }
 }

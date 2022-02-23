@@ -10,6 +10,18 @@ public class UserOperationsService : IUserOperationsService
         _context = context;
     }
 
+    public async Task AddUserAsync(UserRecord user)
+    {
+        await _context.AddAsync(user);
+        await _context.SaveChangesAsync();
+    }
+
+    public async void DeleteUser(int id)
+    {
+        _context.Remove(_context.Users.Single(u => u != null && u.Id == 1));
+        await _context.SaveChangesAsync();
+    }
+
     public Task<UserRecord?> FindByEmail(string userEmail) =>
         Task.FromResult(_context.Users.FirstOrDefault(b =>  b != null && b.Email == userEmail));
 

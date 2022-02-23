@@ -14,9 +14,8 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<UserRecord>().HasKey(x => x.Id);
-        modelBuilder.Entity<UserRecord>().ToTable("users");
-        modelBuilder.Entity<UserRecord>().Property(x => x.Id).HasColumnName("id");
+        modelBuilder.Entity<UserRecord>().ToTable("users").HasKey(x => x.Id);
+        modelBuilder.Entity<UserRecord>().Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd();
         modelBuilder.Entity<UserRecord>().Property(x => x.Email).HasColumnName("email");
         modelBuilder.Entity<UserRecord>().Property(x => x.FirstName).HasColumnName("first_name");
         modelBuilder.Entity<UserRecord>().Property(x => x.LastName).HasColumnName("last_name");

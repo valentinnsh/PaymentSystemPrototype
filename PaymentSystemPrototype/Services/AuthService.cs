@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
+using PaymentSystemPrototype.Models;
 
 namespace PaymentSystemPrototype.Services;
 
@@ -17,6 +18,7 @@ public class AuthService : IAuthService
     
     public async Task<HttpStatusCode> LoginAsync(string userEmail, string userPassword, HttpContext httpContext)
     {
+        // TODO Move this null-check to CheckLoginInfo
         if (await _uos.FindByEmail(userEmail) == null)
         {
             return HttpStatusCode.NotFound;
@@ -39,5 +41,25 @@ public class AuthService : IAuthService
             return HttpStatusCode.OK;
         }
         return HttpStatusCode.Forbidden;
+    }
+
+    public Task LogOutAsync(HttpContext httpContext)
+    {
+        return httpContext.SignOutAsync();
+    }
+
+    public async Task<HttpStatusCode> SignUpAsync(Dictionary<string, string> userData, HttpContext httpContext)
+    {
+        var newUser = new UserRecord
+        {
+            Id = 1,
+            FirstName = userData["FirstName"],
+            LastName = userData["LastName"],
+            Email = userData["Email"],
+            Password = userData["Password"],
+            RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
+        };
+        await _uos.AddUserAsync(newUser);
+        return await Task.FromResult(HttpStatusCode.Accepted);
     }
 }

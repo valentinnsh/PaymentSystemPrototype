@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Controllers;
@@ -20,8 +21,19 @@ public class AuthControllers : Controller
         _authService = serv;
     }
 
+    [HttpPost("sign_up")]
+    public Task<ContentResult> SignUp([FromBody] Dictionary<string,string> newUser)
+    {
+        var result = _authService.SignUpAsync(newUser, HttpContext);
+        if (result.Result == HttpStatusCode.Accepted)
+        {
+            return Task.FromResult(new ContentResult {StatusCode = StatusCodes.Status200OK});
+        }
+        return Task.FromResult(new ContentResult {StatusCode = StatusCodes.Status500InternalServerError});
+    }
+
     [HttpPost("log_in")]
-    public async Task<ContentResult> Login([FromBody] Dictionary<string, string> loginContent)
+    public async Task<ContentResult> LogIn([FromBody] Dictionary<string, string> loginContent)
     {
         var userEmail = loginContent["Email"];
         var userPassword = loginContent["Password"];
@@ -35,4 +47,14 @@ public class AuthControllers : Controller
         };
     }
 
+    [HttpPost("log_out")]
+    public async Task<ContentResult> LogOut()
+    {
+        await _authService.LogOutAsync(HttpContext);
+        return new ContentResult
+        {
+            StatusCode = StatusCodes.Status202Accepted, 
+            Content = "Successfully signed out."
+        };
+    }
 }
