@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,10 @@ public class AuthControllers : Controller
 {
     private readonly AppDbContext _db;
     private readonly IAuthService _authService;
+
     public AuthControllers(AppDbContext context, IAuthService serv)
     {
         _db = context;
-        //_authService = new AuthService(new UserOperationsService(context));
         _authService = serv;
     }
 
@@ -25,19 +26,10 @@ public class AuthControllers : Controller
         var result = await _authService.LoginAsync(userEmail, HttpContext);
         return result switch
         {
-            HttpStatusCode.OK => new ContentResult {StatusCode = StatusCodes.Status202Accepted},
-            HttpStatusCode.NotFound => new ContentResult {StatusCode = StatusCodes.Status404NotFound}
+            HttpStatusCode.OK => new ContentResult {StatusCode = StatusCodes.Status200OK},
+            HttpStatusCode.NotFound => new ContentResult {StatusCode = StatusCodes.Status404NotFound},
+            _ => throw new ArgumentOutOfRangeException()
         };
     }
-    
-    [HttpGet("get-gmails")]
-    public object Get()
-    {
-        return _db.Users.Where(b => b.Email.Contains("gmail")).Select((c) => new
-        {
-            c.Id,
-            c.FirstName,
-            c.LastName
-        }).ToList();
-    }
+
 }

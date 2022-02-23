@@ -11,6 +11,6 @@ public class UserOperationsService : IUserOperationsService
     }
 
     public Task<UserRecord?> FindByEmail(string userEmail) =>
-        Task.FromResult(_context.Users.FirstOrDefault(b =>  b.Email == userEmail));
+        Task.FromResult(_context.Users.FirstOrDefault(b =>  b != null && b.Email == userEmail));
     
 }
