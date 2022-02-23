@@ -15,19 +15,17 @@ namespace PaymentSystemPrototype.Tests;
 
 public class AuthTests : TestBase
 {
-    [Test]
-    public void DBconnectionTest() =>
-        Client.GetAsync("auth/get-gmails").Result.StatusCode.Should().Be(HttpStatusCode.OK);
-    
-    [TestCase("Igor@gmail.com",HttpStatusCode.OK)]
-    [TestCase("NotIgor@gmail.com", HttpStatusCode.NotFound)]
-    public void LogInTest(string email, HttpStatusCode expectedResult)
+    [TestCase("Igor@gmail.com","password", HttpStatusCode.OK)]
+    [TestCase("Igor@gmail.com","WrongPassword", HttpStatusCode.Forbidden)]
+    [TestCase("NotIgor@gmail.com", "notapassword", HttpStatusCode.NotFound)]
+    public void LogInTest(string email, string password,HttpStatusCode expectedResult)
     {
-        // var payload = new Dictionary<string, string>
-        // {
-        //     {"Email", $"{email}"}
-        // };
-        string payload = $"{email}";
+        var payload = new Dictionary<string, string>
+        {
+            {"Email", $"{email}"},
+            {"Password", $"{password}"}
+        };
+        //string payload = $"{email}";
         string strPayload = JsonConvert.SerializeObject(payload);
         var cont = new StringContent(strPayload, Encoding.UTF8, "application/json");
         var result = Client.PostAsync("auth/log_in", cont).Result;

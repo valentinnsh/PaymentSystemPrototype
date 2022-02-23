@@ -5,5 +5,5 @@ namespace PaymentSystemPrototype.Services;
 
 public interface IAuthService
 {
-    Task<HttpStatusCode> LoginAsync(string userEmail, HttpContext httpContext);
+    Task<HttpStatusCode> LoginAsync(string userEmail, string userPassword, HttpContext httpContext);
 }

@@ -21,12 +21,15 @@ public class AuthControllers : Controller
     }
 
     [HttpPost("log_in")]
-    public async Task<ContentResult> Login([FromBody] string userEmail)
+    public async Task<ContentResult> Login([FromBody] Dictionary<string, string> loginContent)
     {
-        var result = await _authService.LoginAsync(userEmail, HttpContext);
+        var userEmail = loginContent["Email"];
+        var userPassword = loginContent["Password"];
+        var result = await _authService.LoginAsync(userEmail, userPassword, HttpContext);
         return result switch
         {
             HttpStatusCode.OK => new ContentResult {StatusCode = StatusCodes.Status200OK},
+            HttpStatusCode.Forbidden => new ContentResult {StatusCode = StatusCodes.Status403Forbidden},
             HttpStatusCode.NotFound => new ContentResult {StatusCode = StatusCodes.Status404NotFound},
             _ => throw new ArgumentOutOfRangeException()
         };

@@ -15,9 +15,13 @@ public class AuthService : IAuthService
         _uos = uos;
     }
     
-    public async Task<HttpStatusCode> LoginAsync(string userEmail, HttpContext httpContext)
+    public async Task<HttpStatusCode> LoginAsync(string userEmail, string userPassword, HttpContext httpContext)
     {
-        var account = await _uos.FindByEmail(userEmail);
+        if (await _uos.FindByEmail(userEmail) == null)
+        {
+            return HttpStatusCode.NotFound;
+        }
+        var account = await _uos.CheckLoginInfo(userEmail, userPassword);
         if (account != null)
         {
             var claims = new List<Claim>
@@ -34,6 +38,6 @@ public class AuthService : IAuthService
                 
             return HttpStatusCode.OK;
         }
-        return HttpStatusCode.NotFound;
+        return HttpStatusCode.Forbidden;
     }
 }
