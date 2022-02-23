@@ -52,7 +52,6 @@ public class AuthService : IAuthService
     {
         var newUser = new UserRecord
         {
-            Id = 1,
             FirstName = userData["FirstName"],
             LastName = userData["LastName"],
             Email = userData["Email"],
