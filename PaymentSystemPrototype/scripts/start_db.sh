@@ -1,1 +1,1 @@
-docker-compose --project-name=PaymentSystemPrototype --file=../Docker/docker-compose.yml up -d
+docker-compose --project-name=PaymentSystemPrototype  --file=../Docker/docker-compose.yml up -d
