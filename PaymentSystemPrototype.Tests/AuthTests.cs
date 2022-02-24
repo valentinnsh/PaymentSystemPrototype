@@ -32,7 +32,14 @@ public class AuthTests : TestBase
         result.StatusCode.Should().Be(expectedResult);
     }
 
+    [TestCase(HttpStatusCode.Accepted)]
+    public void LogOutTest(HttpStatusCode expextedResult)
+    {
+        var result = AuthUserClient.PostAsync("auth/log_out", null).Result;
+        result.StatusCode.Should().Be(expextedResult);
+    }
     [TestCase("Ivan","Ivanov","ivan@gmail.com", "qwerty", HttpStatusCode.OK)]
+    [TestCase("Ivan","Ivanov","ivan@gmail.com", "qwerty", HttpStatusCode.Conflict)]
     public void SignUpTest(string firstName, string lastName, string email, string password,
         HttpStatusCode expectedResult)
     {

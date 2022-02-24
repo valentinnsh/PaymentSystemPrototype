@@ -37,7 +37,7 @@ public class AuthControllers : Controller
     {
         var userEmail = loginContent["Email"];
         var userPassword = loginContent["Password"];
-        var result = await _authService.LoginAsync(userEmail, userPassword, HttpContext);
+        var result = await _authService.LogInAsync(userEmail, userPassword, HttpContext);
         return result switch
         {
             HttpStatusCode.OK => new ContentResult {StatusCode = StatusCodes.Status200OK},

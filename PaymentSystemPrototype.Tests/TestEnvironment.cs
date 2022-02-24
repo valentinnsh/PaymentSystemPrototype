@@ -20,8 +20,6 @@ public class TestEnvironment : IDisposable
 
     public void Prepare()
     {
-       // WebAppHost.Services.GetRequiredService<IAccountCache>().Clear();
-       // WebAppHost.Services.GetRequiredService<IAccountDatabase>().ResetAsync().GetAwaiter().GetResult();
     }
 
     public void Dispose()

@@ -16,10 +16,9 @@ public class AuthService : IAuthService
         _uos = uos;
     }
     
-    public async Task<HttpStatusCode> LoginAsync(string userEmail, string userPassword, HttpContext httpContext)
+    public async Task<HttpStatusCode> LogInAsync(string userEmail, string userPassword, HttpContext httpContext)
     {
-        // TODO Move this null-check to CheckLoginInfo
-        if (await _uos.FindByEmail(userEmail) == null)
+        if (_uos.FindByEmail(userEmail) == null)
         {
             return HttpStatusCode.NotFound;
         }
@@ -50,6 +49,12 @@ public class AuthService : IAuthService
 
     public async Task<HttpStatusCode> SignUpAsync(Dictionary<string, string> userData, HttpContext httpContext)
     {
+        // Check if email is already in use
+        if (_uos.FindByEmail(userData["Email"]) != null)
+        {
+            return HttpStatusCode.Conflict;
+        }
+
         var newUser = new UserRecord
         {
             FirstName = userData["FirstName"],
@@ -59,6 +64,6 @@ public class AuthService : IAuthService
             RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
         };
         await _uos.AddUserAsync(newUser);
-        return await Task.FromResult(HttpStatusCode.Accepted);
+        return HttpStatusCode.Accepted;
     }
 }
