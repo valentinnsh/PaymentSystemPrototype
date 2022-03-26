@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using PaymentSystemPrototype.Models;
 
 namespace PaymentSystemPrototype.Tests;
 
@@ -47,8 +49,9 @@ public class TestBase
         };
         
         string strPayload = JsonConvert.SerializeObject(payload);
-        var cont = new StringContent(strPayload, Encoding.UTF8, "application/json");
-        var res = await client.PostAsync("auth/log_in", cont);
+        //var cont = new StringContent(strPayload, Encoding.UTF8, "application/json");
+        var cont = new LogInData{Email = "Igor@gmail.com", Password = "password"};
+        var res = await client.PostAsJsonAsync("auth/log_in", cont);
         client.DefaultRequestHeaders.Add(HeaderNames.Cookie, res.Headers.GetValues(HeaderNames.SetCookie));
         return client;
     }

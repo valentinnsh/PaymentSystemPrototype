@@ -47,20 +47,20 @@ public class AuthService : IAuthService
         return httpContext.SignOutAsync();
     }
 
-    public async Task<HttpStatusCode> SignUpAsync(Dictionary<string, string> userData)
+    public async Task<HttpStatusCode> SignUpAsync(SignUpData signUpData)
     {
         // Check if email is already in use
-        if (_userOperationsService.FindByEmail(userData["Email"]) != null)
+        if (_userOperationsService.FindByEmail(signUpData.Email) != null)
         {
             return HttpStatusCode.Conflict;
         }
 
         var newUser = new UserRecord
         {
-            FirstName = userData["FirstName"],
-            LastName = userData["LastName"],
-            Email = userData["Email"],
-            Password = userData["Password"],
+            FirstName = signUpData.FirstName,
+            LastName = signUpData.LastName,
+            Email = signUpData.Email,
+            Password = signUpData.Password,
             RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
         };
         await _userOperationsService.AddUserAsync(newUser);

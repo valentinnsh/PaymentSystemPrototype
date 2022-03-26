@@ -19,8 +19,10 @@ builder.Services.AddDbContext<AppDbContext>(o =>
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserOperationsService, UserOperationsService>();
-//builder.Services.AddRazorPages();
+builder.Services.AddRazorPages();
+
 builder.Services.AddControllersWithViews();
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => //CookieAuthenticationOptions
@@ -37,6 +39,7 @@ builder.Services.AddMvc();
 var app = builder.Build();
 
 //app.MapGet("/", () => "Hello World!");
+app.MapRazorPages();
 app.MapDefaultControllerRoute();
 app.UseAuthentication();
 app.UseAuthorization();

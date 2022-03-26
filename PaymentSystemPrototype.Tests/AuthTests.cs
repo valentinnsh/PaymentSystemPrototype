@@ -8,8 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
+using PaymentSystemPrototype.Models;
 
 namespace PaymentSystemPrototype.Tests;
 
@@ -20,16 +22,9 @@ public class AuthTests : TestBase
     [TestCase("NotIgor@gmail.com", "notapassword", HttpStatusCode.NotFound)]
     public void LogInTest(string email, string password,HttpStatusCode expectedResult)
     {
-        var payload = new Dictionary<string, string>
-        {
-            {"Email", $"{email}"},
-            {"Password", $"{password}"}
-        };
-        
-        string strPayload = JsonConvert.SerializeObject(payload);
-        var cont = new StringContent(strPayload, Encoding.UTF8, "application/json");
-        var result = Client.PostAsync("auth/log_in", cont).Result;
-        result.StatusCode.Should().Be(expectedResult);
+        var data = new LogInData {Email = email, Password = password};
+        var result =  Client.PostAsJsonAsync("auth/log_in", data);
+        result.Result.StatusCode.Should().Be(expectedResult);
     }
 
     [Test]
@@ -44,16 +39,14 @@ public class AuthTests : TestBase
     public void SignUpTest(string firstName, string lastName, string email, string password,
         HttpStatusCode expectedResult)
     {
-        var payload = new Dictionary<string, string>
+        var signUpData = new SignUpData
         {
-            {"FirstName", "firstName"},
-            {"LastName", "lastName"},
-            {"Email", "email"},
-            {"Password", "password"}
+            FirstName = firstName,
+            LastName = lastName,
+            Email = email,
+            Password = password
         };
-        string strPayload = JsonConvert.SerializeObject(payload);
-        var cont = new StringContent(strPayload, Encoding.UTF8, "application/json");
-        var result = Client.PostAsync("auth/sign_up", cont).Result;
-        result.StatusCode.Should().Be(expectedResult);
+        var result = Client.PostAsJsonAsync("/auth/sign_up", signUpData);
+        result.Result.StatusCode.Should().Be(expectedResult);
     }
 }
