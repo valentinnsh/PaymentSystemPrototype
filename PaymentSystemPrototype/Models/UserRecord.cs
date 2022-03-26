@@ -7,19 +7,17 @@ public class UserRecord
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Column("id")]
     public int Id { get; set; }
+    [Column("first_name")]
     public string FirstName { get; set; }
+    [Column("last_name")]
     public string LastName { get; set; }
+    [Column("email")]
     public string Email { get; set; }
+    [Column("password")]
     public string Password { get; set; } // TODO Not a good practice. Change asap
+    [Column("registered_at")]
     public DateTime RegisteredAt { get; set; }
     
-    // public UserRecord(Dictionary<string, string> userData)
-    // {
-    //     FirstName = userData["FirstName"];
-    //     LastName = userData["LastName"];
-    //     Email = userData["Email"];
-    //     Password = userData["Password"];
-    //     RegisteredAt = DateTime.Now;
-    // }
 }

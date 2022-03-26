@@ -9,20 +9,20 @@ namespace PaymentSystemPrototype.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly IUserOperationsService _uos;
+    private readonly IUserOperationsService _userOperationsService;
 
-    public AuthService(IUserOperationsService uos)
+    public AuthService(IUserOperationsService userOperationsService)
     {
-        _uos = uos;
+        _userOperationsService = userOperationsService;
     }
     
     public async Task<HttpStatusCode> LogInAsync(string userEmail, string userPassword, HttpContext httpContext)
     {
-        if (_uos.FindByEmail(userEmail) == null)
+        if (_userOperationsService.FindByEmail(userEmail) == null)
         {
             return HttpStatusCode.NotFound;
         }
-        var account = await _uos.CheckLoginInfo(userEmail, userPassword);
+        var account = await _userOperationsService.CheckLoginInfo(userEmail, userPassword);
         if (account != null)
         {
             var claims = new List<Claim>
@@ -47,10 +47,10 @@ public class AuthService : IAuthService
         return httpContext.SignOutAsync();
     }
 
-    public async Task<HttpStatusCode> SignUpAsync(Dictionary<string, string> userData, HttpContext httpContext)
+    public async Task<HttpStatusCode> SignUpAsync(Dictionary<string, string> userData)
     {
         // Check if email is already in use
-        if (_uos.FindByEmail(userData["Email"]) != null)
+        if (_userOperationsService.FindByEmail(userData["Email"]) != null)
         {
             return HttpStatusCode.Conflict;
         }
@@ -63,7 +63,7 @@ public class AuthService : IAuthService
             Password = userData["Password"],
             RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
         };
-        await _uos.AddUserAsync(newUser);
+        await _userOperationsService.AddUserAsync(newUser);
         return HttpStatusCode.Accepted;
     }
 }

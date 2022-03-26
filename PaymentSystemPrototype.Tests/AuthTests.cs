@@ -32,12 +32,13 @@ public class AuthTests : TestBase
         result.StatusCode.Should().Be(expectedResult);
     }
 
-    [TestCase(HttpStatusCode.Accepted)]
-    public void LogOutTest(HttpStatusCode expextedResult)
+    [Test]
+    public void LogOutTest()
     {
         var result = AuthUserClient.PostAsync("auth/log_out", null).Result;
-        result.StatusCode.Should().Be(expextedResult);
+        result.StatusCode.Should().Be(HttpStatusCode.Accepted);
     }
+    
     [TestCase("Ivan","Ivanov","ivan@gmail.com", "qwerty", HttpStatusCode.OK)]
     [TestCase("Ivan","Ivanov","ivan@gmail.com", "qwerty", HttpStatusCode.Conflict)]
     public void SignUpTest(string firstName, string lastName, string email, string password,
@@ -45,10 +46,10 @@ public class AuthTests : TestBase
     {
         var payload = new Dictionary<string, string>
         {
-            {"FirstName", $"{firstName}"},
-            {"LastName", $"{lastName}"},
-            {"Email", $"{email}"},
-            {"Password", $"{password}"}
+            {"FirstName", "firstName"},
+            {"LastName", "lastName"},
+            {"Email", "email"},
+            {"Password", "password"}
         };
         string strPayload = JsonConvert.SerializeObject(payload);
         var cont = new StringContent(strPayload, Encoding.UTF8, "application/json");

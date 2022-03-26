@@ -19,6 +19,9 @@ builder.Services.AddDbContext<AppDbContext>(o =>
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserOperationsService, UserOperationsService>();
+//builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => //CookieAuthenticationOptions
     {
@@ -30,13 +33,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         };
     });
 
-builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
+builder.Services.AddMvc();
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+//app.MapGet("/", () => "Hello World!");
+app.MapDefaultControllerRoute();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMvc();
+
 app.Run();
 
 // Make the implicit Program class public so test projects can access it

@@ -27,14 +27,7 @@ public class TestHost : IDisposable
                 {
                 });
             });
-        // var builder = WebHost.CreateDefaultBuilder();
-        // builder.Configure(app =>
-        // {
-        //        
-        // }
-        // );
-        //builder.UseStartup<Startup>();
-        
+
         _testServer = application.Server;
     }
 

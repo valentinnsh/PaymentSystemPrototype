@@ -16,4 +16,9 @@
       <InternalsVisibleTo Include="PaymentSystemPrototype.Tests" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Auth\LogIn.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Auth\SignUp.cshtml" />
+    </ItemGroup>
+
 </Project>
