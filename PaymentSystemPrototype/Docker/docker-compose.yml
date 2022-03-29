@@ -11,7 +11,6 @@ services:
         ipv4_address: 172.28.0.2
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./../sql/DbGenerator.sql:/docker-entrypoint-initdb.d/DbGenerator.sql
     environment:
       - POSTGRES_USER=pgtest
       - POSTGRES_DB=pgtest

@@ -10,14 +10,6 @@ create table if not exists users
  primary key ( id )
 );
 
-create table if not exists balances
-(
- user_id int not null,
- amount  bigint not null,
- primary key ( user_id ),
- foreign key ( user_id ) references users ( id )
-);
-
 create index if not exists user_email_index on users
 (
  email

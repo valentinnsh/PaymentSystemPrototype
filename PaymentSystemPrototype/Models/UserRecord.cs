@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PaymentSystemPrototype.Models;
 
+[Table("users")]
 public class UserRecord
 {
     [Key]
@@ -20,4 +21,5 @@ public class UserRecord
     [Column("registered_at")]
     public DateTime RegisteredAt { get; set; }
     
+    public BalanceRecord BalanceRecord { get; set; }
 }

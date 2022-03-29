@@ -22,7 +22,7 @@ public class UserProfile : PageModel
     }
     public async Task<IActionResult> OnPostModifyUser()
     {
-        return RedirectToPage("ModifyData", new {previousEmail = User.Identity.Name});
+        return RedirectToPage("ModifyData", new {previousEmail = User.Identity!.Name});
     }
     public async Task<IActionResult> OnPostRequestKYCVerification()
     {
