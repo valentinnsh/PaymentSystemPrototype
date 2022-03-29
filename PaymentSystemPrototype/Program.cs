@@ -39,6 +39,8 @@ builder.Services.AddMvc();
 var app = builder.Build();
 
 //app.MapGet("/", () => "Hello World!");
+
+app.UseStaticFiles();
 app.MapRazorPages();
 app.MapDefaultControllerRoute();
 app.UseAuthentication();

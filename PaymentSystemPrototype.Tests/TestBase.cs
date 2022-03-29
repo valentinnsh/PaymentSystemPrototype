@@ -51,7 +51,7 @@ public class TestBase
         string strPayload = JsonConvert.SerializeObject(payload);
         //var cont = new StringContent(strPayload, Encoding.UTF8, "application/json");
         var cont = new LogInData{Email = "Igor@gmail.com", Password = "password"};
-        var res = await client.PostAsJsonAsync("auth/log_in", cont);
+        var res = await client.PostAsJsonAsync("log_in", cont);
         client.DefaultRequestHeaders.Add(HeaderNames.Cookie, res.Headers.GetValues(HeaderNames.SetCookie));
         return client;
     }

@@ -1,10 +1,11 @@
-@model dynamic
+@page "/log_in"
+@model PaymentSystemPrototype.Pages.Auth.LogIn
 
 @{
     Layout = "_Layout";
 }
 
-<form asp-controller = "Auth" asp-action = "LogIn" method = "post">
+<form method = "post">
     <label for="email">Email</label> <br/>
     <input name="email" type="email"/><br/>
     <label for="password">Password</label> <br/>

@@ -23,7 +23,7 @@ public class AuthTests : TestBase
     public void LogInTest(string email, string password,HttpStatusCode expectedResult)
     {
         var data = new LogInData {Email = email, Password = password};
-        var result =  Client.PostAsJsonAsync("auth/log_in", data);
+        var result =  Client.PostAsJsonAsync("log_in", data);
         result.Result.StatusCode.Should().Be(expectedResult);
     }
 
@@ -46,7 +46,7 @@ public class AuthTests : TestBase
             Email = email,
             Password = password
         };
-        var result = Client.PostAsJsonAsync("/auth/sign_up", signUpData);
+        var result = Client.PostAsJsonAsync("/sign_up", signUpData);
         result.Result.StatusCode.Should().Be(expectedResult);
     }
 }

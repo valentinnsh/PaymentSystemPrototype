@@ -22,4 +22,9 @@
       <_ContentIncludedByDefault Remove="Views\Auth\SignUp.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Views\Auth\LogIn.cshtml" />
+      <UpToDateCheckInput Remove="Views\Auth\SignUp.cshtml" />
+    </ItemGroup>
+
 </Project>

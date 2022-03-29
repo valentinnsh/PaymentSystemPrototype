@@ -1,0 +1,20 @@
+@page "/user/profile"
+@model PaymentSystemPrototype.Pages.User.UserProfile
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "Shared/_Layout";
+}
+
+@if (Model.presentedUser != null)
+{
+    <div class="text-body">
+        @Model.presentedUser.FirstName @Model.presentedUser.LastName
+        @Model.presentedUser.Email \n
+        Registered at : @Model.presentedUser.RegisteredAt
+    </div>
+}
+
+<form asp-page-handler="LogOut" method="post">
+    <button class="btn btn-default">Log Out</button> 
+</form>
+
