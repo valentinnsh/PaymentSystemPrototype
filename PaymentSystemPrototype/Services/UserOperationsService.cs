@@ -1,4 +1,5 @@
 using System.Data.Entity;
+using System.Net;
 using Microsoft.EntityFrameworkCore;
 using PaymentSystemPrototype.Models;
 
@@ -24,6 +25,20 @@ public class UserOperationsService : IUserOperationsService
         await _context.SaveChangesAsync();
     }
 
+    public async Task<HttpStatusCode> ModifyUser(SignUpData user, string previousEmail)
+    {
+        var target = _context.Users.SingleOrDefault(u => u.Email == previousEmail);
+        if (target != null)
+        {
+            target.FirstName = user.FirstName;
+            target.LastName = user.LastName;
+            target.Email = user.Email;
+            target.Password = user.Password;
+            await _context.SaveChangesAsync();
+            return HttpStatusCode.OK;
+        }
+        return HttpStatusCode.NotFound;
+    }
     public UserRecord? FindByEmail(string userEmail) =>
        _context.Users.FirstOrDefault(b =>  b.Email == userEmail);
 

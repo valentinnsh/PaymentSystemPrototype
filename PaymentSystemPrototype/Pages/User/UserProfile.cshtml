@@ -1,20 +1,39 @@
-@page "/user/profile"
+@page
 @model PaymentSystemPrototype.Pages.User.UserProfile
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
     Layout = "Shared/_Layout";
 }
 
-@if (Model.presentedUser != null)
+@if (Model.PresentedUser != null)
 {
     <div class="text-body">
-        @Model.presentedUser.FirstName @Model.presentedUser.LastName
-        @Model.presentedUser.Email \n
-        Registered at : @Model.presentedUser.RegisteredAt
+        @Model.PresentedUser.FirstName @Model.PresentedUser.LastName
+        @Model.PresentedUser.Email
+        Registered at : @Model.PresentedUser.RegisteredAt
     </div>
 }
+
+<form asp-page-handler="ModifyUser" method="post">
+    <button class="btn btn-default">Modify user Info</button> 
+</form>
+
+<form asp-page-handler="RequestKYCVerification" method="post">
+    <button class="btn btn-default">Request Verification</button> 
+</form>
+
+<form asp-page-handler="CreateDeposit" method="post">
+    <button class="btn btn-default">Create Deposit</button> 
+</form>
+
+<form asp-page-handler="CreateWithdrawal" method="post">
+    <button class="btn btn-default">Create Withdrawal</button> 
+</form>
+
+<form asp-page-handler="TransferList" method="post">
+    <button class="btn btn-default">Get Transfers</button> 
+</form>
 
 <form asp-page-handler="LogOut" method="post">
     <button class="btn btn-default">Log Out</button> 
 </form>
-

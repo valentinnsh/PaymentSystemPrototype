@@ -14,12 +14,10 @@ public class SignUp : PageModel
     }
     public async Task<ActionResult> OnPost([FromServices] IAuthService authService, [FromForm] SignUpData signUpData)
     {
-        if (signUpData.FirstName == null)
-            throw new Exception("SignUpData is bad");
         var result = await authService.SignUpAsync(signUpData);
         if (result is HttpStatusCode.OK or HttpStatusCode.Conflict)
         {
-            return RedirectToPage("../User/UserProfile");
+            return RedirectToPage("../LogIn");
         }
         return StatusCode((int)result);
     }
