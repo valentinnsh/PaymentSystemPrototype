@@ -1,6 +1,9 @@
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Net;
+using System.Reflection.Metadata.Ecma335;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using PaymentSystemPrototype.Models;
 
 namespace PaymentSystemPrototype.Services;
@@ -66,4 +69,28 @@ public class UserOperationsService : IUserOperationsService
     }
     public BalanceRecord? GetUserBalance(string userEmail) =>
         _context.Balances.FirstOrDefault(b => b.UserRecord.Email == userEmail);
+
+    public string? GetUserRoleAsString(string userEmail)
+    {
+        var user = FindByEmail(userEmail);
+        return _context.Roles.FirstOrDefault(r => user != null && r.UserRoleRecord.UserId == user.Id)?.Name;
+    }
+
+    public Roles GetUserRole(string userEmail)
+    {
+        var user = FindByEmail(userEmail);
+        return (Roles) _context.Roles.FirstOrDefault(r => user != null && r.UserRoleRecord.UserId == user.Id)?.Id-1;
+    }
+    public async void SetRole(string userEmail, Roles newRole)
+    {
+        var user = FindByEmail(userEmail);
+        var roleToSet = _context.Roles.FirstOrDefault(b =>  b.Id == (int)newRole);
+        var userRoleToChange = _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id);
+        if (userRoleToChange != null && roleToSet != null)
+                userRoleToChange.RoleId = roleToSet.Id;
+        await _context.SaveChangesAsync();
+    }
+
+    public List<UserRecord> GetUsers() =>
+        _context.Users.ToList();
 }

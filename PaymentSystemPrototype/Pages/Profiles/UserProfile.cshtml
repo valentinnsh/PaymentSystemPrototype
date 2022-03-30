@@ -1,0 +1,59 @@
+@page
+@using PaymentSystemPrototype.Models
+@model PaymentSystemPrototype.Pages.Profiles.UserProfile
+
+@{
+    Layout = "Shared/_UserLayout";
+}
+
+@if (Model.PresentedUser != null)
+{
+    <h1>@Model.PresentedUser.FirstName @Model.PresentedUser.LastName</h1>
+    <h2>@Model.PresentedUser.Email</h2>
+    <h2>@Model.PresentedUser.RegisteredAt</h2>
+    <h2>
+        Role: @Model.UserRole
+    </h2>
+}
+@if (@Model.UserBalance != null)
+{
+    <h3>
+        Balance : @Model.UserBalance.Amount
+    </h3>
+}
+@if (@Model.UserRole == Roles.Admin)
+{
+    <form asp-page-handler="ListUsers" method="post">
+        <button class = "button">Users</button> 
+    </form>
+    <form asp-page-handler="ListTransfers" method="post">
+        <button class = "button">Transfers</button> 
+    </form>
+    <form asp-page-handler="ListKYCVerifications" method="post">
+        <button class = "button">KYC Verefications</button> 
+    </form>
+}
+@if (@Model.UserRole == Roles.User)
+{
+    <form asp-page-handler="ListUsers" method="post">
+        <button class = "button">Users</button> 
+    </form>
+    <form asp-page-handler="ModifyUser" method="post">
+        <button class = "button">Modify user Info</button> 
+    </form>
+
+    <form asp-page-handler="RequestKYCVerification" method="post">
+        <button class = "button">Request Verification</button>
+    </form>
+
+    <form asp-page-handler="CreateDeposit" method="post">
+        <button class = "button">Create Deposit</button>
+    </form>
+
+    <form asp-page-handler="CreateWithdrawal" method="post">
+        <button class = "button">Create Withdrawal</button>
+    </form>
+}
+<form asp-page-handler="LogOut" method="post">
+    <button class = "button">Log Out</button> 
+</form>

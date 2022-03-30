@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
-namespace PaymentSystemPrototype.Pages.User;
+namespace PaymentSystemPrototype.Pages.Profiles;
 
 public class ModifyData : PageModel
 {

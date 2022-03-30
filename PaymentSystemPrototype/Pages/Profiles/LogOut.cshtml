@@ -1,0 +1,13 @@
+@page
+@model PaymentSystemPrototype.Pages.Profiles.LogOut
+
+@{
+    Layout = "Shared/_UserLayout";
+}
+<h2>Are you shure you want to log out?</h2>
+<form asp-page="UserProfile" asp-page-handler="LogOut" method="post">
+    <button class="button">Yes</button>
+</form>
+<form asp-page="UserProfile" method="get">
+    <button class="button">No</button>
+</form>

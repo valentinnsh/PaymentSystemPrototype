@@ -5,16 +5,18 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
-namespace PaymentSystemPrototype.Pages.User;
+namespace PaymentSystemPrototype.Pages.Profiles;
 [Authorize]
 public class UserProfile : PageModel
 {
     public UserRecord? PresentedUser = new UserRecord();
     public BalanceRecord? UserBalance = new BalanceRecord();
+    public Roles UserRole;
     public void OnGet([FromServices] IUserOperationsService userOperationsService)
     {
         PresentedUser = userOperationsService.FindByEmail(User.Identity.Name);
         UserBalance = userOperationsService.GetUserBalance(User.Identity.Name);
+        UserRole = userOperationsService.GetUserRole(User.Identity.Name);
     }
 
     public async Task<IActionResult> OnPostLogOut([FromServices] IAuthService authService)
@@ -26,7 +28,7 @@ public class UserProfile : PageModel
     {
         return RedirectToPage("ModifyData", new {previousEmail = User.Identity!.Name});
     }
-    public async Task<IActionResult> OnPostRequestKYCVerification()
+    public async Task<IActionResult> OnPostRequestKYCVerification([FromServices] IUserOperationsService userOperationsService)
     {
         return RedirectToPage("../Auth/WelcomeRazor", new {msg ="PAGE IS IN DEVELOPMENT"});
     }
@@ -39,8 +41,9 @@ public class UserProfile : PageModel
     {
         return RedirectToPage("../Auth/WelcomeRazor", new {msg ="PAGE IS IN DEVELOPMENT"});
     }
-    public async Task<IActionResult> OnPostTransferList()
+
+    public async Task<IActionResult> OnPostListUsers()
     {
-        return RedirectToPage("../Auth/WelcomeRazor", new {msg ="PAGE IS IN DEVELOPMENT"});
+        return RedirectToPage("UserList");
     }
 }

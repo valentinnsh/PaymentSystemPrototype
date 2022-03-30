@@ -20,9 +20,10 @@ public class LogIn : PageModel
     public async Task<ActionResult> OnPost([FromServices] IAuthService authService, [FromForm] LogInData loginContent)
     {
         var loginResult = await authService.LogInAsync(loginContent.Email, loginContent.Password, HttpContext);
+        
         return loginResult switch
         {
-            HttpStatusCode.OK => RedirectToPage("../User/UserProfile", loginContent),
+            HttpStatusCode.OK => RedirectToPage("../Profiles/UserProfile", loginContent),
             HttpStatusCode.NotFound => RedirectToPage("LogIn",
                 new {msg = "Email not found. Consider Signing Up first."}),
             HttpStatusCode.Forbidden => RedirectToPage("LogIn",

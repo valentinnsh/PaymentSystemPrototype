@@ -10,6 +10,8 @@ public class AppDbContext : DbContext
     }
     public DbSet<UserRecord> Users { get; set; }
     public DbSet<BalanceRecord> Balances { get; set; }
+    public DbSet<RoleRecord> Roles { get; set; }
+    public DbSet<UserRoleRecord> UserRoles { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -54,11 +56,11 @@ public class AppDbContext : DbContext
             new BalanceRecord{UserId = 1, Amount = 100});
 
         modelBuilder.Entity<RoleRecord>().HasData(
-            new RoleRecord {Id = 1, Name = "User"});
+            new RoleRecord {Id = 1, Name = "User"},
+            new RoleRecord {Id = 2, Name = "Admin"},
+            new RoleRecord {Id = 3, Name = "KYC"},
+            new RoleRecord {Id = 4, Name = "Funds Manager"});
         modelBuilder.Entity<UserRoleRecord>().HasData(
             new UserRoleRecord{Id = 1, UserId = 1, RoleId = 1});
-        //modelBuilder.Entity<UserRecord>().OwnsOne(u => u.BalanceRecord).HasData(
-        //    new BalanceRecord{UserId = 1, Amount = 100});
-
     }
 }

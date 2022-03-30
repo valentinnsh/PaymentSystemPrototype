@@ -21,8 +21,6 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserOperationsService, UserOperationsService>();
 builder.Services.AddRazorPages();
 
-builder.Services.AddControllersWithViews();
-
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => //CookieAuthenticationOptions
@@ -42,7 +40,6 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 app.MapRazorPages();
-app.MapDefaultControllerRoute();
 app.UseAuthentication();
 app.UseAuthorization();
 

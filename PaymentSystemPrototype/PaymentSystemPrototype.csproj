@@ -25,6 +25,7 @@
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Views\Auth\LogIn.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Auth\SignUp.cshtml" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\site.js" />
     </ItemGroup>
 
     <ItemGroup>
