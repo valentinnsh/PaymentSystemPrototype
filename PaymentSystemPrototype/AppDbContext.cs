@@ -13,8 +13,7 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<UserRecord>().ToTable("users").HasKey(x => x.Id);
+        
         modelBuilder.Entity<UserRecord>().Property(x => x.Id).ValueGeneratedOnAdd();
         modelBuilder.Entity<UserRecord>().Property(x => x.Email);
         modelBuilder.Entity<UserRecord>().Property(x => x.FirstName);
@@ -26,8 +25,40 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<BalanceRecord>().Property(x => x.UserId);
 
         modelBuilder.Entity<UserRecord>()
-            .HasOne<BalanceRecord>(u => u.BalanceRecord)
+            .HasOne(u => u.BalanceRecord)
             .WithOne(b => b.UserRecord)
             .HasForeignKey<BalanceRecord>(b => b.UserId);
+        
+        modelBuilder.Entity<RoleRecord>().Property(x => x.Id).ValueGeneratedOnAdd();
+        modelBuilder.Entity<RoleRecord>().Property(x => x.Name);
+        
+        modelBuilder.Entity<UserRoleRecord>().Property(x => x.Id).ValueGeneratedOnAdd();
+        modelBuilder.Entity<UserRoleRecord>().Property(x => x.UserId);
+        modelBuilder.Entity<UserRoleRecord>().Property(x => x.RoleId);
+        
+        modelBuilder.Entity<UserRecord>()
+            .HasOne(u => u.UserRoleRecord)
+            .WithOne(b => b.UserRecord)
+            .HasForeignKey<UserRoleRecord>(b => b.UserId);
+        
+        modelBuilder.Entity<RoleRecord>()
+            .HasOne(u => u.UserRoleRecord)
+            .WithOne(b => b.RoleRecord)
+            .HasForeignKey<UserRoleRecord>(b => b.RoleId);
+        
+        modelBuilder.Entity<UserRecord>().HasData(
+        new UserRecord { Id = 1, FirstName = "Igor", LastName = "Igorev", Email = "Igor@gmail.com",
+            Password = "password", RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)});
+
+        modelBuilder.Entity<BalanceRecord>().HasData(
+            new BalanceRecord{UserId = 1, Amount = 100});
+
+        modelBuilder.Entity<RoleRecord>().HasData(
+            new RoleRecord {Id = 1, Name = "User"});
+        modelBuilder.Entity<UserRoleRecord>().HasData(
+            new UserRoleRecord{Id = 1, UserId = 1, RoleId = 1});
+        //modelBuilder.Entity<UserRecord>().OwnsOne(u => u.BalanceRecord).HasData(
+        //    new BalanceRecord{UserId = 1, Amount = 100});
+
     }
 }

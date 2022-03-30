@@ -9,6 +9,7 @@ public interface IUserOperationsService
     public Task<UserRecord?> CheckLoginInfo(string userEmail, string userPassword);
     Task AddUserAsync(UserRecord user);
     public Task<HttpStatusCode> ModifyUser(SignUpData user, string previousEmail);
-
+    public BalanceRecord? GetUserBalance(string userEmail);
+    public Task<HttpStatusCode> AddFunds(string userEmail, int amount);
     void DeleteUser(int id);
 }

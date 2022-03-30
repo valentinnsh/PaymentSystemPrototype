@@ -22,4 +22,5 @@ public class UserRecord
     public DateTime RegisteredAt { get; set; }
     
     public BalanceRecord BalanceRecord { get; set; }
+    public UserRoleRecord UserRoleRecord { get; set; }
 }

@@ -13,7 +13,13 @@
         Registered at : @Model.PresentedUser.RegisteredAt
     </div>
 }
-
+<div class=text-body>
+    Balance : 
+    @if (@Model.UserBalance != null)
+    {
+        @Model.UserBalance.Amount
+    }
+</div>
 <form asp-page-handler="ModifyUser" method="post">
     <button class="btn btn-default">Modify user Info</button> 
 </form>

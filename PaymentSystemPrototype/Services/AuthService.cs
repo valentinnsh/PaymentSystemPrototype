@@ -63,6 +63,6 @@ public class AuthService : IAuthService
             RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
         };
         await _userOperationsService.AddUserAsync(newUser);
-        return HttpStatusCode.Accepted;
+        return HttpStatusCode.OK;
     }
 }

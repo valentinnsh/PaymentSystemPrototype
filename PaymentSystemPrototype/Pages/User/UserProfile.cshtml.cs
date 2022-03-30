@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,10 +10,11 @@ namespace PaymentSystemPrototype.Pages.User;
 public class UserProfile : PageModel
 {
     public UserRecord? PresentedUser = new UserRecord();
-    
-    public void OnGet([FromServices] IUserOperationsService userOperationsService,LogInData loggedInUser)
+    public BalanceRecord? UserBalance = new BalanceRecord();
+    public void OnGet([FromServices] IUserOperationsService userOperationsService)
     {
-        PresentedUser = userOperationsService.FindByEmail(loggedInUser.Email);
+        PresentedUser = userOperationsService.FindByEmail(User.Identity.Name);
+        UserBalance = userOperationsService.GetUserBalance(User.Identity.Name);
     }
 
     public async Task<IActionResult> OnPostLogOut([FromServices] IAuthService authService)
@@ -29,7 +31,7 @@ public class UserProfile : PageModel
         return RedirectToPage("../Auth/WelcomeRazor", new {msg ="PAGE IS IN DEVELOPMENT"});
     }
     
-    public async Task<IActionResult> OnPostCreateDeposit()
+    public async Task<IActionResult> OnPostCreateDeposit([FromServices] IUserOperationsService userOperationsService)
     {
         return RedirectToPage("../Auth/WelcomeRazor", new {msg ="PAGE IS IN DEVELOPMENT"});
     }

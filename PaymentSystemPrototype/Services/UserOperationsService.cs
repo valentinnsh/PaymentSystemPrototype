@@ -15,7 +15,12 @@ public class UserOperationsService : IUserOperationsService
 
     public async Task AddUserAsync(UserRecord user)
     {
+        var newUserBalance = new BalanceRecord();
+        newUserBalance.Amount = 0;
+        newUserBalance.UserId = user.Id;
+        newUserBalance.UserRecord = user;
         await _context.AddAsync(user);
+        await _context.AddAsync(newUserBalance);
         await _context.SaveChangesAsync();
     }
 
@@ -45,4 +50,20 @@ public class UserOperationsService : IUserOperationsService
     public Task<UserRecord?> CheckLoginInfo(string userEmail, string userPassword) =>
         Task.FromResult(_context.Users.FirstOrDefault(u => u != null && u.Email == userEmail &&
                                                                                 u.Password == userPassword));
+
+    public async Task<HttpStatusCode> AddFunds(string userEmail, int amount)
+    {
+        var balanceUpdate =  _context.Balances.FirstOrDefault(b => 
+            b.UserRecord.Email == userEmail);
+        if (balanceUpdate != null)
+        {
+            balanceUpdate.Amount += amount;
+            await _context.SaveChangesAsync();
+            return HttpStatusCode.OK;
+        }
+
+        return HttpStatusCode.NotFound;
+    }
+    public BalanceRecord? GetUserBalance(string userEmail) =>
+        _context.Balances.FirstOrDefault(b => b.UserRecord.Email == userEmail);
 }
