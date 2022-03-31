@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<BalanceRecord> Balances { get; set; }
     public DbSet<RoleRecord> Roles { get; set; }
     public DbSet<UserRoleRecord> UserRoles { get; set; }
+    public DbSet<VereficationRecord> Verefications { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -43,18 +44,33 @@ public class AppDbContext : DbContext
             .WithOne(b => b.UserRecord)
             .HasForeignKey<UserRoleRecord>(b => b.UserId);
 
-        // modelBuilder.Entity<UserRoleRecord>()
-        //     .HasOne(x => x.RoleRecord)
-        //     .WithMany(x => x.UserRoleRecord)
-        //     .HasPrincipalKey(x =>x.UserRoleRecord);
-        modelBuilder.Entity<RoleRecord>()
-            .HasMany(x => x.UserRoleRecord)
-            .WithOne(x => x.RoleRecord)
-            .HasForeignKey(f => f.RoleId);
+        // modelBuilder.Entity<RoleRecord>()
+        //     .HasMany(r => r.UserRoleRecord)
+        //     .WithOne(ur => ur.RoleRecord)
+        //     .HasForeignKey(ur => ur.RoleId);
+        modelBuilder.Entity<UserRoleRecord>()
+            .HasOne(r => r.RoleRecord)
+            .WithMany(ur => ur.UserRoleRecord)
+            .HasForeignKey(fk=> fk.RoleId);
+        // modelBuilder.Entity<RoleRecord>()
+        //     .HasMany(x => x.UserRoleRecord)
+        //     .WithOne(x => x.RoleRecord)
+        //     .HasForeignKey(f => f.RoleId);
         // modelBuilder.Entity<RoleRecord>()
         //     .HasMany(u => u.UserRoleRecord)
-        //     .WithOne(b => b.RoleId);
+        //     .WithOne(b => b.RoleRecord)
+        //     .HasForeignKey(k=>k.RoleId);
 
+        modelBuilder.Entity<VereficationRecord>().Property(x => x.UserId);
+        modelBuilder.Entity<VereficationRecord>().Property(x => x.Status);
+        modelBuilder.Entity<VereficationRecord>().Property(x => x.LastChangeDate);
+        modelBuilder.Entity<VereficationRecord>().Property(x => x.Reviewer);
+        
+        modelBuilder.Entity<UserRecord>()
+            .HasOne(u => u.VereficationRecord)
+            .WithOne(b => b.UserRecord)
+            .HasForeignKey<VereficationRecord>(b => b.UserId);
+        
         modelBuilder.Entity<UserRecord>().HasData(
         new UserRecord { Id = 1, FirstName = "Igor", LastName = "Igorev", Email = "Igor@gmail.com",
             Password = "password", RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)});
@@ -68,7 +84,8 @@ public class AppDbContext : DbContext
             new RoleRecord {Id = 3, Name = "KYC"},
             new RoleRecord {Id = 4, Name = "Funds Manager"});
         modelBuilder.Entity<UserRoleRecord>().HasData(
-            new UserRoleRecord {Id = 1, UserId = 1, RoleId = 2}
+            new UserRoleRecord {Id = 1, UserId = 1, RoleId = 3}
         );
+        
     }
 }

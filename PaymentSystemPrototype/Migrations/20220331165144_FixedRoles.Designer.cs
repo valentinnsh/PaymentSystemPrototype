@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PaymentSystemPrototype;
@@ -11,9 +12,11 @@ using PaymentSystemPrototype;
 namespace PaymentSystemPrototype.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220331165144_FixedRoles")]
+    partial class FixedRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,7 +132,7 @@ namespace PaymentSystemPrototype.Migrations
                             FirstName = "Igor",
                             LastName = "Igorev",
                             Password = "password",
-                            RegisteredAt = new DateTime(2022, 3, 31, 18, 39, 55, 560, DateTimeKind.Utc).AddTicks(799)
+                            RegisteredAt = new DateTime(2022, 3, 31, 16, 51, 44, 495, DateTimeKind.Utc).AddTicks(922)
                         });
                 });
 
@@ -152,7 +155,7 @@ namespace PaymentSystemPrototype.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleId").IsUnique(false);
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -163,32 +166,9 @@ namespace PaymentSystemPrototype.Migrations
                         new
                         {
                             Id = 1,
-                            RoleId = 3,
+                            RoleId = 2,
                             UserId = 1
                         });
-                });
-
-            modelBuilder.Entity("PaymentSystemPrototype.Models.VereficationRecord", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnName("user_id");
-
-                    b.Property<DateTime>("LastChangeDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("last_change_date");
-
-                    b.Property<string>("Reviewer")
-                        .HasColumnType("text")
-                        .HasColumnName("reviewer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer")
-                        .HasColumnName("status");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("verefications");
                 });
 
             modelBuilder.Entity("PaymentSystemPrototype.Models.BalanceRecord", b =>
@@ -221,17 +201,6 @@ namespace PaymentSystemPrototype.Migrations
                     b.Navigation("UserRecord");
                 });
 
-            modelBuilder.Entity("PaymentSystemPrototype.Models.VereficationRecord", b =>
-                {
-                    b.HasOne("PaymentSystemPrototype.Models.UserRecord", "UserRecord")
-                        .WithOne("VereficationRecord")
-                        .HasForeignKey("PaymentSystemPrototype.Models.VereficationRecord", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserRecord");
-                });
-
             modelBuilder.Entity("PaymentSystemPrototype.Models.RoleRecord", b =>
                 {
                     b.Navigation("UserRoleRecord");
@@ -243,9 +212,6 @@ namespace PaymentSystemPrototype.Migrations
                         .IsRequired();
 
                     b.Navigation("UserRoleRecord")
-                        .IsRequired();
-
-                    b.Navigation("VereficationRecord")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

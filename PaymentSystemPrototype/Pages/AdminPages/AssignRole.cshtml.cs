@@ -8,22 +8,21 @@ namespace PaymentSystemPrototype.Pages.AdminPages;
 
 public class AssignRole : PageModel
 {
-    [BindProperty]
     public Roles AssignedRole { get; set; }
-    [BindProperty]
-    public string UserEmail { get; set; }
-    public void OnGet(string userEmail)
+    public static string UserEmail { get; set; }
+    public void OnGet(string email)
     {
-        UserEmail = userEmail;
+        UserEmail = email;
     }
 
-    public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService)
+    public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] int assignedRole)
     {
-        var result = await userOperationsService.SetRole(UserEmail, AssignedRole);
+        
+        var result = await userOperationsService.SetRole(UserEmail, (Roles)assignedRole-1);
         if (result is HttpStatusCode.OK)
         {
             return RedirectToPage("UserList");
         }
-        return RedirectToPage("../Auth/WelcomeRazor", new {msg = $"Error: {(int)result}"});
+        return RedirectToPage("../Auth/WelcomeRazor", new {msg = $"Error: {(int)result + UserEmail}"});
     }
 }

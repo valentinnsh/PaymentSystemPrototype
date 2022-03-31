@@ -18,6 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IKycService, KycService>();
 builder.Services.AddScoped<IUserOperationsService, UserOperationsService>();
 builder.Services.AddRazorPages();
 

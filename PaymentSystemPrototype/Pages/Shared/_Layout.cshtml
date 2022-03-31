@@ -21,7 +21,6 @@
                             case "User":
                                 <li><a asp-page="/UserPages/UserProfile">Profile</a></li>
                                 <li><a asp-page="/UserPages/TransferList">Transfers</a></li>
-                                <li><a asp-page="/UserPages/LogOut">LogOut</a></li>
                                 break;
                             case "Admin":
                                 <li><a asp-page="/AdminPages/UserList">Users</a></li>
@@ -33,6 +32,7 @@
                             case "FundsManager":
                                 break;
                         }
+                        <li><a asp-page="/UserPages/LogOut">LogOut</a></li>
                     }
                     else
                     {

@@ -14,7 +14,9 @@ public class UserRoleRecord
     public int UserId { get; set; }
     public UserRecord UserRecord { get; set; }
     
-    [Column("role_id")]
+    [Required]
+    [ForeignKey("roles")]
+    [Column(("role_id"))]
     public int RoleId { get; set; }
     public RoleRecord RoleRecord { get; set; }
 }

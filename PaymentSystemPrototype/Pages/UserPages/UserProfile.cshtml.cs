@@ -27,10 +27,10 @@ public class UserProfile : PageModel
     {
         return RedirectToPage("ModifyData", new {previousEmail = User.Identity!.Name});
     }
-    public async Task<IActionResult> OnPostRequestKYCVerification([FromServices] IUserOperationsService userOperationsService)
+    public async Task<IActionResult> OnPostRequestKYCVerification([FromServices] IKycService kycService)
     {
-        userOperationsService.SetRole(User.Identity.Name, Roles.Admin);
-        return RedirectToPage("../Auth/WelcomeRazor", new {msg ="PAGE IS IN DEVELOPMENT"});
+        await kycService.CreateVerificationRequest(User.Identity.Name);
+        return RedirectToPage("UserProfile");
     }
     
     public async Task<IActionResult> OnPostCreateDeposit([FromServices] IUserOperationsService userOperationsService)

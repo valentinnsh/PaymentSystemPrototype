@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PaymentSystemPrototype;
@@ -11,9 +12,11 @@ using PaymentSystemPrototype;
 namespace PaymentSystemPrototype.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220331172903_Verefications")]
+    partial class Verefications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,7 +132,7 @@ namespace PaymentSystemPrototype.Migrations
                             FirstName = "Igor",
                             LastName = "Igorev",
                             Password = "password",
-                            RegisteredAt = new DateTime(2022, 3, 31, 18, 39, 55, 560, DateTimeKind.Utc).AddTicks(799)
+                            RegisteredAt = new DateTime(2022, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc).AddTicks(9577)
                         });
                 });
 
@@ -163,7 +166,7 @@ namespace PaymentSystemPrototype.Migrations
                         new
                         {
                             Id = 1,
-                            RoleId = 3,
+                            RoleId = 2,
                             UserId = 1
                         });
                 });

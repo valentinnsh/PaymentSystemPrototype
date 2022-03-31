@@ -12,5 +12,5 @@ public class RoleRecord
     [Column("name")]
     public string? Name { get; set; }
     
-    public IList<UserRoleRecord> UserRoleRecord { get; set; }
+    public ICollection<UserRoleRecord> UserRoleRecord { get; set; }
 }

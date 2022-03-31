@@ -5,10 +5,13 @@
     Layout = "Shared/_Layout";
 }
 
-<select name="AssignedRole">
-    <option value="">Select Role</option>
-    <option value="Roles.User">User</option>
-    <option value="Roles.Admin">Admin</option>
-    <option value="Roles.KycManager">KYC Manager</option>
-    <option value="Roles.FundsManager">Funds Manager</option>
-</select>
+<form method = "post">
+    <select name="AssignedRole">
+        <option value="">Select Role</option>
+        <option value="1">User</option>
+        <option value="2">Admin</option>
+        <option value="3">KYC Manager</option>
+        <option value="4">Funds Manager</option>
+    </select>
+    <input type="submit" value="Assign Role"/><br/>
+</form>

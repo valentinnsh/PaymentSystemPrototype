@@ -30,8 +30,6 @@ public class UserOperationsService : IUserOperationsService
             UserId = user.Id,
             RoleId = 1,
             UserRecord = user,
-            //RoleRecord = _context.Roles.FirstOrDefault(r => r.Id == 1)
-
         });
         await _context.SaveChangesAsync();
     }
