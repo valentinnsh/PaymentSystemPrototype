@@ -1,11 +1,10 @@
-using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
-namespace PaymentSystemPrototype.Pages.Profiles;
+namespace PaymentSystemPrototype.Pages.UserPages;
 [Authorize]
 public class UserProfile : PageModel
 {
@@ -30,6 +29,7 @@ public class UserProfile : PageModel
     }
     public async Task<IActionResult> OnPostRequestKYCVerification([FromServices] IUserOperationsService userOperationsService)
     {
+        userOperationsService.SetRole(User.Identity.Name, Roles.Admin);
         return RedirectToPage("../Auth/WelcomeRazor", new {msg ="PAGE IS IN DEVELOPMENT"});
     }
     

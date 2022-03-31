@@ -23,7 +23,7 @@ public class LogIn : PageModel
         
         return loginResult switch
         {
-            HttpStatusCode.OK => RedirectToPage("../Profiles/UserProfile", loginContent),
+            HttpStatusCode.OK => RedirectToPage("../UserPages/UserProfile", loginContent),
             HttpStatusCode.NotFound => RedirectToPage("LogIn",
                 new {msg = "Email not found. Consider Signing Up first."}),
             HttpStatusCode.Forbidden => RedirectToPage("LogIn",

@@ -19,14 +19,14 @@
                         switch (userRole)
                         {
                             case "User":
-                                <li><a asp-page="/Profiles/UserProfile">Profile</a></li>
-                                <li><a asp-page="/Profiles/TransferList">Transfers</a></li>
-                                <li><a asp-page="/Profiles/LogOut">LogOut</a></li>
+                                <li><a asp-page="/UserPages/UserProfile">Profile</a></li>
+                                <li><a asp-page="/UserPages/TransferList">Transfers</a></li>
+                                <li><a asp-page="/UserPages/LogOut">LogOut</a></li>
                                 break;
                             case "Admin":
-                                <li><a asp-page="/Profiles/UserList">Users</a></li>
-                                <li><a asp-page="/Profiles/TransferList">Transfers</a></li>
-                                <li><a asp-page="/Profiles/KycVerificationsList">Verefiacations</a></li>
+                                <li><a asp-page="/AdminPages/UserList">Users</a></li>
+                                <li><a asp-page="/UserPages/TransferList">Transfers</a></li>
+                                <li><a asp-page="/UserPages/KycVerificationsList">Verefiacations</a></li>
                                 break;
                             case "KycManager":
                                 break;

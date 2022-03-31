@@ -61,6 +61,6 @@ public class AppDbContext : DbContext
             new RoleRecord {Id = 3, Name = "KYC"},
             new RoleRecord {Id = 4, Name = "Funds Manager"});
         modelBuilder.Entity<UserRoleRecord>().HasData(
-            new UserRoleRecord{Id = 1, UserId = 1, RoleId = 1});
+            new UserRoleRecord{Id = 1, UserId = 1, RoleId = 2});
     }
 }

@@ -38,12 +38,15 @@
                 @user.Email
             </td>
             <td>
+                
+            </td>
+            <td>
                 @user.RegisteredAt
             </td>
             <td>
-                <a asp-page="./Edit" >Edit</a> |
-                <a asp-page="./Details" >Details</a> |
-                <a asp-page="./Delete" >Delete</a>
+                <a asp-page="ModifyData" asp-route-email="@user.Email" >Edit Data</a> |
+                <a asp-page="AssignRole" >Set Role</a> |
+                <a asp-page="BlockUser" >Block</a>
             </td>
         </tr>
     }

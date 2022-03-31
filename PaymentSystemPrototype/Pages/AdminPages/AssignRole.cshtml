@@ -1,0 +1,14 @@
+@page
+@model PaymentSystemPrototype.Pages.AdminPages.AssignRole
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<select name="AssignedRole">
+    <option value="">Select Role</option>
+    <option value="Roles.User">User</option>
+    <option value="Roles.Admin">Admin</option>
+    <option value="Roles.KycManager">KYC Manager</option>
+    <option value="Roles.FundsManager">Funds Manager</option>
+</select>

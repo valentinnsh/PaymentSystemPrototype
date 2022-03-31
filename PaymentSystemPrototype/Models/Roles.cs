@@ -4,6 +4,6 @@ public enum Roles
 {
     User,
     Admin,
-    KYC,
+    KycManager,
     FundsManager
 }

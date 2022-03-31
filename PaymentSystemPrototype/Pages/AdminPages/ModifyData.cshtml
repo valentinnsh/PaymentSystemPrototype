@@ -1,10 +1,11 @@
 @page
-@model PaymentSystemPrototype.Pages.Profiles.ModifyData
+@model PaymentSystemPrototype.Pages.AdminPages.ModifyData
 
 @{
     Layout = "Shared/_Layout";
 }
-<h2>Enter New Data:</h2>
+
+<h2>Enter New Data for user @Model.UserEmail</h2>
 
 <form method="post">
     <label for="FirstName">First Name</label> <br/>

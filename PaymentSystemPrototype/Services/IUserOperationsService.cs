@@ -13,7 +13,7 @@ public interface IUserOperationsService
     public Task<HttpStatusCode> AddFunds(string userEmail, int amount);
     public string? GetUserRoleAsString(string userEmail);
     public Roles GetUserRole(string userEmail);
-    public void SetRole(string userEmail, Roles newRole);
+    public Task<HttpStatusCode> SetRole(string userEmail, Roles newRole);
     public List<UserRecord> GetUsers();
     void DeleteUser(int id);
 }

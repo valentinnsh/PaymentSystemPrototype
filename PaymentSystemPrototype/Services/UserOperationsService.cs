@@ -81,14 +81,20 @@ public class UserOperationsService : IUserOperationsService
         var user = FindByEmail(userEmail);
         return (Roles) _context.Roles.FirstOrDefault(r => user != null && r.UserRoleRecord.UserId == user.Id)?.Id-1;
     }
-    public async void SetRole(string userEmail, Roles newRole)
+    public async Task<HttpStatusCode> SetRole(string userEmail, Roles newRole)
     {
         var user = FindByEmail(userEmail);
-        var roleToSet = _context.Roles.FirstOrDefault(b =>  b.Id == (int)newRole);
-        var userRoleToChange = _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id);
-        if (userRoleToChange != null && roleToSet != null)
+        if (user != null)
+        {
+            var roleToSet = _context.Roles.FirstOrDefault(b => b.Id == (int) newRole + 1);
+            var userRoleToChange = _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id);
+            if (roleToSet != null)
                 userRoleToChange.RoleId = roleToSet.Id;
-        await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return HttpStatusCode.OK;
+        }
+
+        return HttpStatusCode.NotFound;
     }
 
     public List<UserRecord> GetUsers() =>
