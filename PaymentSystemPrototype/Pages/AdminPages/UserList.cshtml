@@ -5,7 +5,7 @@
     Layout = "Shared/_Layout";
 }
 <h2>User List</h2>
-<table class="w3-table w3-striped">
+<table>
     <thead>
     <tr>
         <th>
@@ -41,9 +41,9 @@
                 @user.RegisteredAt
             </td>
             <td>
-                <a asp-page="ModifyData" asp-route-email="@user.Email" >Edit Data</a> |
+                <a asp-page="ModifyData" asp-route-email="@user.Email">Edit Data</a> |
                 <a asp-page="AssignRole" asp-route-email="@user.Email">Set Role</a> |
-                <a asp-page="BlockUser" >Block</a>
+                <a asp-page="BlockUser">Block</a>
             </td>
         </tr>
     }

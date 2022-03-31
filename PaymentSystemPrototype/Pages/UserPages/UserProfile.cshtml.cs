@@ -41,9 +41,4 @@ public class UserProfile : PageModel
     {
         return RedirectToPage("../Auth/WelcomeRazor", new {msg ="PAGE IS IN DEVELOPMENT"});
     }
-
-    public async Task<IActionResult> OnPostListUsers()
-    {
-        return RedirectToPage("UserList");
-    }
 }

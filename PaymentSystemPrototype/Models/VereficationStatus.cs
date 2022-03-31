@@ -2,7 +2,7 @@ namespace PaymentSystemPrototype.Models;
 
 public enum VerificationStatus
 {
-    Created,
+    Rejected,
     Accepted,
-    Rejected
+    InReview
 }
