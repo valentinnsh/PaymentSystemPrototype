@@ -42,12 +42,19 @@ public class AppDbContext : DbContext
             .HasOne(u => u.UserRoleRecord)
             .WithOne(b => b.UserRecord)
             .HasForeignKey<UserRoleRecord>(b => b.UserId);
-        
+
+        // modelBuilder.Entity<UserRoleRecord>()
+        //     .HasOne(x => x.RoleRecord)
+        //     .WithMany(x => x.UserRoleRecord)
+        //     .HasPrincipalKey(x =>x.UserRoleRecord);
         modelBuilder.Entity<RoleRecord>()
-            .HasOne(u => u.UserRoleRecord)
-            .WithOne(b => b.RoleRecord)
-            .HasForeignKey<UserRoleRecord>(b => b.RoleId);
-        
+            .HasMany(x => x.UserRoleRecord)
+            .WithOne(x => x.RoleRecord)
+            .HasForeignKey(f => f.RoleId);
+        // modelBuilder.Entity<RoleRecord>()
+        //     .HasMany(u => u.UserRoleRecord)
+        //     .WithOne(b => b.RoleId);
+
         modelBuilder.Entity<UserRecord>().HasData(
         new UserRecord { Id = 1, FirstName = "Igor", LastName = "Igorev", Email = "Igor@gmail.com",
             Password = "password", RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)});
@@ -61,6 +68,7 @@ public class AppDbContext : DbContext
             new RoleRecord {Id = 3, Name = "KYC"},
             new RoleRecord {Id = 4, Name = "Funds Manager"});
         modelBuilder.Entity<UserRoleRecord>().HasData(
-            new UserRoleRecord{Id = 1, UserId = 1, RoleId = 2});
+            new UserRoleRecord {Id = 1, UserId = 1, RoleId = 2}
+        );
     }
 }

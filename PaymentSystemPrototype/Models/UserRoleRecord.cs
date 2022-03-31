@@ -6,7 +6,6 @@ namespace PaymentSystemPrototype.Models;
 public class UserRoleRecord
 {
     [Key]
-    
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("id")]
     public int Id { get; set; }

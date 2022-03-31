@@ -1,5 +1,6 @@
 using System.Data.Entity;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,14 @@ public class UserOperationsService : IUserOperationsService
         newUserBalance.UserRecord = user;
         await _context.AddAsync(user);
         await _context.AddAsync(newUserBalance);
+        await _context.AddAsync(new UserRoleRecord
+        {
+            UserId = user.Id,
+            RoleId = 1,
+            UserRecord = user,
+            //RoleRecord = _context.Roles.FirstOrDefault(r => r.Id == 1)
+
+        });
         await _context.SaveChangesAsync();
     }
 
@@ -73,13 +82,16 @@ public class UserOperationsService : IUserOperationsService
     public string? GetUserRoleAsString(string userEmail)
     {
         var user = FindByEmail(userEmail);
-        return _context.Roles.FirstOrDefault(r => user != null && r.UserRoleRecord.UserId == user.Id)?.Name;
+        return _context.Roles.FirstOrDefault(
+            r => r.Id == _context.UserRoles.FirstOrDefault(ur=>ur.UserId == user.Id).RoleId).Name;
     }
 
     public Roles GetUserRole(string userEmail)
     {
         var user = FindByEmail(userEmail);
-        return (Roles) _context.Roles.FirstOrDefault(r => user != null && r.UserRoleRecord.UserId == user.Id)?.Id-1;
+        var userRole = _context.UserRoles.FirstOrDefault(ur => user != null && ur.UserId == user.Id);
+        return (Roles) _context.Roles.FirstOrDefault(
+            r => r.Id == _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id).RoleId).Id-1;
     }
     public async Task<HttpStatusCode> SetRole(string userEmail, Roles newRole)
     {
