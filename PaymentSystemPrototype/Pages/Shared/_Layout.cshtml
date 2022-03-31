@@ -1,3 +1,4 @@
+@using System.Security.Claims
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,9 +13,26 @@
         <div class="container">
             <div class="row">
                 <ul class="nav navbar-nav">
-                    @if (Context.User.Identity.IsAuthenticated)
+                    @if (Context.User.Identity!.IsAuthenticated)
                     {
-                        <li><a asp-page="/Profiles/UserProfile">Profile</a></li>
+                        var userRole = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+                        switch (userRole)
+                        {
+                            case "User":
+                                <li><a asp-page="/Profiles/UserProfile">Profile</a></li>
+                                <li><a asp-page="/Profiles/TransferList">Transfers</a></li>
+                                <li><a asp-page="/Profiles/LogOut">LogOut</a></li>
+                                break;
+                            case "Admin":
+                                <li><a asp-page="/Profiles/UserList">Users</a></li>
+                                <li><a asp-page="/Profiles/TransferList">Transfers</a></li>
+                                <li><a asp-page="/Profiles/KycVerificationsList">Verefiacations</a></li>
+                                break;
+                            case "KycManager":
+                                break;
+                            case "FundsManager":
+                                break;
+                        }
                     }
                     else
                     {
