@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,7 +6,7 @@ using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.UserPages;
 
-public class CreateDeposit : PageModel
+public class CreateWithdrawal : PageModel
 {
     public string Message = "";
     public void OnGet(string msg)
@@ -18,10 +17,12 @@ public class CreateDeposit : PageModel
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService,
         [FromServices] ITransferOperationsService transferOperationsService, [FromForm] TransferData transferData)
     {
+        transferData.Amount *= -1;
         var result = transferOperationsService.CreateTransferRequest(transferData, User.Identity.Name).Result;
         return result switch
         {
             HttpStatusCode.OK => RedirectToPage("/UserPages/UserProfile"),
+            HttpStatusCode.Forbidden => RedirectToPage("CreateWithdrawal", new {msg = "Balance is too low"}),
             _ => RedirectToPage("CreateDeposit", new {msg = "Unknown Error, try again"})
         };
     }

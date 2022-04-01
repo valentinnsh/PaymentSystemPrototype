@@ -1,5 +1,5 @@
 @page
-@model PaymentSystemPrototype.Pages.UserPages.CreateDeposit
+@model PaymentSystemPrototype.Pages.UserPages.CreateWithdrawal
 
 @{
     Layout = "Shared/_Layout";
@@ -9,12 +9,6 @@
 <form method="post">
     <label for="CardNumber">Card Number</label> <br/>
     <input name="CardNumber" type="text"/><br/>
-    <label for="ExpireDate">Expire date</label> <br/>
-    <input name="ExpireDate" type="text"/><br/>
-    <label for="CardHolder">Card Holder</label> <br/>
-    <input name="CardHolder" type="text"/><br/>
-    <label for="CV2">CV2</label> <br/>
-    <input name="CV2" type="password"/><br/>
     <label for="Amount" type="text">Amount</label> <br/>
     <input name = "Amount" type = "text"/><br/>
     <input type="submit" value="Apply Changes"/><br/>

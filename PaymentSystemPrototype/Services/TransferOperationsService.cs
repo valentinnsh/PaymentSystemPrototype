@@ -38,4 +38,30 @@ public class TransferOperationsService : ITransferOperationsService
 
         return HttpStatusCode.OK;
     }
+
+    public List<TransferRecord> GetTransfers() =>
+        _context.Transfers.ToList();
+
+    public List<TransferRecord> GetTransfersForUser(string userEmail)
+    {
+        var user = _userOperationsService.FindByEmail(userEmail);
+        if (user != null)
+        {
+            return _context.Transfers.Where(t => t.UserId == user.Id).ToList();
+        }
+        return new List<TransferRecord>();
+    }
+
+    public async Task<HttpStatusCode> CanelTransfer(int transferId)
+    {
+        var result = await _context.Transfers.FindAsync(transferId);
+        if (result != null)
+        {
+            _context.Transfers.Remove(result);
+            await _context.SaveChangesAsync();
+            return HttpStatusCode.OK;
+        }
+
+        return HttpStatusCode.NotFound;
+    }
 }

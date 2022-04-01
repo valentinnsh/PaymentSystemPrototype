@@ -17,12 +17,6 @@ public class UserProfile : PageModel
         UserBalance = userOperationsService.GetUserBalance(User.Identity.Name);
         UserRole = userOperationsService.GetUserRole(User.Identity.Name);
     }
-
-    public async Task<IActionResult> OnPostLogOut([FromServices] IAuthService authService)
-    {
-        await authService.LogOutAsync(HttpContext);
-        return RedirectToPage("../Auth/LogIn");
-    }
     public async Task<IActionResult> OnPostModifyUser()
     {
         return RedirectToPage("ModifyData", new {previousEmail = User.Identity!.Name});
@@ -37,8 +31,5 @@ public class UserProfile : PageModel
     {
        return RedirectToPage("CreateDeposit");
     }
-    public async Task<IActionResult> OnPostCreateWithdrawal()
-    {
-        return RedirectToPage("../Auth/WelcomeRazor", new {msg ="PAGE IS IN DEVELOPMENT"});
-    }
+    
 }

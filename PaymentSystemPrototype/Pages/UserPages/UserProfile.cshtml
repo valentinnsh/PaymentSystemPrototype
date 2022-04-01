@@ -30,14 +30,11 @@
         <button class = "button">Request Verification</button>
     </form>
 
-    <form asp-page-handler="CreateDeposit" method="post">
-        <button class = "button">Create Deposit</button>
+    <form method="get">
+        <button asp-page="CreateDeposit" class = "button">Create Deposit</button>
     </form>
 
-    <form asp-page-handler="CreateWithdrawal" method="post">
-        <button class = "button">Create Withdrawal</button>
+    <form method="get">
+        <button asp-page = "CreateWithdrawal" class = "button">Create Withdrawal</button>
     </form>
-
-<form asp-page-handler="LogOut" method="post">
-    <button class = "button">Log Out</button> 
-</form>
+    
