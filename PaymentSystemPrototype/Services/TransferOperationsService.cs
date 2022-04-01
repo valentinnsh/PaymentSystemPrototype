@@ -1,3 +1,4 @@
+using System.Data.Entity;
 using System.Net;
 using PaymentSystemPrototype.Models;
 
@@ -73,11 +74,30 @@ public class TransferOperationsService : ITransferOperationsService
         var transfer = await _context.Transfers.FindAsync(transferId);
         if (transfer != null)
         {
-            transfer.Status = (int) status;
+            if (status == ReviewStatus.Accepted)
+            {
+                var user = _context.Users.FirstOrDefault(u => u.Id == transfer.UserId);
+                var balance = _context.Balances.FirstOrDefault(b => user != null && b.UserId == user.Id);
+                if (balance!.Amount + transfer.Amount > 0 )
+                {
+                
+                    balance.Amount += transfer.Amount;
+                    transfer.Status = (int) status;
+                    transfer.ConfirmedAt = DateTime.UtcNow;
+                    transfer.ConfirmedBy = _userOperationsService.FindByEmail(reviewerEmail)?.Id;
+                    await _context.SaveChangesAsync();
+                    return HttpStatusCode.OK;
+                }
+            }
+            else
+            {
+                return HttpStatusCode.Forbidden;
+            }
+            transfer.Status = (int) ReviewStatus.Rejected;
             transfer.ConfirmedAt = DateTime.UtcNow;
             transfer.ConfirmedBy = _userOperationsService.FindByEmail(reviewerEmail)?.Id;
             await _context.SaveChangesAsync();
-            return HttpStatusCode.OK;
+            return HttpStatusCode.Forbidden;
         }
 
         return HttpStatusCode.NotFound;

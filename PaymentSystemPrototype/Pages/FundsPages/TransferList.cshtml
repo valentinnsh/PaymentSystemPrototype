@@ -58,58 +58,62 @@
                 ConfirmedBy = res?.Email
             };
     }
-        @foreach (var transfer in query)
-        {
-            <tr>
-                <td>
-                    @transfer.Id
-                </td>
+    @foreach (var transfer in query)
+    {
+        <tr>
+            <td>
+                @transfer.Id
+            </td>
                 
+            <td>
+                @transfer.FullName
+            </td>
+            <td>
+                @transfer.Amount
+            </td>
+            @{
+                ReviewStatus status = (ReviewStatus) transfer.Status;
                 <td>
-                    @transfer.FullName
+                    @status
                 </td>
-                <td>
-                    @transfer.Amount
-                </td>
-                @{
-                    ReviewStatus status = (ReviewStatus) transfer.Status;
-                    <td>
-                        @status
-                    </td>
                     
-                }
+            }
+            <td>
+                @transfer.CreatedAt
+            </td>
+                
+                
+            @if (@transfer.ConfirmedBy == null)
+            {
                 <td>
-                    @transfer.CreatedAt
+                    --
                 </td>
-                
-                
-                @if (@transfer.ConfirmedBy == null)
-                {
-                    <td>
-                        --
-                    </td>
-                    <td>
-                        --
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        @transfer.ConfirmedBy
-                    </td>
-                    <td>
-                        @transfer.ConfirmedAt
-                    </td>
-                }
                 <td>
+                    --
+                </td>
+            }
+            else
+            {
+                <td>
+                    @transfer.ConfirmedBy
+                </td>
+                <td>
+                    @transfer.ConfirmedAt
+                </td>
+            }
+            <td>
+                @if (transfer.Status == (int) ReviewStatus.InReview)
+                {
                     <form asp-page-handler="Review" asp-route-transferId="@transfer.Id" asp-route-status="1" method="post">
                         <button class="btn btn-default">Accept</button>
                     </form>
                     <form asp-page-handler="Review" asp-route-transferId="@transfer.Id" asp-route-status="0" method="post">
                         <button class="btn btn-default">Reject</button>
                     </form>
-                </td>
-            </tr>
-        }
-        </tbody>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
 </table>
+<h2>@Model.Message</h2>
