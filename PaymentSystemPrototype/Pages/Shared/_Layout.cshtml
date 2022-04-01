@@ -1,0 +1,59 @@
+@using System.Security.Claims
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="row">
+                <ul class="nav navbar-nav">
+                    @if (Context.User.Identity!.IsAuthenticated)
+                    {
+                        var userRole = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+                        switch (userRole)
+                        {
+                            case "User":
+                                <li><a asp-page="/UserPages/UserProfile">Profile</a></li>
+                                <li><a asp-page="/UserPages/TransferList">Transfers</a></li>
+                                break;
+                            case "Admin":
+                                <li><a asp-page="/AdminPages/UserList">Users</a></li>
+                                <li><a asp-page="/FundsPages/TransferList">Transfers</a></li>
+                                <li><a asp-page="/KycPages/VerificationList">Verefiacations</a></li>
+                                break;
+                            case "KycManager":
+                                <li><a asp-page="/KycPages/VerificationList">Verefiacations</a></li>
+                                break;
+                            case "FundsManager":
+                                <li><a asp-page="/FundsPages/TransferList">Transfers</a></li>
+                                <li><a asp-page="/FundsPages/AddFunds">Add Fundss</a></li>
+                                break;
+                        }
+                        <li><a asp-page="/UserPages/LogOut">LogOut</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-page="/Auth/LogIn">Log In</a></li>
+                        <li><a asp-page="/Auth/SignUp">Sign Up</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2022</p>
+        </footer>
+    </div>
+</body>
+</html>

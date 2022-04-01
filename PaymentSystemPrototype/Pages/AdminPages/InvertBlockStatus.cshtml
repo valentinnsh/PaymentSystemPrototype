@@ -1,0 +1,14 @@
+@page
+@model PaymentSystemPrototype.Pages.AdminPages.InvertBlockStatus
+
+@{
+    Layout = "_Layout";
+}
+
+<h2>Are you shure you want to @Model.UserEmail?</h2>
+<form method="post">
+    <button class="button" asp-route-userId="@Model.UserId">Yes</button>
+</form>
+<form asp-page="UserList" method="get">
+    <button class="button">No</button>
+</form>

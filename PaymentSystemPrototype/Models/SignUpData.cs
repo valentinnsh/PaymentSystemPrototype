@@ -2,12 +2,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PaymentSystemPrototype.Models;
 
-public class User
+public class SignUpData
 {
-    public int Id { get; set; }
+    [Required]
     public string FirstName { get; set; }
+    [Required]
     public string LastName { get; set; }
+    [Required]
     public string Email { get; set; }
-    public DateTime RegisteredAt { get; set; }
-    
+    [Required]
+    public string Password { get; set; }
 }

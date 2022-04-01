@@ -1,0 +1,104 @@
+@page
+@using PaymentSystemPrototype.Migrations
+@using PaymentSystemPrototype.Models
+@model PaymentSystemPrototype.Pages.KycPages.VerificationList
+
+@{
+    Layout = "Shared/_Layout";
+}
+<h2>Verefications List</h2>
+<table >
+    <thead>
+    <tr>
+        <th>
+            First Name
+        </th>
+        <th>
+            Last Name
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Last Change
+        </th>
+        <th>
+            Status
+        </th>
+        <th>
+            Last Change
+        </th>
+        <th>
+            Reviewer
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @{
+        var query = (
+            from u in @Model.ListUsers
+            join v in @Model.ListVerrifivcations
+                on u.Id equals v.UserId
+            select new
+            {
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Email = u.Email,
+                RegisteredAt = u.RegisteredAt,
+                Status = v.Status,
+                LastChangeDate = v.LastChangeDate,
+                Reviewer = v.Reviewer
+            }
+            );
+    }
+    @foreach (var userVerifications in query)
+    {
+        <tr>
+            <td>
+                @userVerifications.FirstName
+            </td>
+            <td>
+                @userVerifications.LastName
+            </td>
+            <td>
+                @userVerifications.Email
+            </td>
+            <td>
+                @userVerifications.RegisteredAt
+            </td>
+            @{
+                ReviewStatus status = (ReviewStatus) userVerifications.Status;
+                <td>
+                    @status
+                </td>
+            }
+            <td>
+                @userVerifications.LastChangeDate
+            </td>
+            @if (@userVerifications.Reviewer == null)
+            {
+                <td>
+                    --
+                </td>
+            }
+            else
+            {
+                <td>
+                    @userVerifications.Reviewer
+                </td>
+            }
+            <td>
+                <form asp-page-handler="Review" asp-route-email="@userVerifications.Email" asp-route-status="1" method="post">
+                    <button class="btn btn-default">Accept</button>
+                </form>
+                <form asp-page-handler="Review" asp-route-email="@userVerifications.Email" asp-route-status="0" method="post">
+                    <button class="btn btn-default">Reject</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

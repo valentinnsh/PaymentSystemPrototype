@@ -1,0 +1,108 @@
+@page
+@using PaymentSystemPrototype.Models
+@model PaymentSystemPrototype.Pages.UserPages.TransferList
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<h2>Your Transfers</h2>
+<table >
+    <thead>
+    <tr>
+        <th>
+            Transfer
+        </th>
+        <th>
+            Requested At
+        </th>
+        <th>
+            Confirmed By
+        </th>
+        <th>
+            Confirmed At
+        </th>
+        <th>
+            Amount
+        </th>
+        <th>
+            Status
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @{
+        var query = from t in Model.UserTransfers
+            join u in Model.UserList
+                on t.ConfirmedBy equals u.Id into q1
+            from q in q1.DefaultIfEmpty()
+            select new
+            {
+                Id = t.Id,
+                CreatedAt = t.CreatedAt,
+                ConfirmedBy = q?.Email,
+                ConfirmedAt = t.ConfirmedAt,
+                Amount = t.Amount,
+                Status = t.Status
+            };
+    }
+    @foreach (var transfer in query)
+    {
+        <tr>
+            <td>
+                @transfer.Id
+            </td>
+            <td>
+                @transfer.CreatedAt
+            </td>
+            @if (transfer.ConfirmedBy == null)
+            {
+                <td>
+                    --
+                </td>
+
+            }
+            else
+            {
+                <td>
+                    @transfer.ConfirmedBy
+                </td>
+            }
+            @if (@transfer.ConfirmedAt == null)
+            {
+                <td>
+                    --
+                </td>
+
+            }
+            else
+            {
+                <td>
+                    @transfer.ConfirmedAt
+                </td>
+            }
+            <td>
+                @transfer.Amount
+            </td>
+            @{
+                ReviewStatus status = (ReviewStatus) transfer.Status;
+                <td>
+                    @status
+                </td>
+
+            }
+            @if (transfer.Status == (int) ReviewStatus.InReview)
+            {
+                <td>
+                    <form asp-page-handler="Cancel" asp-route-transferId="@transfer.Id" method="post">
+                        <button class="btn btn-default">Cancel</button>
+                    </form>
+                </td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>

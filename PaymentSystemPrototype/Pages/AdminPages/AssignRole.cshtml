@@ -1,0 +1,17 @@
+@page
+@model PaymentSystemPrototype.Pages.AdminPages.AssignRole
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<form method = "post">
+    <select name="AssignedRole">
+        <option value="">Select Role</option>
+        <option value="1">User</option>
+        <option value="2">Admin</option>
+        <option value="3">KYC Manager</option>
+        <option value="4">Funds Manager</option>
+    </select>
+    <input type="submit" value="Assign Role"/><br/>
+</form>

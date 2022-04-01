@@ -1,0 +1,17 @@
+@page
+@model PaymentSystemPrototype.Pages.UserPages.CreateWithdrawal
+
+@{
+    Layout = "Shared/_Layout";
+}
+<h2>Enter Card Data and deposit amount:</h2>
+
+<form method="post">
+    <label for="CardNumber">Card Number</label> <br/>
+    <input name="CardNumber" type="text"/><br/>
+    <label for="Amount" type="text">Amount</label> <br/>
+    <input name = "Amount" type = "text"/><br/>
+    <input type="submit" value="Apply Changes"/><br/>
+</form>
+
+<h2>@Model.Message</h2>

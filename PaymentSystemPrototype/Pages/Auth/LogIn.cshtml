@@ -1,0 +1,16 @@
+@page "/log_in"
+@model PaymentSystemPrototype.Pages.Auth.LogIn
+
+@{
+    Layout = "_Layout";
+}
+
+<form method = "post">
+    <label for="email">Email</label> <br/>
+    <input name="email" type="email"/><br/>
+    <label for="password">Password</label> <br/>
+    <input name="password" type="password"/><br/>
+    <input type="submit" value="Log In"/><br/>
+</form>
+
+<h2>@Model.Message</h2>

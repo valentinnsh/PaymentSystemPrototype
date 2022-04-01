@@ -1,0 +1,40 @@
+@page
+@using PaymentSystemPrototype.Models
+@model PaymentSystemPrototype.Pages.UserPages.UserProfile
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+@if (Model.PresentedUser != null)
+{
+    <h1>@Model.PresentedUser.FirstName @Model.PresentedUser.LastName</h1>
+    <h2>@Model.PresentedUser.Email</h2>
+    <h2>@Model.PresentedUser.RegisteredAt</h2>
+    <h2>
+        Role: @Model.UserRole
+    </h2>
+}
+@if (@Model.UserBalance != null)
+{
+    <h3>
+        Balance : @Model.UserBalance.Amount
+    </h3>
+}
+
+<form asp-page-handler="ModifyUser" method="post">
+        <button class = "button">Modify user Info</button> 
+    </form>
+
+    <form asp-page-handler="RequestKYCVerification" method="post">
+        <button class = "button">Request Verification</button>
+    </form>
+
+    <form method="get">
+        <button asp-page="CreateDeposit" class = "button">Create Deposit</button>
+    </form>
+
+    <form method="get">
+        <button asp-page = "CreateWithdrawal" class = "button">Create Withdrawal</button>
+    </form>
+    
