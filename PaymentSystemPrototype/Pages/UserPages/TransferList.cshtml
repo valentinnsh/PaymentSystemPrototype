@@ -34,7 +34,22 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var transfer in @Model.UserTransfers)
+    @{
+        var query = from t in Model.UserTransfers
+            join u in Model.UserList
+                on t.ConfirmedBy equals u.Id into q1
+            from q in q1.DefaultIfEmpty()
+            select new
+            {
+                Id = t.Id,
+                CreatedAt = t.CreatedAt,
+                ConfirmedBy = q?.Email,
+                ConfirmedAt = t.ConfirmedAt,
+                Amount = t.Amount,
+                Status = t.Status
+            };
+    }
+    @foreach (var transfer in query)
     {
         <tr>
             <td>
@@ -43,12 +58,12 @@
             <td>
                 @transfer.CreatedAt
             </td>
-            @if (@transfer.ConfirmedBy == null)
+            @if (transfer.ConfirmedBy == null)
             {
                 <td>
                     --
                 </td>
-                
+
             }
             else
             {
@@ -61,7 +76,7 @@
                 <td>
                     --
                 </td>
-                
+
             }
             else
             {
@@ -77,13 +92,16 @@
                 <td>
                     @status
                 </td>
-                
+
             }
-            <td>
-                <form asp-page-handler = "Cancel" asp-route-transferId="@transfer.Id" method="post">
-                    <button class="btn btn-default">Cancel</button>
-                </form>
-            </td>
+            @if (transfer.Status == (int) ReviewStatus.InReview)
+            {
+                <td>
+                    <form asp-page-handler="Cancel" asp-route-transferId="@transfer.Id" method="post">
+                        <button class="btn btn-default">Cancel</button>
+                    </form>
+                </td>
+            }
         </tr>
     }
     </tbody>
