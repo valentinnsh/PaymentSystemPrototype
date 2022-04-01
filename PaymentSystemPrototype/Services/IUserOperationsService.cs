@@ -17,5 +17,7 @@ public interface IUserOperationsService
     public List<UserRecord> GetUsers();
     public List<UserRoleRecord> GetUserRoles();
     public List<BalanceRecord> GetBalances();
+    public bool IsUserBlocked(string userEmail);
+    public Task<HttpStatusCode> RevertBlockStatus(int userId);
     void DeleteUser(int id);
 }

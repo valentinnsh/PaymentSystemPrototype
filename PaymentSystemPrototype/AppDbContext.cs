@@ -24,6 +24,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<UserRecord>().Property(x => x.LastName);
         modelBuilder.Entity<UserRecord>().Property(x => x.Password);
         modelBuilder.Entity<UserRecord>().Property(x => x.RegisteredAt);
+        modelBuilder.Entity<UserRecord>().Property(x => x.Block);
 
         modelBuilder.Entity<BalanceRecord>().Property(x => x.Amount);
         modelBuilder.Entity<BalanceRecord>().Property(x => x.UserId);

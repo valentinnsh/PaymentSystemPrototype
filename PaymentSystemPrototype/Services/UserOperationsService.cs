@@ -115,4 +115,21 @@ public class UserOperationsService : IUserOperationsService
 
     public List<BalanceRecord> GetBalances() =>
         _context.Balances.ToList();
+
+    public bool IsUserBlocked(string userEmail) =>
+        _context.Users.FirstOrDefault(b => b.Email == userEmail).Block;
+
+    public async Task<HttpStatusCode> RevertBlockStatus(int userId)
+    {
+        var user = _context.Users.FirstOrDefault(b => b.Id == userId);
+        if (user != null)
+        {
+            user.Block = !user.Block;
+            await _context.SaveChangesAsync();
+            return HttpStatusCode.OK;
+        }
+
+        return HttpStatusCode.NotFound;
+    }
+    
 }

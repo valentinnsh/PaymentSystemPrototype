@@ -17,8 +17,14 @@ public class LogIn : PageModel
         return Page();
     }
     
-    public async Task<ActionResult> OnPost([FromServices] IAuthService authService, [FromForm] LogInData loginContent)
+    public async Task<ActionResult> OnPost([FromServices] IAuthService authService, 
+        [FromServices] IUserOperationsService userOperationsService, [FromForm] LogInData loginContent)
     {
+        if(userOperationsService.IsUserBlocked(loginContent.Email))
+        {
+            return RedirectToPage("LogIn",
+                new {msg = "You are blocked by Administrator"});
+        }
         var loginResult = await authService.LogInAsync(loginContent.Email, loginContent.Password, HttpContext);
         
         return loginResult switch
