@@ -17,7 +17,7 @@ public class TransferList : PageModel
     public async Task<IActionResult> OnPostCancel([FromServices] ITransferOperationsService transferOperationsService,
         int transferId)
     {
-        var result = await transferOperationsService.CanelTransfer(transferId);
+        var result = await transferOperationsService.CancelTransfer(transferId);
         return result switch
         {
             HttpStatusCode.OK => RedirectToPage("TransferList"),

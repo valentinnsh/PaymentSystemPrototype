@@ -1,6 +1,6 @@
 namespace PaymentSystemPrototype.Models;
 
-public enum VerificationStatus
+public enum ReviewStatus
 {
     Rejected,
     Accepted,

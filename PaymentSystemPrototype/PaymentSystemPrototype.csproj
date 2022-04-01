@@ -33,8 +33,4 @@
       <UpToDateCheckInput Remove="Views\Auth\SignUp.cshtml" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Pages\FundsPages" />
-    </ItemGroup>
-
 </Project>

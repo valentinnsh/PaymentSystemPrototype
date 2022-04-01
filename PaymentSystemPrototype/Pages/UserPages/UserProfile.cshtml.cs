@@ -17,6 +17,7 @@ public class UserProfile : PageModel
         UserBalance = userOperationsService.GetUserBalance(User.Identity.Name);
         UserRole = userOperationsService.GetUserRole(User.Identity.Name);
     }
+    
     public async Task<IActionResult> OnPostModifyUser()
     {
         return RedirectToPage("ModifyData", new {previousEmail = User.Identity!.Name});

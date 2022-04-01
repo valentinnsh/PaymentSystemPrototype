@@ -1,0 +1,18 @@
+@page
+@model PaymentSystemPrototype.Pages.FundsPages.AddFunds
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<h2>Add Funds to user:</h2>
+
+<form method="post">
+    <label>User's Email</label> <br/>
+    <input name="userEmail" type="text"/><br/>
+    <label>Amount</label> <br/>
+    <input name = "amountAdded" type = "number"/><br/>
+    <input type="submit" value="Add Funds"/><br/>
+</form>
+
+<h2>@Model.Message</h2>

@@ -29,5 +29,7 @@ public class TransferRecord
     
     [Column("amount")]
     public int Amount { get; set; }
+    [Column("status")]
+    public int Status { get; set; }
     
 }

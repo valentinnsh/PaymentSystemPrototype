@@ -31,7 +31,8 @@ public class TransferOperationsService : ITransferOperationsService
                     CreatedAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now),
                     ConfirmedAt = null,
                     ConfirmedBy = null,
-                    Amount = data.Amount
+                    Amount = data.Amount,
+                    Status = (int) ReviewStatus.InReview
                 });
             await _context.SaveChangesAsync();
         }
@@ -42,6 +43,8 @@ public class TransferOperationsService : ITransferOperationsService
     public List<TransferRecord> GetTransfers() =>
         _context.Transfers.ToList();
 
+    public List<TransferRecord> GetTransfersUnreviewedFirst() =>
+        _context.Transfers.ToList().OrderByDescending(t=>t.Status).ToList();
     public List<TransferRecord> GetTransfersForUser(string userEmail)
     {
         var user = _userOperationsService.FindByEmail(userEmail);
@@ -52,12 +55,27 @@ public class TransferOperationsService : ITransferOperationsService
         return new List<TransferRecord>();
     }
 
-    public async Task<HttpStatusCode> CanelTransfer(int transferId)
+    public async Task<HttpStatusCode> CancelTransfer(int transferId)
     {
         var result = await _context.Transfers.FindAsync(transferId);
         if (result != null)
         {
             _context.Transfers.Remove(result);
+            await _context.SaveChangesAsync();
+            return HttpStatusCode.OK;
+        }
+
+        return HttpStatusCode.NotFound;
+    }
+
+    public async Task<HttpStatusCode> SetStatus(ReviewStatus status, string reviewerEmail, int transferId)
+    {
+        var transfer = await _context.Transfers.FindAsync(transferId);
+        if (transfer != null)
+        {
+            transfer.Status = (int) status;
+            transfer.ConfirmedAt = DateTime.UtcNow;
+            transfer.ConfirmedBy = _userOperationsService.FindByEmail(reviewerEmail)?.Id;
             await _context.SaveChangesAsync();
             return HttpStatusCode.OK;
         }

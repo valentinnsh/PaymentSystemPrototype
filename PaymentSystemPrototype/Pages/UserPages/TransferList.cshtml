@@ -1,11 +1,12 @@
 @page
+@using PaymentSystemPrototype.Models
 @model PaymentSystemPrototype.Pages.UserPages.TransferList
 
 @{
     Layout = "Shared/_Layout";
 }
 
-<h2>User List</h2>
+<h2>Your Transfers</h2>
 <table >
     <thead>
     <tr>
@@ -23,6 +24,9 @@
         </th>
         <th>
             Amount
+        </th>
+        <th>
+            Status
         </th>
         <th>
             Actions
@@ -68,6 +72,13 @@
             <td>
                 @transfer.Amount
             </td>
+            @{
+                ReviewStatus status = (ReviewStatus) transfer.Status;
+                <td>
+                    @status
+                </td>
+                
+            }
             <td>
                 <form asp-page-handler = "Cancel" asp-route-transferId="@transfer.Id" method="post">
                     <button class="btn btn-default">Cancel</button>

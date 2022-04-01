@@ -23,7 +23,7 @@ public class KycService : IKycService
                 new VereficationRecord
                 {
                     UserId = user.Id,
-                    Status = 2,
+                    Status = (int) ReviewStatus.InReview,
                     LastChangeDate = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now),
                     Reviewer = null
                 });

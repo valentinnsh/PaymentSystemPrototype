@@ -6,7 +6,7 @@
 @{
     Layout = "Shared/_Layout";
 }
-<h2>User List</h2>
+<h2>Verefications List</h2>
 <table >
     <thead>
     <tr>
@@ -70,7 +70,7 @@
                 @userVerifications.RegisteredAt
             </td>
             @{
-                VerificationStatus status = (VerificationStatus) userVerifications.Status;
+                ReviewStatus status = (ReviewStatus) userVerifications.Status;
                 <td>
                     @status
                 </td>

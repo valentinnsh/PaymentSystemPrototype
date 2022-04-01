@@ -67,7 +67,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TransferRecord>().Property(x => x.ConfirmedBy);
         modelBuilder.Entity<TransferRecord>().Property(x => x.CreatedAt);
         modelBuilder.Entity<TransferRecord>().Property(x => x.UserId);
-        
+        modelBuilder.Entity<TransferRecord>().Property(x => x.Status);
         modelBuilder.Entity<TransferRecord>()
             .HasOne(t => t.UserRecord)
             .WithMany(u => u.TransferRecords)

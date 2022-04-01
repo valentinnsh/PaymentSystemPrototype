@@ -1,0 +1,115 @@
+@page
+@using PaymentSystemPrototype.Models
+@model PaymentSystemPrototype.Pages.FundsPages.TransferList
+
+@{
+    Layout = "Shared/_Layout";
+}
+<h2>Transfer List</h2>
+<table >
+    <thead>
+    <tr>
+        <th>
+            Transfer
+        </th>
+        <th>
+            User
+        </th>
+        <th>
+            Amount
+        </th>
+        <th>
+            Status
+        </th>
+        <th>
+            Requested At
+        </th>
+        <th>
+            Confirmed By
+        </th>
+        <th>
+            Confirmed At
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @{
+        var query = from r in @Model.ListRequests
+            join u in @Model.ListUsers
+                on r.UserId equals u.Id into q1
+            from q in q1 
+            join u1 in @Model.ListUsers 
+                on r.ConfirmedBy equals u1.Id
+                into result
+            from res in result.DefaultIfEmpty()
+            select new
+            {
+                Id = r.Id,
+                FullName = string.Join(" ", new string[]{q.FirstName, q.LastName, q.Email}),
+                LastName = q.LastName,
+                Email = q.Email,
+                Amount = r.Amount,
+                Status = r.Status,
+                CreatedAt = r.CreatedAt,
+                ConfirmedAt = r.ConfirmedAt,
+                ConfirmedBy = res?.Email
+            };
+    }
+        @foreach (var transfer in query)
+        {
+            <tr>
+                <td>
+                    @transfer.Id
+                </td>
+                
+                <td>
+                    @transfer.FullName
+                </td>
+                <td>
+                    @transfer.Amount
+                </td>
+                @{
+                    ReviewStatus status = (ReviewStatus) transfer.Status;
+                    <td>
+                        @status
+                    </td>
+                    
+                }
+                <td>
+                    @transfer.CreatedAt
+                </td>
+                
+                
+                @if (@transfer.ConfirmedBy == null)
+                {
+                    <td>
+                        --
+                    </td>
+                    <td>
+                        --
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @transfer.ConfirmedBy
+                    </td>
+                    <td>
+                        @transfer.ConfirmedAt
+                    </td>
+                }
+                <td>
+                    <form asp-page-handler="Review" asp-route-transferId="@transfer.Id" asp-route-status="1" method="post">
+                        <button class="btn btn-default">Accept</button>
+                    </form>
+                    <form asp-page-handler="Review" asp-route-transferId="@transfer.Id" asp-route-status="0" method="post">
+                        <button class="btn btn-default">Reject</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+</table>
