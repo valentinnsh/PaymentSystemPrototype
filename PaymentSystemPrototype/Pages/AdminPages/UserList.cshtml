@@ -18,6 +18,9 @@
             Email
         </th>
         <th>
+            Role
+        </th>
+        <th>
             Register date
         </th>
         <th>
@@ -39,6 +42,14 @@
             <td>
                 @user.Email
             </td>
+            @{
+                var role = Model.ListRoles.FirstOrDefault(r => r.Id == 
+                                                               Model.ListUserRoles.FirstOrDefault(
+                                                                   ur => ur.UserId == user.Id)!.RoleId)?.Name;
+                <td>
+                    @role
+                </td>
+            }
             <td>
                 @user.RegisteredAt
             </td>

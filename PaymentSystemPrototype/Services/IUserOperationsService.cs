@@ -16,6 +16,7 @@ public interface IUserOperationsService
     public Task<HttpStatusCode> SetRole(string userEmail, Roles newRole);
     public List<UserRecord> GetUsers();
     public List<UserRoleRecord> GetUserRoles();
+    public List<RoleRecord> GetRoles();
     public List<BalanceRecord> GetBalances();
     public bool IsUserBlocked(string userEmail);
     public Task<HttpStatusCode> RevertBlockStatus(int userId);

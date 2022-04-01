@@ -113,6 +113,9 @@ public class UserOperationsService : IUserOperationsService
     public List<UserRoleRecord> GetUserRoles() =>
         _context.UserRoles.ToList();
 
+    public List<RoleRecord> GetRoles() =>
+        _context.Roles.ToList();
+    
     public List<BalanceRecord> GetBalances() =>
         _context.Balances.ToList();
 

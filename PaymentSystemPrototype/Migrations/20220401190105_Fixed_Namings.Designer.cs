@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PaymentSystemPrototype;
@@ -11,9 +12,11 @@ using PaymentSystemPrototype;
 namespace PaymentSystemPrototype.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220401190105_Fixed_Namings")]
+    partial class Fixed_Namings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,26 +43,6 @@ namespace PaymentSystemPrototype.Migrations
                         new
                         {
                             UserId = 1,
-                            Amount = 100
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            Amount = 100
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            Amount = 100
-                        },
-                        new
-                        {
-                            UserId = 4,
-                            Amount = 100
-                        },
-                        new
-                        {
-                            UserId = 5,
                             Amount = 100
                         });
                 });
@@ -148,26 +131,6 @@ namespace PaymentSystemPrototype.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("fund_transfers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Amount = 100,
-                            CardNumber = 1234567812345678L,
-                            CreatedAt = new DateTime(2022, 3, 28, 14, 29, 3, 605, DateTimeKind.Utc),
-                            Status = 2,
-                            UserId = 4
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Amount = -10,
-                            CardNumber = 8765432112345678L,
-                            CreatedAt = new DateTime(2022, 3, 24, 11, 29, 3, 605, DateTimeKind.Utc),
-                            Status = 2,
-                            UserId = 5
-                        });
                 });
 
             modelBuilder.Entity("PaymentSystemPrototype.Models.UserRecord", b =>
@@ -216,51 +179,11 @@ namespace PaymentSystemPrototype.Migrations
                         {
                             Id = 1,
                             Block = false,
-                            Email = "Admin@gmail.com",
-                            FirstName = "Admin",
-                            LastName = "Admin",
-                            Password = "admin",
+                            Email = "Igor@gmail.com",
+                            FirstName = "Igor",
+                            LastName = "Igorev",
+                            Password = "password",
                             RegisteredAt = new DateTime(2022, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Block = false,
-                            Email = "Kyc@gmail.com",
-                            FirstName = "Kyc",
-                            LastName = "Kyc",
-                            Password = "kyc",
-                            RegisteredAt = new DateTime(2021, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Block = false,
-                            Email = "Funds@gmail.com",
-                            FirstName = "Funds",
-                            LastName = "Funds",
-                            Password = "funds",
-                            RegisteredAt = new DateTime(2020, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Block = false,
-                            Email = "User1@gmail.com",
-                            FirstName = "User1",
-                            LastName = "User1",
-                            Password = "user1",
-                            RegisteredAt = new DateTime(2022, 3, 30, 17, 29, 3, 605, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Block = false,
-                            Email = "User2@gmail.com",
-                            FirstName = "User2",
-                            LastName = "User2",
-                            Password = "user2",
-                            RegisteredAt = new DateTime(2022, 3, 29, 17, 29, 3, 605, DateTimeKind.Utc)
                         });
                 });
 
@@ -296,30 +219,6 @@ namespace PaymentSystemPrototype.Migrations
                             Id = 1,
                             RoleId = 2,
                             UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            RoleId = 3,
-                            UserId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            RoleId = 4,
-                            UserId = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            RoleId = 1,
-                            UserId = 4
-                        },
-                        new
-                        {
-                            Id = 5,
-                            RoleId = 1,
-                            UserId = 5
                         });
                 });
 
@@ -344,20 +243,6 @@ namespace PaymentSystemPrototype.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("verefications");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 4,
-                            LastChangeDate = new DateTime(2022, 3, 29, 14, 29, 3, 605, DateTimeKind.Utc),
-                            Status = 2
-                        },
-                        new
-                        {
-                            UserId = 5,
-                            LastChangeDate = new DateTime(2022, 3, 28, 14, 29, 3, 605, DateTimeKind.Utc),
-                            Status = 2
-                        });
                 });
 
             modelBuilder.Entity("PaymentSystemPrototype.Models.BalanceRecord", b =>

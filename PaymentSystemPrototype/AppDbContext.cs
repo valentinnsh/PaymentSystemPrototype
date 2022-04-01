@@ -81,20 +81,55 @@ public class AppDbContext : DbContext
             .IsRequired(false);
 
         modelBuilder.Entity<UserRecord>().HasData(
-        new UserRecord { Id = 1, FirstName = "Igor", LastName = "Igorev", Email = "Igor@gmail.com",
-            Password = "password", RegisteredAt = new DateTime(2022, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)});
+        new UserRecord { Id = 1, FirstName = "Admin", LastName = "Admin", Email = "Admin@gmail.com",
+            Password = "admin", RegisteredAt = new DateTime(2022, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)},
+        new UserRecord { Id = 2, FirstName = "Kyc", LastName = "Kyc", Email = "Kyc@gmail.com",
+            Password = "kyc", RegisteredAt = new DateTime(2021, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)},
+        new UserRecord { Id = 3, FirstName = "Funds", LastName = "Funds", Email = "Funds@gmail.com",
+            Password = "funds", RegisteredAt = new DateTime(2020, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)},
+        new UserRecord { Id = 4, FirstName = "User1", LastName = "User1", Email = "User1@gmail.com",
+            Password = "user1", RegisteredAt = new DateTime(2022, 3, 30, 17, 29, 3, 605, DateTimeKind.Utc)},
+        new UserRecord { Id = 5, FirstName = "User2", LastName = "User2", Email = "User2@gmail.com",
+            Password = "user2", RegisteredAt = new DateTime(2022, 3, 29, 17, 29, 3, 605, DateTimeKind.Utc)}
+        );
         
         modelBuilder.Entity<BalanceRecord>().HasData(
-            new BalanceRecord{UserId = 1, Amount = 100});
+            new BalanceRecord{UserId = 1, Amount = 100},
+            new BalanceRecord{UserId = 2, Amount = 100},
+            new BalanceRecord{UserId = 3, Amount = 100},
+            new BalanceRecord{UserId = 4, Amount = 100},
+            new BalanceRecord{UserId = 5, Amount = 100});
 
         modelBuilder.Entity<RoleRecord>().HasData(
             new RoleRecord {Id = 1, Name = "User"},
             new RoleRecord {Id = 2, Name = "Admin"},
-            new RoleRecord {Id = 3, Name = "KYC"},
-            new RoleRecord {Id = 4, Name = "Funds Manager"});
+            new RoleRecord {Id = 3, Name = "KycManager"},
+            new RoleRecord {Id = 4, Name = "FundsManager"});
         modelBuilder.Entity<UserRoleRecord>().HasData(
-            new UserRoleRecord {Id = 1, UserId = 1, RoleId = 3}
+            new UserRoleRecord {Id = 1, UserId = 1, RoleId = 2},
+            new UserRoleRecord {Id = 2, UserId = 2, RoleId = 3},
+            new UserRoleRecord {Id = 3, UserId = 3, RoleId = 4},
+            new UserRoleRecord {Id = 4, UserId = 4, RoleId = 1},
+            new UserRoleRecord {Id = 5, UserId = 5, RoleId = 1}
         );
-        
+
+        modelBuilder.Entity<VereficationRecord>().HasData(
+            new VereficationRecord {LastChangeDate = new DateTime(2022, 3, 29, 14,
+                29, 3, 605, DateTimeKind.Utc), Reviewer = null, Status = 2, UserId = 4},
+            new VereficationRecord {LastChangeDate = new DateTime(2022, 3, 28, 14,
+                29, 3, 605, DateTimeKind.Utc), Reviewer = null, Status = 2, UserId = 5}
+            );
+
+        modelBuilder.Entity<TransferRecord>().HasData(
+            new TransferRecord {
+                Id = 1, Amount = 100, CardNumber = 1234567812345678,ConfirmedAt = null,ConfirmedBy = null,
+                CreatedAt =  new DateTime(2022, 3, 28, 14,
+                    29, 3, 605, DateTimeKind.Utc),Status = 2,UserId = 4},
+            new TransferRecord {
+                Id = 2, Amount = -10, CardNumber = 8765432112345678,ConfirmedAt = null,ConfirmedBy = null,
+                CreatedAt =  new DateTime(2022, 3, 24, 11,
+                    29, 3, 605, DateTimeKind.Utc),Status = 2,UserId = 5}
+            );
+
     }
 }
