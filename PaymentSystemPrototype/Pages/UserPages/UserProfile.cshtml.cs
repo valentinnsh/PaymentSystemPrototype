@@ -35,7 +35,7 @@ public class UserProfile : PageModel
     
     public async Task<IActionResult> OnPostCreateDeposit([FromServices] IUserOperationsService userOperationsService)
     {
-        return RedirectToPage("../Auth/WelcomeRazor", new {msg ="PAGE IS IN DEVELOPMENT"});
+       return RedirectToPage("CreateDeposit");
     }
     public async Task<IActionResult> OnPostCreateWithdrawal()
     {

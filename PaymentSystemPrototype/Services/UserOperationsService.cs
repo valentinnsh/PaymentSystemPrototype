@@ -109,4 +109,7 @@ public class UserOperationsService : IUserOperationsService
 
     public List<UserRecord> GetUsers() =>
         _context.Users.ToList();
+
+    public List<UserRoleRecord> GetUserRoles() =>
+        _context.UserRoles.ToList();
 }

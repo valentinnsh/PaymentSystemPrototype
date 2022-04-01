@@ -28,4 +28,8 @@ public class UserRecord
     public BalanceRecord BalanceRecord { get; set; }
     public UserRoleRecord UserRoleRecord { get; set; }
     public VereficationRecord VereficationRecord { get; set; }
+    
+    public IEnumerable<TransferRecord> TransferRecords { get; set; }
+    
+    public IEnumerable<TransferRecord> ManagerTransferRecords{ get; set; }
 }

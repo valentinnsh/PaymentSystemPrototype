@@ -15,5 +15,6 @@ public interface IUserOperationsService
     public Roles GetUserRole(string userEmail);
     public Task<HttpStatusCode> SetRole(string userEmail, Roles newRole);
     public List<UserRecord> GetUsers();
+    public List<UserRoleRecord> GetUserRoles();
     void DeleteUser(int id);
 }

@@ -19,6 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(o =>
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IKycService, KycService>();
+builder.Services.AddScoped<ITransferOperationsService, TransferOperationsService>();
 builder.Services.AddScoped<IUserOperationsService, UserOperationsService>();
 builder.Services.AddRazorPages();
 
@@ -43,7 +44,6 @@ app.UseStaticFiles();
 app.MapRazorPages();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.Run();
 
 // Make the implicit Program class public so test projects can access it

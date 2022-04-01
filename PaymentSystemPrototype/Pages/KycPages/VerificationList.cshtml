@@ -54,31 +54,31 @@
             }
             );
     }
-    @foreach (var userVerefications in query)
+    @foreach (var userVerifications in query)
     {
         <tr>
             <td>
-                @userVerefications.FirstName
+                @userVerifications.FirstName
             </td>
             <td>
-                @userVerefications.LastName
+                @userVerifications.LastName
             </td>
             <td>
-                @userVerefications.Email
+                @userVerifications.Email
             </td>
             <td>
-                @userVerefications.RegisteredAt
+                @userVerifications.RegisteredAt
             </td>
             @{
-                VerificationStatus status = (VerificationStatus) userVerefications.Status;
+                VerificationStatus status = (VerificationStatus) userVerifications.Status;
                 <td>
                     @status
                 </td>
             }
             <td>
-                @userVerefications.LastChangeDate
+                @userVerifications.LastChangeDate
             </td>
-            @if (@userVerefications.Reviewer == null)
+            @if (@userVerifications.Reviewer == null)
             {
                 <td>
                     --
@@ -87,14 +87,14 @@
             else
             {
                 <td>
-                    @userVerefications.Reviewer
+                    @userVerifications.Reviewer
                 </td>
             }
             <td>
-                <form asp-page-handler="Review" asp-route-email="@userVerefications.Email" asp-route-status="1" method="post">
+                <form asp-page-handler="Review" asp-route-email="@userVerifications.Email" asp-route-status="1" method="post">
                     <button class="btn btn-default">Accept</button>
                 </form>
-                <form asp-page-handler="Review" asp-route-email="@userVerefications.Email" asp-route-status="0" method="post">
+                <form asp-page-handler="Review" asp-route-email="@userVerifications.Email" asp-route-status="0" method="post">
                     <button class="btn btn-default">Reject</button>
                 </form>
             </td>

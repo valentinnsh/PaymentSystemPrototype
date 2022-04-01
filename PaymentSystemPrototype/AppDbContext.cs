@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<RoleRecord> Roles { get; set; }
     public DbSet<UserRoleRecord> UserRoles { get; set; }
     public DbSet<VereficationRecord> Verefications { get; set; }
+    public DbSet<TransferRecord> Transfers { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -43,23 +44,11 @@ public class AppDbContext : DbContext
             .HasOne(u => u.UserRoleRecord)
             .WithOne(b => b.UserRecord)
             .HasForeignKey<UserRoleRecord>(b => b.UserId);
-
-        // modelBuilder.Entity<RoleRecord>()
-        //     .HasMany(r => r.UserRoleRecord)
-        //     .WithOne(ur => ur.RoleRecord)
-        //     .HasForeignKey(ur => ur.RoleId);
+        
         modelBuilder.Entity<UserRoleRecord>()
             .HasOne(r => r.RoleRecord)
             .WithMany(ur => ur.UserRoleRecord)
             .HasForeignKey(fk=> fk.RoleId);
-        // modelBuilder.Entity<RoleRecord>()
-        //     .HasMany(x => x.UserRoleRecord)
-        //     .WithOne(x => x.RoleRecord)
-        //     .HasForeignKey(f => f.RoleId);
-        // modelBuilder.Entity<RoleRecord>()
-        //     .HasMany(u => u.UserRoleRecord)
-        //     .WithOne(b => b.RoleRecord)
-        //     .HasForeignKey(k=>k.RoleId);
 
         modelBuilder.Entity<VereficationRecord>().Property(x => x.UserId);
         modelBuilder.Entity<VereficationRecord>().Property(x => x.Status);
@@ -70,11 +59,30 @@ public class AppDbContext : DbContext
             .HasOne(u => u.VereficationRecord)
             .WithOne(b => b.UserRecord)
             .HasForeignKey<VereficationRecord>(b => b.UserId);
+
+        modelBuilder.Entity<TransferRecord>().Property(x => x.Id);
+        modelBuilder.Entity<TransferRecord>().Property(x => x.Amount);
+        modelBuilder.Entity<TransferRecord>().Property(x => x.CardNumber);
+        modelBuilder.Entity<TransferRecord>().Property(x => x.ConfirmedAt);
+        modelBuilder.Entity<TransferRecord>().Property(x => x.ConfirmedBy);
+        modelBuilder.Entity<TransferRecord>().Property(x => x.CreatedAt);
+        modelBuilder.Entity<TransferRecord>().Property(x => x.UserId);
         
+        modelBuilder.Entity<TransferRecord>()
+            .HasOne(t => t.UserRecord)
+            .WithMany(u => u.TransferRecords)
+            .HasForeignKey(t=> t.UserId);
+        
+        modelBuilder.Entity<TransferRecord>()
+            .HasOne(u => u.FundsUserRecord)
+            .WithMany(t => t.ManagerTransferRecords)
+            .HasForeignKey(t => t.ConfirmedBy)
+            .IsRequired(false);
+
         modelBuilder.Entity<UserRecord>().HasData(
         new UserRecord { Id = 1, FirstName = "Igor", LastName = "Igorev", Email = "Igor@gmail.com",
-            Password = "password", RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)});
-
+            Password = "password", RegisteredAt = new DateTime(2022, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)});
+        
         modelBuilder.Entity<BalanceRecord>().HasData(
             new BalanceRecord{UserId = 1, Amount = 100});
 

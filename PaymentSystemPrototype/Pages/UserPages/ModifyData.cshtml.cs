@@ -8,7 +8,7 @@ namespace PaymentSystemPrototype.Pages.UserPages;
 
 public class ModifyData : PageModel
 {
-    public void OnGet(string previousEmail)
+    public void OnGet()
     {
     }
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] 

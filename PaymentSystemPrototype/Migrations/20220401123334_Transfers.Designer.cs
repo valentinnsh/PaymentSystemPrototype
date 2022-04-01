@@ -12,8 +12,8 @@ using PaymentSystemPrototype;
 namespace PaymentSystemPrototype.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220331183955_Apply_Role_id_index_fix")]
-    partial class Apply_Role_id_index_fix
+    [Migration("20220401123334_Transfers")]
+    partial class Transfers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,6 +87,48 @@ namespace PaymentSystemPrototype.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PaymentSystemPrototype.Models.TransferRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("integer")
+                        .HasColumnName("amount");
+
+                    b.Property<long>("CardNumber")
+                        .HasColumnType("bigint")
+                        .HasColumnName("card_number");
+
+                    b.Property<DateTime?>("ConfirmedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("confirmed_at");
+
+                    b.Property<int?>("ConfirmedBy")
+                        .HasColumnType("integer")
+                        .HasColumnName("confirmed_by");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConfirmedBy");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("fund_transfers");
+                });
+
             modelBuilder.Entity("PaymentSystemPrototype.Models.UserRecord", b =>
                 {
                     b.Property<int>("Id")
@@ -132,7 +174,7 @@ namespace PaymentSystemPrototype.Migrations
                             FirstName = "Igor",
                             LastName = "Igorev",
                             Password = "password",
-                            RegisteredAt = new DateTime(2022, 3, 31, 18, 39, 55, 560, DateTimeKind.Utc).AddTicks(799)
+                            RegisteredAt = new DateTime(2022, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)
                         });
                 });
 
@@ -205,6 +247,23 @@ namespace PaymentSystemPrototype.Migrations
                     b.Navigation("UserRecord");
                 });
 
+            modelBuilder.Entity("PaymentSystemPrototype.Models.TransferRecord", b =>
+                {
+                    b.HasOne("PaymentSystemPrototype.Models.UserRecord", "FundsUserRecord")
+                        .WithMany("ManagerTransferRecords")
+                        .HasForeignKey("ConfirmedBy");
+
+                    b.HasOne("PaymentSystemPrototype.Models.UserRecord", "UserRecord")
+                        .WithMany("TransferRecords")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FundsUserRecord");
+
+                    b.Navigation("UserRecord");
+                });
+
             modelBuilder.Entity("PaymentSystemPrototype.Models.UserRoleRecord", b =>
                 {
                     b.HasOne("PaymentSystemPrototype.Models.RoleRecord", "RoleRecord")
@@ -244,6 +303,10 @@ namespace PaymentSystemPrototype.Migrations
                 {
                     b.Navigation("BalanceRecord")
                         .IsRequired();
+
+                    b.Navigation("ManagerTransferRecords");
+
+                    b.Navigation("TransferRecords");
 
                     b.Navigation("UserRoleRecord")
                         .IsRequired();

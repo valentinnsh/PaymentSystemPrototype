@@ -26,10 +26,12 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var user in Model.ListUsers) {
+    
+    @foreach (var user in Model.ListUsers)
+    {
         <tr>
             <td>
-               @user.FirstName
+                @user.FirstName
             </td>
             <td>
                 @user.LastName
