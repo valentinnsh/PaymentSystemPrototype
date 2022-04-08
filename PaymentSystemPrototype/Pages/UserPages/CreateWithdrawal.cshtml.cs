@@ -18,12 +18,11 @@ public class CreateWithdrawal : PageModel
         [FromServices] ITransferOperationsService transferOperationsService, [FromForm] TransferData transferData)
     {
         transferData.Amount *= -1;
-        var result = transferOperationsService.CreateTransferRequest(transferData, User.Identity.Name).Result;
+        var result = transferOperationsService.CreateTransferRequestAsync(transferData, User.Identity.Name).Result;
         return result switch
         {
-            HttpStatusCode.OK => RedirectToPage("/UserPages/UserProfile"),
-            HttpStatusCode.Forbidden => RedirectToPage("CreateWithdrawal", new {msg = "Balance is too low"}),
-            _ => RedirectToPage("CreateDeposit", new {msg = "Unknown Error, try again"})
+            true => RedirectToPage("/UserPages/UserProfile"),
+            false => RedirectToPage("CreateWithdrawal", new {msg = "Balance is too low"})
         };
     }
 }

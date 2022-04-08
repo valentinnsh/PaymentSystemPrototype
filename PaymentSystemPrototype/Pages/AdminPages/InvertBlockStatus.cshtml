@@ -5,7 +5,8 @@
     Layout = "_Layout";
 }
 
-<h2>Are you shure you want to @Model.UserEmail?</h2>
+@*IncomingMessage is a string that contains "block"(or "unblock") word + email for the person under this action*@
+<h2>Are you shure you want to @Model.IncomingMessage?</h2>
 <form method="post">
     <button class="button" asp-route-userId="@Model.UserId">Yes</button>
 </form>

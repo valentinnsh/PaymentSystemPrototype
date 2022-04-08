@@ -18,10 +18,10 @@ public class CreateDeposit : PageModel
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService,
         [FromServices] ITransferOperationsService transferOperationsService, [FromForm] TransferData transferData)
     {
-        var result = transferOperationsService.CreateTransferRequest(transferData, User.Identity.Name).Result;
+        var result = transferOperationsService.CreateTransferRequestAsync(transferData, User.Identity.Name).Result;
         return result switch
         {
-            HttpStatusCode.OK => RedirectToPage("/UserPages/UserProfile"),
+            true => RedirectToPage("/UserPages/UserProfile"),
             _ => RedirectToPage("CreateDeposit", new {msg = "Unknown Error, try again"})
         };
     }

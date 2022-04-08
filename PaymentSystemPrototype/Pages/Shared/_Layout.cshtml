@@ -16,10 +16,10 @@
                     @if (Context.User.Identity!.IsAuthenticated)
                     {
                         var userRole = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
+                        <li><a asp-page="/UserPages/UserProfile">Profile</a></li>
                         switch (userRole)
                         {
                             case "User":
-                                <li><a asp-page="/UserPages/UserProfile">Profile</a></li>
                                 <li><a asp-page="/UserPages/TransferList">Transfers</a></li>
                                 break;
                             case "Admin":

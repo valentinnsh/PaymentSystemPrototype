@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PaymentSystemPrototype.Exceptions;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
@@ -19,11 +21,11 @@ public class ModifyData : PageModel
         SignUpData newData)
     {
         
-        var result = await userOperationsService.ModifyUser(newData, PreviousEmail);
-        if (result is HttpStatusCode.OK)
+        var result = await userOperationsService.ModifyUserAsync(newData, PreviousEmail);
+        return result switch
         {
-            return RedirectToPage("UserList");
-        }
-        return RedirectToPage("../Auth/WelcomeRazor", new {msg = $"Error: {(int)result}"});
+            true => RedirectToPage("UserList"),
+            false => throw new UserNotFoundException()
+        };
     }
 }

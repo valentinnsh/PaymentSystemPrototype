@@ -17,7 +17,9 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+        
+        modelBuilder.Entity<UserRecord>().Property(it => it.Email).
+            HasConversion(v => v.ToLowerInvariant(), v => v);
         modelBuilder.Entity<UserRecord>()
             .HasOne(u => u.BalanceRecord)
             .WithOne(b => b.UserRecord)
@@ -50,15 +52,15 @@ public class AppDbContext : DbContext
             .IsRequired(false);
 
         modelBuilder.Entity<UserRecord>().HasData(
-        new UserRecord { Id = 1, FirstName = "Admin", LastName = "Admin", Email = "Admin@gmail.com",
+        new UserRecord { Id = 1, FirstName = "Admin", LastName = "Admin", Email = "admin@gmail.com",
             Password = "admin", RegisteredAt = new DateTime(2022, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)},
-        new UserRecord { Id = 2, FirstName = "Kyc", LastName = "Kyc", Email = "Kyc@gmail.com",
+        new UserRecord { Id = 2, FirstName = "Kyc", LastName = "Kyc", Email = "kyc@gmail.com",
             Password = "kyc", RegisteredAt = new DateTime(2021, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)},
-        new UserRecord { Id = 3, FirstName = "Funds", LastName = "Funds", Email = "Funds@gmail.com",
+        new UserRecord { Id = 3, FirstName = "Funds", LastName = "Funds", Email = "funds@gmail.com",
             Password = "funds", RegisteredAt = new DateTime(2020, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)},
-        new UserRecord { Id = 4, FirstName = "User1", LastName = "User1", Email = "User1@gmail.com",
+        new UserRecord { Id = 4, FirstName = "User1", LastName = "User1", Email = "user1@gmail.com",
             Password = "user1", RegisteredAt = new DateTime(2022, 3, 30, 17, 29, 3, 605, DateTimeKind.Utc)},
-        new UserRecord { Id = 5, FirstName = "User2", LastName = "User2", Email = "User2@gmail.com",
+        new UserRecord { Id = 5, FirstName = "User2", LastName = "User2", Email = "user2@gmail.com",
             Password = "user2", RegisteredAt = new DateTime(2022, 3, 29, 17, 29, 3, 605, DateTimeKind.Utc)}
         );
         

@@ -16,19 +16,19 @@ public class AuthService : IAuthService
         _userOperationsService = userOperationsService;
     }
     
-    public async Task<HttpStatusCode> LogInAsync(string userEmail, string userPassword, HttpContext httpContext)
+    public async Task<bool> LogInAsync(string userEmail, string userPassword, HttpContext httpContext)
     {
-        if (_userOperationsService.FindByEmail(userEmail) == null)
+        if (await _userOperationsService.FindByEmailAsync(userEmail) == null)
         {
-            return HttpStatusCode.NotFound;
+            throw new Exception();
         }
-        var account = await _userOperationsService.CheckLoginInfo(userEmail, userPassword);
+        var account = await _userOperationsService.CheckLoginInfoAsync(userEmail, userPassword);
         if (account != null)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, account.Email),
-                new Claim(ClaimTypes.Role, _userOperationsService.GetUserRoleAsString(account.Email))
+                new(ClaimTypes.Name, account.Email),
+                new(ClaimTypes.Role, _userOperationsService.GetUserRoleAsString(account.Email))
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, "ApplicationCookie",
@@ -37,22 +37,22 @@ public class AuthService : IAuthService
             await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
                 new ClaimsPrincipal(claimsIdentity));
                 
-            return HttpStatusCode.OK;
+            return true;
         }
-        return HttpStatusCode.Forbidden;
+        return false;
     }
 
-    public Task LogOutAsync(HttpContext httpContext)
+    public async Task LogOutAsync(HttpContext httpContext)
     {
-        return httpContext.SignOutAsync();
+        await httpContext.SignOutAsync();
     }
 
-    public async Task<HttpStatusCode> SignUpAsync(SignUpData signUpData)
+    public async Task<bool> SignUpAsync(SignUpData signUpData)
     {
         // Check if email is already in use
-        if (_userOperationsService.FindByEmail(signUpData.Email) != null)
+        if (await _userOperationsService.FindByEmailAsync(signUpData.Email) != null)
         {
-            return HttpStatusCode.Conflict;
+            return false;
         }
 
         var newUser = new UserRecord
@@ -64,6 +64,7 @@ public class AuthService : IAuthService
             RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
         };
         await _userOperationsService.AddUserAsync(newUser);
-        return HttpStatusCode.OK;
+        return true;
     }
+    
 }

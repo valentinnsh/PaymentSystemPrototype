@@ -11,10 +11,10 @@ public class UserProfile : PageModel
     public UserRecord? PresentedUser = new UserRecord();
     public BalanceRecord? UserBalance = new BalanceRecord();
     public Roles UserRole;
-    public void OnGet([FromServices] IUserOperationsService userOperationsService)
+    public async Task OnGet([FromServices] IUserOperationsService userOperationsService)
     {
-        PresentedUser = userOperationsService.FindByEmail(User.Identity.Name);
-        UserBalance = userOperationsService.GetUserBalance(User.Identity.Name);
+        PresentedUser = await userOperationsService.FindByEmailAsync(User.Identity.Name);
+        UserBalance = await userOperationsService.GetUserBalanceAsync(User.Identity.Name);
         UserRole = userOperationsService.GetUserRole(User.Identity.Name);
     }
     
@@ -24,7 +24,7 @@ public class UserProfile : PageModel
     }
     public async Task<IActionResult> OnPostRequestKYCVerification([FromServices] IKycService kycService)
     {
-        await kycService.CreateVerificationRequest(User.Identity.Name);
+        await kycService.CreateVerificationRequestAsync(User.Identity.Name);
         return RedirectToPage("UserProfile");
     }
     

@@ -8,8 +8,8 @@ namespace PaymentSystemPrototype.Pages.KycPages;
 
 public class VerificationList : PageModel
 {
-    public List<UserRecord> ListUsers;
-    public List<VereficationRecord> ListVerrifivcations;
+    public IList<UserRecord> ListUsers;
+    public IList<VereficationRecord> ListVerrifivcations;
     public void OnGet([FromServices] IUserOperationsService userOperationsService, [FromServices] IKycService kycService)
     {
         ListUsers = userOperationsService.GetUsers();
@@ -18,8 +18,7 @@ public class VerificationList : PageModel
 
     public async Task<IActionResult> OnPostReview([FromServices] IKycService kycService, string email, int status)
     {
-        //return RedirectToPage("../Auth/WelcomeRazor", new {msg =$"{status}"});
-        await kycService.UpdateRequestStatus(email, User.Identity.Name, status);
+        await kycService.UpdateRequestStatusAsync(email, User.Identity.Name, status);
         return RedirectToPage("VerificationList");
     }
 }

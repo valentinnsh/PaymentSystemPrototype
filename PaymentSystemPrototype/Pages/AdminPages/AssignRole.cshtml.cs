@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PaymentSystemPrototype.Exceptions;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
@@ -18,11 +19,11 @@ public class AssignRole : PageModel
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] int assignedRole)
     {
         
-        var result = await userOperationsService.SetRole(UserEmail, (Roles)assignedRole-1);
-        if (result is HttpStatusCode.OK)
+        var result = await userOperationsService.SetRoleAsync(UserEmail, (Roles)assignedRole-1);
+        return result switch
         {
-            return RedirectToPage("UserList");
-        }
-        return RedirectToPage("../Auth/WelcomeRazor", new {msg = $"Error: {(int)result + UserEmail}"});
+            true => RedirectToPage("UserList"),
+            false => throw new UserNotFoundException()
+        };
     }
 }

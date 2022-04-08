@@ -1,11 +1,13 @@
 using System.Data.Entity;
 using System.Net;
+using PaymentSystemPrototype.Exceptions;
 using PaymentSystemPrototype.Models;
 
 namespace PaymentSystemPrototype.Services;
 
 public class TransferOperationsService : ITransferOperationsService
 {
+    private readonly object _balanceLock = new();
     private readonly IUserOperationsService _userOperationsService;
     private readonly AppDbContext _context;
     public TransferOperationsService(AppDbContext context, IUserOperationsService userOperationsService)
@@ -14,17 +16,19 @@ public class TransferOperationsService : ITransferOperationsService
         _userOperationsService = userOperationsService;
     }
 
-    public async Task<HttpStatusCode> CreateTransferRequest(TransferData data, string userEmail)
+    public async Task<bool> CreateTransferRequestAsync(TransferData data, string userEmail)
     {
-        var user = _userOperationsService.FindByEmail(userEmail);
-        var balance = _userOperationsService.GetUserBalance(userEmail);
-        if (user != null)
+        var user = await _userOperationsService.FindByEmailAsync(userEmail);
+        var balance = await _userOperationsService.GetUserBalanceAsync(userEmail);
+        if (user == null || balance == null) throw new UserNotFoundException();
+        lock (_balanceLock)
         {
             if (balance.Amount + data.Amount < 0)
             {
-                return HttpStatusCode.Forbidden;
+                return false;
             }
-            await _context.Transfers.AddAsync(
+
+            _context.Transfers.Add(
                 new TransferRecord()
                 {
                     UserId = user.Id,
@@ -35,20 +39,19 @@ public class TransferOperationsService : ITransferOperationsService
                     Amount = data.Amount,
                     Status = (int) ReviewStatus.InReview
                 });
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
+            return true;
         }
-
-        return HttpStatusCode.OK;
     }
 
-    public List<TransferRecord> GetTransfers() =>
+    public IList<TransferRecord> GetTransfers() =>
         _context.Transfers.ToList();
 
-    public List<TransferRecord> GetTransfersUnreviewedFirst() =>
+    public IList<TransferRecord> GetTransfersUnreviewedFirst() =>
         _context.Transfers.ToList().OrderByDescending(t=>t.Status).ToList();
-    public List<TransferRecord> GetTransfersForUser(string userEmail)
+    public IList<TransferRecord> GetTransfersForUser(string userEmail)
     {
-        var user = _userOperationsService.FindByEmail(userEmail);
+        var user =  _userOperationsService.FindByEmail(userEmail);
         if (user != null)
         {
             return _context.Transfers.Where(t => t.UserId == user.Id).ToList();
@@ -56,20 +59,20 @@ public class TransferOperationsService : ITransferOperationsService
         return new List<TransferRecord>();
     }
 
-    public async Task<HttpStatusCode> CancelTransfer(int transferId)
+    public async Task<bool> CancelTransferAsync(int transferId)
     {
         var result = await _context.Transfers.FindAsync(transferId);
         if (result != null)
         {
             _context.Transfers.Remove(result);
             await _context.SaveChangesAsync();
-            return HttpStatusCode.OK;
+            return true;
         }
 
-        return HttpStatusCode.NotFound;
+        return false;
     }
 
-    public async Task<HttpStatusCode> SetStatus(ReviewStatus status, string reviewerEmail, int transferId)
+    public async Task<bool> SetStatusAsync(ReviewStatus status, string reviewerEmail, int transferId)
     {
         var transfer = await _context.Transfers.FindAsync(transferId);
         if (transfer != null)
@@ -77,29 +80,36 @@ public class TransferOperationsService : ITransferOperationsService
             if (status == ReviewStatus.Accepted)
             {
                 var user = _context.Users.FirstOrDefault(u => u.Id == transfer.UserId);
-                var balance = _context.Balances.FirstOrDefault(b => user != null && b.UserId == user.Id);
-                if (balance!.Amount + transfer.Amount > 0 )
+                var balance = _context.Balances.FirstOrDefault(b => b.UserId == user.Id);
+                if (user == null || balance == null) throw new UserNotFoundException();
+                lock (balance)
                 {
-                
-                    balance.Amount += transfer.Amount;
-                    transfer.Status = (int) status;
-                    transfer.ConfirmedAt = DateTime.UtcNow;
-                    transfer.ConfirmedBy = _userOperationsService.FindByEmail(reviewerEmail)?.Id;
-                    await _context.SaveChangesAsync();
-                    return HttpStatusCode.OK;
+                    if (balance.Amount + transfer.Amount > 0)
+                    {
+
+                        balance.Amount += transfer.Amount;
+                        transfer.Status = (int) status;
+                        transfer.ConfirmedAt = DateTime.UtcNow;
+                        transfer.ConfirmedBy = _userOperationsService.FindByEmail(reviewerEmail)?.Id;
+                        _context.SaveChanges();
+                        return true;
+                    }
                 }
             }
             else
             {
-                return HttpStatusCode.Forbidden;
+                return false;
             }
+            
+            // If review status is Accepted, but balance is too low -> reject automatically
+            
             transfer.Status = (int) ReviewStatus.Rejected;
             transfer.ConfirmedAt = DateTime.UtcNow;
-            transfer.ConfirmedBy = _userOperationsService.FindByEmail(reviewerEmail)?.Id;
+            transfer.ConfirmedBy = (await _userOperationsService.FindByEmailAsync(reviewerEmail))?.Id;
             await _context.SaveChangesAsync();
-            return HttpStatusCode.Forbidden;
+            return false;
         }
 
-        return HttpStatusCode.NotFound;
+        throw new TransferNotFoundException();
     }
 }

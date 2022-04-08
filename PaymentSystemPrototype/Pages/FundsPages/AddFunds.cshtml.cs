@@ -13,15 +13,14 @@ public class AddFunds : PageModel
         Message = msg;
     }
 
-    public async Task<IActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, string userEmail,
+    public Task<IActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, string userEmail,
         int amountAdded)
     {
-        var result = userOperationsService.AddFunds(userEmail, amountAdded).Result;
-        return result switch
+        var result = userOperationsService.AddFundsAsync(userEmail, amountAdded).Result;
+        return Task.FromResult<IActionResult>(result switch
         {
-            HttpStatusCode.OK => RedirectToPage("AddFunds", new {msg = $"Done {userEmail} {amountAdded}"}),
-            HttpStatusCode.NotFound => RedirectToPage("AddFunds", new {msg = "UserNotFound"}),
-            _ => RedirectToPage("AddFunds", new {msg = "Unknown error"})
-        };
+            true => RedirectToPage("AddFunds", new {msg = $"Done adding {amountAdded} to {userEmail}"}),
+            false => RedirectToPage("AddFunds", new {msg = "User was not found"})
+        });
     }
 }

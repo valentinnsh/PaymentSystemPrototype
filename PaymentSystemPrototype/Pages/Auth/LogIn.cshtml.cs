@@ -2,6 +2,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.VisualBasic;
+using PaymentSystemPrototype.Exceptions;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
@@ -20,22 +21,25 @@ public class LogIn : PageModel
     public async Task<ActionResult> OnPost([FromServices] IAuthService authService, 
         [FromServices] IUserOperationsService userOperationsService, [FromForm] LogInData loginContent)
     {
-        if(userOperationsService.IsUserBlocked(loginContent.Email))
+        bool loginResult = false;
+        try
         {
-            return RedirectToPage("LogIn",
+            if(userOperationsService.IsUserBlocked(loginContent.Email))
+            {
+                return RedirectToPage("LogIn",
                 new {msg = "You are blocked by Administrator"});
+            }
+            loginResult = await authService.LogInAsync(loginContent.Email, loginContent.Password, HttpContext);
         }
-        var loginResult = await authService.LogInAsync(loginContent.Email, loginContent.Password, HttpContext);
-        
+        catch (UserNotFoundException)
+        {
+            return RedirectToPage("LogIn", new {msg = "Email not found. Consider Signing Up first."});
+        }
         return loginResult switch
         {
-            HttpStatusCode.OK => RedirectToPage("../UserPages/UserProfile", loginContent),
-            HttpStatusCode.NotFound => RedirectToPage("LogIn",
-                new {msg = "Email not found. Consider Signing Up first."}),
-            HttpStatusCode.Forbidden => RedirectToPage("LogIn",
+            true => RedirectToPage("../UserPages/UserProfile", loginContent),
+            false => RedirectToPage("LogIn",
                 new {msg = "Wrong Password"}),
-            _ => RedirectToPage("LogIn",
-                new {msg = "Unknown Error, please try again."})
         };
     }
 }

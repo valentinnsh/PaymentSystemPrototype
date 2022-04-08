@@ -6,19 +6,20 @@ namespace PaymentSystemPrototype.Services;
 public interface IUserOperationsService
 {
     UserRecord? FindByEmail(string userEmail);
-    public Task<UserRecord?> CheckLoginInfo(string userEmail, string userPassword);
+    public Task<UserRecord?> FindByEmailAsync(string userEmail);
+    public Task<UserRecord?> CheckLoginInfoAsync(string userEmail, string userPassword);
     Task AddUserAsync(UserRecord user);
-    public Task<HttpStatusCode> ModifyUser(SignUpData user, string previousEmail);
-    public BalanceRecord? GetUserBalance(string userEmail);
-    public Task<HttpStatusCode> AddFunds(string userEmail, int amount);
+    public Task<bool> ModifyUserAsync(SignUpData user, string previousEmail);
+    public Task<BalanceRecord?> GetUserBalanceAsync(string userEmail);
+    public Task<bool> AddFundsAsync(string userEmail, int amount);
     public string? GetUserRoleAsString(string userEmail);
     public Roles GetUserRole(string userEmail);
-    public Task<HttpStatusCode> SetRole(string userEmail, Roles newRole);
-    public List<UserRecord> GetUsers();
-    public List<UserRoleRecord> GetUserRoles();
-    public List<RoleRecord> GetRoles();
-    public List<BalanceRecord> GetBalances();
+    public Task<bool> SetRoleAsync(string userEmail, Roles newRole);
+    public IList<UserRecord> GetUsers();
+    public IList<UserRoleRecord> GetUserRoles();
+    public IList<RoleRecord> GetRoles();
+    public IList<BalanceRecord> GetBalances();
     public bool IsUserBlocked(string userEmail);
-    public Task<HttpStatusCode> RevertBlockStatus(int userId);
-    void DeleteUser(int id);
+    public Task<bool> RevertBlockStatusAsync(int userId);
+    Task DeleteUserAsync(int id);
 }

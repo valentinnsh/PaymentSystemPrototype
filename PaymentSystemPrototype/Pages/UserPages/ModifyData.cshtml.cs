@@ -14,11 +14,11 @@ public class ModifyData : PageModel
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] 
         SignUpData newData)
     {
-        var result = await userOperationsService.ModifyUser(newData, User.Identity.Name);
-        if (result is HttpStatusCode.OK)
+        var result = await userOperationsService.ModifyUserAsync(newData, User.Identity.Name);
+        return result switch
         {
-            return RedirectToPage("../Auth/LogIn");
-        }
-        return RedirectToPage("../Auth/WelcomeRazor", new {msg = $"{(int)result}"});
+            true => RedirectToPage("../Auth/LogIn"),
+            false => RedirectToPage("../Auth/WelcomeRazor", new {msg = $"{result}"})
+        };
     }
 }

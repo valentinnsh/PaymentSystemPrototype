@@ -8,9 +8,9 @@ namespace PaymentSystemPrototype.Pages.Profiles;
 
 public class UserList : PageModel
 {
-    public List<UserRecord> ListUsers = new List<UserRecord>();
-    public List<RoleRecord> ListRoles = new List<RoleRecord>();
-    public List<UserRoleRecord> ListUserRoles = new List<UserRoleRecord>();
+    public IList<UserRecord> ListUsers = new List<UserRecord>();
+    public IList<RoleRecord> ListRoles = new List<RoleRecord>();
+    public IList<UserRoleRecord> ListUserRoles = new List<UserRoleRecord>();
     public void OnGet([FromServices] IUserOperationsService userOperationsService)
     {
         ListUsers = userOperationsService.GetUsers();

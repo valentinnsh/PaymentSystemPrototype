@@ -21,9 +21,8 @@ public class SignUp : PageModel
         var result = await authService.SignUpAsync(signUpData);
         return result switch
         {
-            HttpStatusCode.OK => RedirectToPage("LogIn"),
-            HttpStatusCode.Conflict => RedirectToPage("SignUp", new {msg = "Email is already in use."}),
-            _ => RedirectToPage("SignUp", new {msg = "Unknown error. Please try again."})
+            true => RedirectToPage("LogIn"),
+            false => RedirectToPage("SignUp", new {msg = "Email is already in use."})
         };
     }
 }
