@@ -1,12 +1,13 @@
 using System.Diagnostics;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.UserPages;
-
+[Authorize(Roles = "User")]
 public class CreateDeposit : PageModel
 {
     public string Message = "";

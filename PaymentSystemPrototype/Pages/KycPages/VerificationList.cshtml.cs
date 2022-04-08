@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.KycPages;
-
+[Authorize(Roles = "KycManager, Admin")]
 public class VerificationList : PageModel
 {
     public IList<UserRecord> ListUsers;

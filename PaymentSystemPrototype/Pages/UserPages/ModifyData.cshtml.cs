@@ -8,8 +8,10 @@ namespace PaymentSystemPrototype.Pages.UserPages;
 
 public class ModifyData : PageModel
 {
-    public void OnGet()
+    public UserRecord PresentedUser;
+    public void OnGet([FromServices] IUserOperationsService userOperationsService)
     {
+        PresentedUser = userOperationsService.FindByEmail(User.Identity.Name);
     }
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] 
         SignUpData newData)

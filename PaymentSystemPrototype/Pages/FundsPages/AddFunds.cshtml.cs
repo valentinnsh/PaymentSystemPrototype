@@ -1,10 +1,12 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.FundsPages;
 
+[Authorize(Roles = "FundsManager")]
 public class AddFunds : PageModel
 {
     public string Message = "";

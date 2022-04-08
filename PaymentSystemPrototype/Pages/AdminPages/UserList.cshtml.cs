@@ -1,11 +1,12 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.Profiles;
-
+[Authorize(Roles = "Admin")]
 public class UserList : PageModel
 {
     public IList<UserRecord> ListUsers = new List<UserRecord>();
