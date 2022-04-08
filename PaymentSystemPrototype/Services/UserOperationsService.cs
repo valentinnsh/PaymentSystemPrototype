@@ -14,12 +14,14 @@ public class UserOperationsService : IUserOperationsService
 
     public async Task AddUserAsync(UserRecord user)
     {
-        var newUserBalance = new BalanceRecord();
-        newUserBalance.Amount = 0;
-        newUserBalance.UserId = user.Id;
-        newUserBalance.UserRecord = user;
         await _context.AddAsync(user);
-        await _context.AddAsync(newUserBalance);
+        await _context.SaveChangesAsync();
+        await _context.AddAsync(new BalanceRecord
+        {
+            Amount = 0,
+            UserId = user.Id,
+            UserRecord = user
+        });
         await _context.AddAsync(new UserRoleRecord
         {
             UserId = user.Id,
