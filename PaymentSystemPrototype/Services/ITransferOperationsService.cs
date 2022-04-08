@@ -5,7 +5,7 @@ namespace PaymentSystemPrototype.Services;
 
 public interface ITransferOperationsService
 {
-    public Task<bool> CreateTransferRequestAsync(TransferData data, string userEmail);
+    public Task<bool> CreateTransferRequestAsync(WithdrawalData data, string userEmail);
     public IList<TransferRecord> GetTransfersForUser(string userEmail);
     public IList<TransferRecord> GetTransfers();
     public Task<bool> CancelTransferAsync(int transferId);

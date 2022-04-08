@@ -16,7 +16,7 @@ public class TransferOperationsService : ITransferOperationsService
         _userOperationsService = userOperationsService;
     }
 
-    public async Task<bool> CreateTransferRequestAsync(TransferData data, string userEmail)
+    public async Task<bool> CreateTransferRequestAsync(WithdrawalData data, string userEmail)
     {
         var user = await _userOperationsService.FindByEmailAsync(userEmail);
         var balance = await _userOperationsService.GetUserBalanceAsync(userEmail);

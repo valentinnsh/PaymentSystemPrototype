@@ -7,11 +7,11 @@
 <h2>Enter Card Data and deposit amount:</h2>
 
 <form method="post">
-    <label for="CardNumber">Card Number</label> <br/>
-    <input name="CardNumber" type="text"/><br/>
-    <label for="Amount" type="text">Amount</label> <br/>
-    <input name = "Amount" type = "text"/><br/>
-    <input type="submit" value="Apply Changes"/><br/>
+    <label>Card Number</label> <br/>
+        <input type = "number" asp-for="@Model.WithdrawalData.CardNumber"/> <span asp-validation-for="@Model.WithdrawalData.CardNumber" class="error"></span><br/>
+        <label>Amount</label> <br/>
+        <input type = "number" step="any" asp-for="@Model.WithdrawalData.Amount"/> <span asp-validation-for="@Model.WithdrawalData.Amount" class="error"></span><br/>
+        <input type="submit" value="Apply Changes"/><br/>
 </form>
 
 <h2>@Model.Message</h2>

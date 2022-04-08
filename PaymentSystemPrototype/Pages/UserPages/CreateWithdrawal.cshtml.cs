@@ -10,6 +10,8 @@ namespace PaymentSystemPrototype.Pages.UserPages;
 [Authorize(Roles = "User")]
 public class CreateWithdrawal : PageModel
 {
+    [BindProperty]
+    public WithdrawalData? WithdrawalData { get; set; }
     public string Message = "";
     public void OnGet(string msg)
     {
@@ -17,10 +19,14 @@ public class CreateWithdrawal : PageModel
     }
 
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService,
-        [FromServices] ITransferOperationsService transferOperationsService, [FromForm] TransferData transferData)
+        [FromServices] ITransferOperationsService transferOperationsService, [FromForm] WithdrawalData withdrawalData)
     {
-        transferData.Amount *= -1;
-        var result = transferOperationsService.CreateTransferRequestAsync(transferData, User.Identity.Name).Result;
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
+        withdrawalData.Amount *= -1;
+        var result = transferOperationsService.CreateTransferRequestAsync(withdrawalData, User.Identity.Name).Result;
         return result switch
         {
             true => RedirectToPage("/UserPages/UserProfile"),

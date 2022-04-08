@@ -11,6 +11,9 @@ namespace PaymentSystemPrototype.Pages.Auth;
 [IgnoreAntiforgeryToken]
 public class LogIn : PageModel
 {
+    [BindProperty]
+    public LogInData loginContent { get; set; }
+    
     public string Message = "";
     public async Task<PageResult> OnGet(string msg)
     {
@@ -21,7 +24,11 @@ public class LogIn : PageModel
     public async Task<ActionResult> OnPost([FromServices] IAuthService authService, 
         [FromServices] IUserOperationsService userOperationsService, [FromForm] LogInData loginContent)
     {
-        bool loginResult = false;
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
+        bool loginResult;
         try
         {
             if(userOperationsService.IsUserBlocked(loginContent.Email))
