@@ -5,24 +5,15 @@ services:
     image: postgres:latest
     restart: always
     ports:
-      - "5431:5431"
-    networks:
-      pg_net:
-        ipv4_address: 172.28.0.2
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=pgtest
       - POSTGRES_DB=pgtest
       - POSTGRES_PASSWORD=pgtest
-      - DB_CONNECTION_STRING="host=192.168.112.2;port=5432;database=pgtest;username=pgtest;password=pgtest"
+      - DB_CONNECTION_STRING="host=localhost;port=5432;database=pgtest;username=pgtest;password=pgtest"
 volumes:
   pgdata:
 
-networks:
-  pg_net:
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.28.0.2/24
         

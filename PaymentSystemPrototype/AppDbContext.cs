@@ -17,30 +17,12 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
-        modelBuilder.Entity<UserRecord>().Property(x => x.Id).ValueGeneratedOnAdd();
-        modelBuilder.Entity<UserRecord>().Property(x => x.Email);
-        modelBuilder.Entity<UserRecord>().Property(x => x.FirstName);
-        modelBuilder.Entity<UserRecord>().Property(x => x.LastName);
-        modelBuilder.Entity<UserRecord>().Property(x => x.Password);
-        modelBuilder.Entity<UserRecord>().Property(x => x.RegisteredAt);
-        modelBuilder.Entity<UserRecord>().Property(x => x.Block);
-
-        modelBuilder.Entity<BalanceRecord>().Property(x => x.Amount);
-        modelBuilder.Entity<BalanceRecord>().Property(x => x.UserId);
 
         modelBuilder.Entity<UserRecord>()
             .HasOne(u => u.BalanceRecord)
             .WithOne(b => b.UserRecord)
             .HasForeignKey<BalanceRecord>(b => b.UserId);
-        
-        modelBuilder.Entity<RoleRecord>().Property(x => x.Id).ValueGeneratedOnAdd();
-        modelBuilder.Entity<RoleRecord>().Property(x => x.Name);
-        
-        modelBuilder.Entity<UserRoleRecord>().Property(x => x.Id).ValueGeneratedOnAdd();
-        modelBuilder.Entity<UserRoleRecord>().Property(x => x.UserId);
-        modelBuilder.Entity<UserRoleRecord>().Property(x => x.RoleId);
-        
+
         modelBuilder.Entity<UserRecord>()
             .HasOne(u => u.UserRoleRecord)
             .WithOne(b => b.UserRecord)
@@ -51,24 +33,11 @@ public class AppDbContext : DbContext
             .WithMany(ur => ur.UserRoleRecord)
             .HasForeignKey(fk=> fk.RoleId);
 
-        modelBuilder.Entity<VereficationRecord>().Property(x => x.UserId);
-        modelBuilder.Entity<VereficationRecord>().Property(x => x.Status);
-        modelBuilder.Entity<VereficationRecord>().Property(x => x.LastChangeDate);
-        modelBuilder.Entity<VereficationRecord>().Property(x => x.Reviewer);
-        
         modelBuilder.Entity<UserRecord>()
             .HasOne(u => u.VereficationRecord)
             .WithOne(b => b.UserRecord)
             .HasForeignKey<VereficationRecord>(b => b.UserId);
-
-        modelBuilder.Entity<TransferRecord>().Property(x => x.Id);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.Amount);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.CardNumber);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.ConfirmedAt);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.ConfirmedBy);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.CreatedAt);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.UserId);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.Status);
+        
         modelBuilder.Entity<TransferRecord>()
             .HasOne(t => t.UserRecord)
             .WithMany(u => u.TransferRecords)

@@ -9,15 +9,14 @@
 
     <ItemGroup>
       <PackageReference Include="EntityFramework" Version="6.4.4" />
-      <PackageReference Include="FluentAssertions" Version="6.5.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0-preview.2.22153.1">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="NETStandard.Library" Version="2.0.3" />
       <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.3" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="2.0.0-preview1" />
-      <PackageReference Include="NUnit" Version="3.13.2" />
       <InternalsVisibleTo Include="PaymentSystemPrototype.Tests" />
       <PackageReference Include="System.Net.Http.Json" Version="7.0.0-preview.2.22152.2" />
     </ItemGroup>
