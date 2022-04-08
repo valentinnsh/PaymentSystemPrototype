@@ -1,4 +1,4 @@
-@page "/log_in"
+@page
 @model PaymentSystemPrototype.Pages.Auth.LogIn
 
 @{
@@ -8,9 +8,9 @@
 <form method="post">
     
     <label>Email</label> <br/>
-    <input type = "email" asp-for="@Model.loginContent.Email"/> <span asp-validation-for="@Model.loginContent.Email" class="error"></span><br/>
+    <input type = "email" asp-for="@Model.LoginContent.Email"/> <span asp-validation-for="@Model.LoginContent.Email" class="error"></span><br/>
     <label>Password</label> <br/>
-    <input type="password" asp-for="@Model.loginContent.Password"/> <span asp-validation-for="@Model.loginContent.Password" class="error"></span><br/>
+    <input type="password" asp-for="@Model.LoginContent.Password"/> <span asp-validation-for="@Model.LoginContent.Password" class="error"></span><br/>
     
     
     <input type="submit" value="Log In"/><br/>

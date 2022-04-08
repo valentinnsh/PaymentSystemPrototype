@@ -12,7 +12,7 @@ namespace PaymentSystemPrototype.Pages.Auth;
 public class LogIn : PageModel
 {
     [BindProperty]
-    public LogInData loginContent { get; set; }
+    public LogInData? LoginContent { get; set; }
     
     public string Message = "";
     public async Task<PageResult> OnGet(string msg)
@@ -22,7 +22,7 @@ public class LogIn : PageModel
     }
     
     public async Task<ActionResult> OnPost([FromServices] IAuthService authService, 
-        [FromServices] IUserOperationsService userOperationsService, [FromForm] LogInData loginContent)
+        [FromServices] IUserOperationsService userOperationsService, [FromForm, FromBody] LogInData loginContent)
     {
         if (!ModelState.IsValid)
         {
