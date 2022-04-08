@@ -36,23 +36,6 @@ public class TestBase
     {
         Env.Prepare();
         Client = Env.WebAppHost.GetClient();
-        AuthUserClient = CreateAuthorizedClientAsync().Result;
     }
     
-    protected async Task<HttpClient> CreateAuthorizedClientAsync()
-    {
-        var client = Env.WebAppHost.GetClient();
-        var payload = new Dictionary<string, string>
-        {
-            {"Email", "Igor@gmail.com"},
-            {"Password", "password"}
-        };
-        
-        string strPayload = JsonConvert.SerializeObject(payload);
-        //var cont = new StringContent(strPayload, Encoding.UTF8, "application/json");
-        var cont = new LogInData{Email = "Igor@gmail.com", Password = "password"};
-        var res = await client.PostAsJsonAsync("log_in", cont);
-        client.DefaultRequestHeaders.Add(HeaderNames.Cookie, res.Headers.GetValues(HeaderNames.SetCookie));
-        return client;
-    }
 }

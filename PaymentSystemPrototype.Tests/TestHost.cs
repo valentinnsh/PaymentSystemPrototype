@@ -18,20 +18,21 @@ public class TestHost : IDisposable
     private TestServer _testServer;
     public IServiceProvider Services => _testServer.Host.Services;
 
+    public HttpClient Client;
+
     public void Start()
     {
         var application = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder =>
             {
-                builder.ConfigureServices(services =>
-                {
-                });
+                builder.ConfigureServices(_ => {});
             });
 
         _testServer = application.Server;
+        Client = _testServer.CreateClient();
     }
 
-    public HttpClient GetClient() => _testServer.CreateClient();
+    public HttpClient GetClient() => Client;
 
     public void Dispose()
     {
