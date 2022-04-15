@@ -1,6 +1,8 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PaymentSystemPrototype.Exceptions;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
@@ -13,7 +15,8 @@ public class UserProfile : PageModel
     public Roles UserRole;
     public async Task OnGet([FromServices] IUserOperationsService userOperationsService)
     {
-        PresentedUser = await userOperationsService.FindByEmailAsync(User.Identity.Name);
+        PresentedUser = await userOperationsService.FindUserByIdAsync(Int32.Parse(HttpContext.User.Claims.FirstOrDefault(x => 
+            x.Type == ClaimTypes.NameIdentifier)?.Value ?? throw new UserNotFoundException()));
         UserBalance = await userOperationsService.GetUserBalanceAsync(User.Identity.Name);
         UserRole = userOperationsService.GetUserRole(User.Identity.Name);
     }
