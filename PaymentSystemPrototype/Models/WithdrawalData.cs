@@ -11,5 +11,5 @@ public class WithdrawalData
     [Range(1000000000000000, 9999999999999999, ErrorMessage = "Invalid Card Number")]
     public long CardNumber { get; set; }
     [Required(ErrorMessage = "required")]
-    public float Amount { get; set; }
+    public decimal Amount { get; set; }
 }

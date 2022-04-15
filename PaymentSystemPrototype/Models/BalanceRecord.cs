@@ -7,7 +7,7 @@ namespace PaymentSystemPrototype.Models;
 public class BalanceRecord
 {
     [Column("amount")]
-    public float Amount { get; set; }
+    public decimal Amount { get; set; }
     
     [Key]
     [Column("user_id")]

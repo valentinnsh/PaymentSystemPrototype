@@ -28,7 +28,7 @@ public class TransferRecord
     public DateTime? ConfirmedAt { get; set; }
     
     [Column("amount")]
-    public float Amount { get; set; }
+    public decimal Amount { get; set; }
     [Column("status")]
     public int Status { get; set; }
     

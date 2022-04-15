@@ -19,5 +19,5 @@ public class TransferData
     [Range(100,999, ErrorMessage = "Invalid CV2")]
     public int? CV2 { get; set; }
     [Required(ErrorMessage = "required")]
-    public float Amount { get; set; }
+    public decimal Amount { get; set; }
 }
