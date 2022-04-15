@@ -80,7 +80,7 @@ public class TransferOperationsService : ITransferOperationsService
             if (status == ReviewStatus.Accepted)
             {
                 var user = _context.Users.FirstOrDefault(u => u.Id == transfer.UserId);
-                var balance = _context.Balances.FirstOrDefault(b => b.UserId == user.Id);
+                var balance = _context.Balances.FirstOrDefault(b => user != null && b.UserId == user.Id);
                 if (user == null || balance == null) throw new UserNotFoundException();
                 lock (_balanceLock)
                 {
@@ -96,11 +96,7 @@ public class TransferOperationsService : ITransferOperationsService
                     }
                 }
             }
-            else
-            {
-                return false;
-            }
-            
+
             // If review status is Accepted, but balance is too low -> reject automatically
             
             transfer.Status = (int) ReviewStatus.Rejected;
