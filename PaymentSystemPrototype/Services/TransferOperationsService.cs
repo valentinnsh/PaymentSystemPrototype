@@ -82,7 +82,7 @@ public class TransferOperationsService : ITransferOperationsService
                 var user = _context.Users.FirstOrDefault(u => u.Id == transfer.UserId);
                 var balance = _context.Balances.FirstOrDefault(b => b.UserId == user.Id);
                 if (user == null || balance == null) throw new UserNotFoundException();
-                lock (balance)
+                lock (_balanceLock)
                 {
                     if (balance.Amount + transfer.Amount > 0)
                     {
