@@ -28,7 +28,8 @@ public class AuthService : IAuthService
             var claims = new List<Claim>
             {
                 new(ClaimTypes.Name, account.Email),
-                new(ClaimTypes.Role, _userOperationsService.GetUserRoleAsString(account.Email))
+                new(ClaimTypes.Role, _userOperationsService.GetUserRoleAsString(account.Email)),
+                new(ClaimTypes.NameIdentifier, account.Id.ToString())
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, "ApplicationCookie",
