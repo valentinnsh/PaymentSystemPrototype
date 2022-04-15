@@ -33,7 +33,7 @@ public class UserOperationsService : IUserOperationsService
 
     public async Task DeleteUserAsync(int id)
     {
-        _context.Remove(_context.Users.Single(u => u != null && u.Id == 1));
+        _context.Remove(_context.Users.Single(u => u != null && u.Id == id));
         await _context.SaveChangesAsync();
     }
 
@@ -57,6 +57,12 @@ public class UserOperationsService : IUserOperationsService
     public async Task<UserRecord?> FindByEmailAsync(string userEmail) =>
         await _context.Users.FirstOrDefaultAsync(u =>  EF.Functions.ILike(u.Email, $"{userEmail}"));
 
+    public UserRecord? FindUserById(int userId) =>
+        _context.Users.FirstOrDefault(u => u.Id == userId);
+
+    public async Task<UserRecord?> FindUserByIdAsync(int userId) =>
+        await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+    
     public async Task<UserRecord?> CheckLoginInfoAsync(string userEmail, string userPassword) =>
         await _context.Users.FirstOrDefaultAsync(u =>
             EF.Functions.ILike(u.Email, $"{userEmail}") && u.Password == userPassword);
@@ -91,9 +97,9 @@ public class UserOperationsService : IUserOperationsService
         return (Roles) _context.Roles.FirstOrDefault(
             r => r.Id == _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id).RoleId).Id-1;
     }
-    public async Task<bool> SetRoleAsync(string userEmail, Roles newRole)
+    public async Task<bool> SetRoleAsync(int userId, Roles newRole)
     {
-        var user = await FindByEmailAsync(userEmail);
+        var user = await FindUserByIdAsync(userId);
         if (user != null)
         {
             var roleToSet = await _context.Roles.FirstOrDefaultAsync(b => b.Id == (int) newRole + 1);
@@ -134,12 +140,10 @@ public class UserOperationsService : IUserOperationsService
 
     public async Task<bool> RevertBlockStatusAsync(int userId)
     {
-        var user = _context.Users.FirstOrDefault(b => b.Id == userId);
+        var user = await FindUserByIdAsync(userId);
         if (user == null) return false;
         user.Block = !user.Block;
         await _context.SaveChangesAsync();
         return true;
-
     }
-    
 }
