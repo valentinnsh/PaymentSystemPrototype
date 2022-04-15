@@ -31,7 +31,8 @@ public class LogIn : PageModel
         bool loginResult;
         try
         {
-            if(await userOperationsService.IsUserBlocked(loginContent.Email))
+            var user = await userOperationsService.FindByEmailAsync(loginContent.Email) ?? throw new UserNotFoundException();
+            if(await userOperationsService.IsUserBlocked(user.Id))
             {
                 return RedirectToPage("LogIn",
                 new {msg = "You are blocked by Administrator"});
