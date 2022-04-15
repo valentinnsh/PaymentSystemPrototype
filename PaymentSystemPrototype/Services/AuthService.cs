@@ -61,7 +61,7 @@ public class AuthService : IAuthService
             LastName = signUpData.LastName,
             Email = signUpData.Email,
             Password = signUpData.Password,
-            RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
+            RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.UtcNow)
         };
         await _userOperationsService.AddUserAsync(newUser);
         return true;
