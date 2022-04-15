@@ -27,7 +27,8 @@ public class UserProfile : PageModel
     }
     public async Task<IActionResult> OnPostRequestKYCVerification([FromServices] IKycService kycService)
     {
-        await kycService.CreateVerificationRequestAsync(User.Identity.Name);
+        await kycService.CreateVerificationRequestAsync(Int32.Parse(HttpContext.User.Claims.FirstOrDefault(x => 
+            x.Type == ClaimTypes.NameIdentifier)?.Value ?? throw new UserNotFoundException()));
         return RedirectToPage("UserProfile");
     }
     

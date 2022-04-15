@@ -44,6 +44,7 @@
                 on u.Id equals v.UserId
             select new
             {
+                Id = u.Id,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Email = u.Email,
@@ -91,10 +92,10 @@
                 </td>
             }
             <td>
-                <form asp-page-handler="Review" asp-route-email="@userVerifications.Email" asp-route-status="1" method="post">
+                <form asp-page-handler="Review" asp-route-userId="@userVerifications.Id" asp-route-status="1" method="post">
                     <button class="btn btn-default">Accept</button>
                 </form>
-                <form asp-page-handler="Review" asp-route-email="@userVerifications.Email" asp-route-status="0" method="post">
+                <form asp-page-handler="Review" asp-route-userId="@userVerifications.Id" asp-route-status="0" method="post">
                     <button class="btn btn-default">Reject</button>
                 </form>
             </td>

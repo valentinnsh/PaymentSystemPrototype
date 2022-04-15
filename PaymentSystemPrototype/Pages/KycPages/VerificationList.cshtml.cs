@@ -17,9 +17,9 @@ public class VerificationList : PageModel
         ListVerrifivcations = kycService.GetVerificationRequests();
     }
 
-    public async Task<IActionResult> OnPostReview([FromServices] IKycService kycService, string email, int status)
+    public async Task<IActionResult> OnPostReview([FromServices] IKycService kycService, int userId, int status)
     {
-        await kycService.UpdateRequestStatusAsync(email, User.Identity.Name, status);
+        await kycService.UpdateRequestStatusAsync(userId, User.Identity.Name, status);
         return RedirectToPage("VerificationList");
     }
 }

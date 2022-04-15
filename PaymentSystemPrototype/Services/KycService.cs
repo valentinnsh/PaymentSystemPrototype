@@ -14,9 +14,9 @@ public class KycService : IKycService
         _userOperationsService = userOperationsService;
     }
 
-    public async Task CreateVerificationRequestAsync(string userEmail)
+    public async Task CreateVerificationRequestAsync(int userId)
     {
-        var user = await _userOperationsService.FindByEmailAsync(userEmail);
+        var user = await _userOperationsService.FindUserByIdAsync(userId);
         if (user != null && _context.Verefications.FirstOrDefault(v => v.UserId == user.Id) == null)
         {
             await _context.Verefications.AddAsync(
@@ -34,9 +34,9 @@ public class KycService : IKycService
     public IList<VereficationRecord> GetVerificationRequests() =>
         _context.Verefications.ToList();
 
-    public async Task UpdateRequestStatusAsync(string userEmail, string reviewerEmail, int status)
+    public async Task UpdateRequestStatusAsync(int userId, string reviewerEmail, int status)
     {
-        var user = await _userOperationsService.FindByEmailAsync(userEmail);
+        var user = await _userOperationsService.FindUserByIdAsync(userId);
         var request = _context.Verefications.FirstOrDefault(v => v.UserId == user.Id);
         if (request != null)
         {
