@@ -6,9 +6,10 @@
 }
 
 @*IncomingMessage is a string that contains "block"(or "unblock") word + email for the person under this action*@
-<h2>Are you shure you want to @Model.IncomingMessage?</h2>
+<h2>@Model.BlockData.IncomingMessage</h2>
 <form method="post">
-    <button class="button" asp-route-userId="@Model.UserId">Yes</button>
+    <button class="button" asp-route-userId="@Model.BlockData.UserId" 
+            asp-route-status="@Model.BlockData.BlockStatus">Yes</button>
 </form>
 <form asp-page="UserList" method="get">
     <button class="button">No</button>

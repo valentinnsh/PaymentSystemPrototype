@@ -21,6 +21,7 @@ public interface IUserOperationsService
     public IList<RoleRecord> GetRoles();
     public IList<BalanceRecord> GetBalances();
     public Task<bool> IsUserBlocked(int userId);
-    public Task<bool> RevertBlockStatusAsync(int userId);
+    public Task BlockUserAsync(int userId);
+    public Task UnblockUserAsync(int userId);
     Task DeleteUserAsync(int id);
 }

@@ -128,14 +128,17 @@ public class UserOperationsService : IUserOperationsService
         var user =  await _context.Users.FirstOrDefaultAsync(b => b.Id == userId) ?? throw new UserNotFoundException();
         return user.Block;
     }
-        
 
-    public async Task<bool> RevertBlockStatusAsync(int userId)
+    public async Task BlockUserAsync(int userId)
     {
-        var user = await FindUserByIdAsync(userId);
-        if (user == null) return false;
-        user.Block = !user.Block;
+        var user = await FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
+        user.Block = true;
         await _context.SaveChangesAsync();
-        return true;
+    }
+    public async Task UnblockUserAsync(int userId)
+    {
+        var user = await FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
+        user.Block = false;
+        await _context.SaveChangesAsync();
     }
 }
