@@ -55,7 +55,7 @@
             </td>
             <td>
                 <a asp-page="ModifyData" asp-route-email="@user.Email">Edit Data</a> |
-                <a asp-page="AssignRole" asp-route-email="@user.Email">Set Role</a> |
+                <a asp-page="AssignRole" asp-route-id="@user.Id">Set Role</a> |
                 @if (!user.Block)
                 {
                     var statusEmail = "Block " + user.Email;

@@ -12,16 +12,16 @@ namespace PaymentSystemPrototype.Pages.AdminPages;
 public class AssignRole : PageModel
 {
     public Roles AssignedRole { get; set; }
-    public static string UserEmail { get; set; }
-    public void OnGet(string email)
+    public static int UserId { get; set; }
+    public void OnGet(int id)
     {
-        UserEmail = email;
+        UserId = id;
     }
 
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] int assignedRole)
     {
         
-        var result = await userOperationsService.SetRoleAsync(UserEmail, (Roles)assignedRole-1);
+        var result = await userOperationsService.SetRoleAsync(UserId, (Roles)assignedRole-1);
         return result switch
         {
             true => RedirectToPage("UserList"),
