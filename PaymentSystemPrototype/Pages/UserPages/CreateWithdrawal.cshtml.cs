@@ -8,7 +8,7 @@ using PaymentSystemPrototype.Services;
 namespace PaymentSystemPrototype.Pages.UserPages;
 
 [Authorize(Roles = "User")]
-public class CreateWithdrawal : PageModel
+public class CreateWithdrawal : AlteredPageModel
 {
     [BindProperty]
     public WithdrawalData? WithdrawalData { get; set; }
@@ -26,7 +26,7 @@ public class CreateWithdrawal : PageModel
             return Page();
         }
         withdrawalData.Amount *= -1;
-        var result = transferOperationsService.CreateTransferRequestAsync(withdrawalData, User.Identity.Name).Result;
+        var result = transferOperationsService.CreateTransferRequestAsync(withdrawalData, GetUsersId()).Result;
         return result switch
         {
             true => RedirectToPage("/UserPages/UserProfile"),

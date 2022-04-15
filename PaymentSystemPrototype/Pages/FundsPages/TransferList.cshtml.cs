@@ -8,7 +8,7 @@ using PaymentSystemPrototype.Services;
 namespace PaymentSystemPrototype.Pages.FundsPages;
 
 [Authorize(Roles = "FundsManager, Admin")]
-public class TransferList : PageModel
+public class TransferList : AlteredPageModel
 {
     public IList<TransferRecord> ListRequests;
     public IList<UserRecord> ListUsers;
@@ -27,7 +27,7 @@ public class TransferList : PageModel
     public async Task<IActionResult> OnPostReview([FromServices] ITransferOperationsService transferOperationsService,
         int transferId, int status)
     {
-        var result = await transferOperationsService.SetStatusAsync((ReviewStatus)status, User.Identity.Name, transferId);
+        var result = await transferOperationsService.SetStatusAsync((ReviewStatus)status, GetUsersId(), transferId);
         return result switch
         {
             true => RedirectToPage("TransferList"),

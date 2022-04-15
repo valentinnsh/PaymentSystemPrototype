@@ -8,14 +8,14 @@ using PaymentSystemPrototype.Services;
 namespace PaymentSystemPrototype.Pages.UserPages;
 
 [Authorize(Roles = "User")]
-public class TransferList : PageModel
+public class TransferList : AlteredPageModel
 {
     public IList<TransferRecord> UserTransfers;
     public IList<UserRecord> UserList; 
     public void OnGet([FromServices] ITransferOperationsService transferOperationsService,
         [FromServices] IUserOperationsService userOperationsService)
     {
-        UserTransfers = transferOperationsService.GetTransfersForUser(User.Identity.Name);
+        UserTransfers = transferOperationsService.GetTransfersForUser(GetUsersId());
         UserList =  userOperationsService.GetUsers();
     }
 

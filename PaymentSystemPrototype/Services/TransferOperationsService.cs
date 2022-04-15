@@ -16,10 +16,10 @@ public class TransferOperationsService : ITransferOperationsService
         _userOperationsService = userOperationsService;
     }
 
-    public async Task<bool> CreateTransferRequestAsync(WithdrawalData data, string userEmail)
+    public async Task<bool> CreateTransferRequestAsync(WithdrawalData data, int userId)
     {
-        var user = await _userOperationsService.FindByEmailAsync(userEmail);
-        var balance = await _userOperationsService.GetUserBalanceAsync(userEmail);
+        var user = await _userOperationsService.FindUserByIdAsync(userId);
+        var balance = await _userOperationsService.GetUserBalanceAsync(userId);
         if (user == null || balance == null) throw new UserNotFoundException();
         lock (_balanceLock)
         {
@@ -49,9 +49,9 @@ public class TransferOperationsService : ITransferOperationsService
 
     public IList<TransferRecord> GetTransfersUnreviewedFirst() =>
         _context.Transfers.ToList().OrderByDescending(t=>t.Status).ToList();
-    public IList<TransferRecord> GetTransfersForUser(string userEmail)
+    public IList<TransferRecord> GetTransfersForUser(int userId)
     {
-        var user =  _userOperationsService.FindByEmail(userEmail);
+        var user =  _userOperationsService.FindUserByIdAsync(userId).Result;
         if (user != null)
         {
             return _context.Transfers.Where(t => t.UserId == user.Id).ToList();
@@ -72,7 +72,7 @@ public class TransferOperationsService : ITransferOperationsService
         return false;
     }
 
-    public async Task<bool> SetStatusAsync(ReviewStatus status, string reviewerEmail, int transferId)
+    public async Task<bool> SetStatusAsync(ReviewStatus status, int reviewerId, int transferId)
     {
         var transfer = await _context.Transfers.FindAsync(transferId);
         if (transfer != null)
@@ -90,7 +90,7 @@ public class TransferOperationsService : ITransferOperationsService
                         balance.Amount += transfer.Amount;
                         transfer.Status = (int) status;
                         transfer.ConfirmedAt = DateTime.UtcNow;
-                        transfer.ConfirmedBy = _userOperationsService.FindByEmail(reviewerEmail)?.Id;
+                        transfer.ConfirmedBy = reviewerId;
                         _context.SaveChanges();
                         return true;
                     }
@@ -101,7 +101,7 @@ public class TransferOperationsService : ITransferOperationsService
             
             transfer.Status = (int) ReviewStatus.Rejected;
             transfer.ConfirmedAt = DateTime.UtcNow;
-            transfer.ConfirmedBy = (await _userOperationsService.FindByEmailAsync(reviewerEmail))?.Id;
+            transfer.ConfirmedBy = reviewerId;
             await _context.SaveChangesAsync();
             return false;
         }

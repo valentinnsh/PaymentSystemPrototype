@@ -80,8 +80,8 @@ public class UserOperationsService : IUserOperationsService
 
         return false;
     }
-    public async Task<BalanceRecord?> GetUserBalanceAsync(string userEmail) =>
-        await _context.Balances.FirstOrDefaultAsync(b => b.UserRecord.Email == userEmail);
+    public async Task<BalanceRecord?> GetUserBalanceAsync(int userId) =>
+        await _context.Balances.FirstOrDefaultAsync(b => b.UserRecord.Id == userId);
 
     public string? GetUserRoleAsString(string userEmail)
     {

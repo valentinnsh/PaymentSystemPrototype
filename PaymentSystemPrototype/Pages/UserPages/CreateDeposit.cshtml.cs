@@ -8,7 +8,7 @@ using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.UserPages;
 [Authorize(Roles = "User")]
-public class CreateDeposit : PageModel
+public class CreateDeposit : AlteredPageModel
 {
     [BindProperty]
     public TransferData transferData { get; set; }
@@ -25,7 +25,7 @@ public class CreateDeposit : PageModel
         {
             return Page();
         }
-        var result = transferOperationsService.CreateTransferRequestAsync(transferData, User.Identity.Name).Result;
+        var result = transferOperationsService.CreateTransferRequestAsync(transferData, GetUsersId()).Result;
         return result switch
         {
             true => RedirectToPage("/UserPages/UserProfile"),
