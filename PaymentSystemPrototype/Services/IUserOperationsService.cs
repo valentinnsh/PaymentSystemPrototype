@@ -19,7 +19,7 @@ public interface IUserOperationsService
     public IList<UserRoleRecord> GetUserRoles();
     public IList<RoleRecord> GetRoles();
     public IList<BalanceRecord> GetBalances();
-    public bool IsUserBlocked(string userEmail);
+    public Task<bool> IsUserBlocked(string userEmail);
     public Task<bool> RevertBlockStatusAsync(int userId);
     Task DeleteUserAsync(int id);
 }

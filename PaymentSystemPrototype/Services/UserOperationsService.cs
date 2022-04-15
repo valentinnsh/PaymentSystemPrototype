@@ -120,9 +120,9 @@ public class UserOperationsService : IUserOperationsService
     public IList<BalanceRecord> GetBalances() =>
         _context.Balances.ToList();
 
-    public bool IsUserBlocked(string userEmail)
+    public async Task<bool> IsUserBlocked(string userEmail)
     {
-        var user = _context.Users.FirstOrDefault(b => b.Email == userEmail);
+        var user =  await _context.Users.FirstOrDefaultAsync(b => b.Email == userEmail);
         if (user == null)
         {
             throw new UserNotFoundException();
