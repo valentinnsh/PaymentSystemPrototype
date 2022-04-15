@@ -17,7 +17,7 @@ public class UserProfile : AlteredPageModel
     {
         PresentedUser = await userOperationsService.FindUserByIdAsync(GetUsersId());
         if (PresentedUser != null) UserBalance = await userOperationsService.GetUserBalanceAsync(PresentedUser.Id);
-        UserRole = userOperationsService.GetUserRole(User.Identity.Name);
+        UserRole = userOperationsService.GetUserRole(GetUsersId());
     }
     
     public async Task<IActionResult> OnPostModifyUser()

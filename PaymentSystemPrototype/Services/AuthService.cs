@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
+using PaymentSystemPrototype.Exceptions;
 using PaymentSystemPrototype.Models;
 
 namespace PaymentSystemPrototype.Services;
@@ -20,7 +21,7 @@ public class AuthService : IAuthService
     {
         if (await _userOperationsService.FindByEmailAsync(userEmail) == null)
         {
-            throw new Exception();
+            throw new UserNotFoundException();
         }
         var account = await _userOperationsService.CheckLoginInfoAsync(userEmail, userPassword);
         if (account != null)
@@ -28,7 +29,7 @@ public class AuthService : IAuthService
             var claims = new List<Claim>
             {
                 new(ClaimTypes.Name, account.Email),
-                new(ClaimTypes.Role, _userOperationsService.GetUserRoleAsString(account.Email)),
+                new(ClaimTypes.Role, await _userOperationsService.GetUserRoleAsStringAsync(account.Id)),
                 new(ClaimTypes.NameIdentifier, account.Id.ToString())
             };
 

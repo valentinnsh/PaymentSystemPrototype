@@ -14,16 +14,15 @@ public class ModifyData : PageModel
     public string UserEmail = "";
     public UserRecord? PresentedUser;
     public static string PreviousEmail = "";
-    public void OnGet([FromServices] IUserOperationsService userOperationsService, string email)
+    public async Task OnGet([FromServices] IUserOperationsService userOperationsService, int userId)
     {
-        UserEmail = PreviousEmail = email;
-        PresentedUser = userOperationsService.FindByEmail(email);
+        PresentedUser =  await userOperationsService.FindUserByIdAsync(userId);
+        UserEmail = PreviousEmail = PresentedUser.Email;
     }
     
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] 
         SignUpData newData)
     {
-        
         var result = await userOperationsService.ModifyUserAsync(newData, PreviousEmail);
         return result switch
         {

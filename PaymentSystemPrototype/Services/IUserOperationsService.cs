@@ -5,7 +5,6 @@ namespace PaymentSystemPrototype.Services;
 
 public interface IUserOperationsService
 {
-    UserRecord? FindByEmail(string userEmail);
     public Task<UserRecord?> FindByEmailAsync(string userEmail);
     public Task<UserRecord?> FindUserByIdAsync(int userId);
     public UserRecord? FindUserById(int userId);
@@ -14,8 +13,8 @@ public interface IUserOperationsService
     public Task<bool> ModifyUserAsync(SignUpData user, string previousEmail);
     public Task<BalanceRecord?> GetUserBalanceAsync(int userId);
     public Task<bool> AddFundsAsync(string userEmail, int amount);
-    public string? GetUserRoleAsString(string userEmail);
-    public Roles GetUserRole(string userEmail);
+    public Task<string> GetUserRoleAsStringAsync(int userId);
+    public Roles GetUserRole(int userId);
     public Task<bool> SetRoleAsync(int userId, Roles newRole);
     public IList<UserRecord> GetUsers();
     public IList<UserRoleRecord> GetUserRoles();

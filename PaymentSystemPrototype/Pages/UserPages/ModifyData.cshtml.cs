@@ -6,12 +6,12 @@ using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.UserPages;
 
-public class ModifyData : PageModel
+public class ModifyData : AlteredPageModel
 {
-    public UserRecord PresentedUser;
-    public void OnGet([FromServices] IUserOperationsService userOperationsService)
+    public UserRecord? PresentedUser;
+    public async Task OnGet([FromServices] IUserOperationsService userOperationsService)
     {
-        PresentedUser = userOperationsService.FindByEmail(User.Identity.Name);
+        PresentedUser = await userOperationsService.FindUserByIdAsync(GetUsersId());
     }
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] 
         SignUpData newData)

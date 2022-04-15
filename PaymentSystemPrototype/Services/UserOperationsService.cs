@@ -51,9 +51,7 @@ public class UserOperationsService : IUserOperationsService
         }
         return false;
     }
-    public UserRecord? FindByEmail(string userEmail) =>
-       _context.Users.FirstOrDefault(u =>  EF.Functions.ILike(u.Email, $"{userEmail}"));
-    
+
     public async Task<UserRecord?> FindByEmailAsync(string userEmail) =>
         await _context.Users.FirstOrDefaultAsync(u =>  EF.Functions.ILike(u.Email, $"{userEmail}"));
 
@@ -83,17 +81,16 @@ public class UserOperationsService : IUserOperationsService
     public async Task<BalanceRecord?> GetUserBalanceAsync(int userId) =>
         await _context.Balances.FirstOrDefaultAsync(b => b.UserRecord.Id == userId);
 
-    public string? GetUserRoleAsString(string userEmail)
+    public async Task<string> GetUserRoleAsStringAsync(int userId)
     {
-        var user = FindByEmail(userEmail);
+        var user =  await FindUserByIdAsync(userId);
         return _context.Roles.FirstOrDefault(
             r => r.Id == _context.UserRoles.FirstOrDefault(ur=>ur.UserId == user.Id).RoleId).Name;
     }
 
-    public Roles GetUserRole(string userEmail)
+    public Roles GetUserRole(int userId)
     {
-        var user = FindByEmail(userEmail);
-        var userRole = _context.UserRoles.FirstOrDefault(ur => user != null && ur.UserId == user.Id);
+        var user = FindUserByIdAsync(userId).Result;
         return (Roles) _context.Roles.FirstOrDefault(
             r => r.Id == _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id).RoleId).Id-1;
     }
