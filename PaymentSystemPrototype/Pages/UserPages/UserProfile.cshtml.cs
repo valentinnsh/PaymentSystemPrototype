@@ -8,16 +8,15 @@ using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.UserPages;
 [Authorize]
-public class UserProfile : PageModel
+public class UserProfile : AlteredPageModel
 {
     public UserRecord? PresentedUser = new UserRecord();
     public BalanceRecord? UserBalance = new BalanceRecord();
     public Roles UserRole;
     public async Task OnGet([FromServices] IUserOperationsService userOperationsService)
     {
-        PresentedUser = await userOperationsService.FindUserByIdAsync(Int32.Parse(HttpContext.User.Claims.FirstOrDefault(x => 
-            x.Type == ClaimTypes.NameIdentifier)?.Value ?? throw new UserNotFoundException()));
-        UserBalance = await userOperationsService.GetUserBalanceAsync(User.Identity.Name);
+        PresentedUser = await userOperationsService.FindUserByIdAsync(GetUsersId());
+        if (PresentedUser != null) UserBalance = await userOperationsService.GetUserBalanceAsync(PresentedUser.Id);
         UserRole = userOperationsService.GetUserRole(User.Identity.Name);
     }
     
@@ -27,8 +26,7 @@ public class UserProfile : PageModel
     }
     public async Task<IActionResult> OnPostRequestKYCVerification([FromServices] IKycService kycService)
     {
-        await kycService.CreateVerificationRequestAsync(Int32.Parse(HttpContext.User.Claims.FirstOrDefault(x => 
-            x.Type == ClaimTypes.NameIdentifier)?.Value ?? throw new UserNotFoundException()));
+        await kycService.CreateVerificationRequestAsync(GetUsersId());
         return RedirectToPage("UserProfile");
     }
     
