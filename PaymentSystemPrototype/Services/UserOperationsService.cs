@@ -65,7 +65,7 @@ public class UserOperationsService : IUserOperationsService
         await _context.Users.FirstOrDefaultAsync(u =>
             EF.Functions.ILike(u.Email, $"{userEmail}") && u.Password == userPassword);
 
-    public async Task<bool> AddFundsAsync(string userEmail, int amount)
+    public async Task<bool> AddFundsAsync(string userEmail, decimal amount)
     {
         var balanceUpdate =  _context.Balances.FirstOrDefault(b => 
             EF.Functions.ILike(b.UserRecord.Email, $"{userEmail}"));

@@ -12,7 +12,7 @@ public interface IUserOperationsService
     Task AddUserAsync(UserRecord user);
     public Task<bool> ModifyUserAsync(SignUpData user, string previousEmail);
     public Task<BalanceRecord?> GetUserBalanceAsync(int userId);
-    public Task<bool> AddFundsAsync(string userEmail, int amount);
+    public Task<bool> AddFundsAsync(string userEmail, decimal amount);
     public Task<string> GetUserRoleAsStringAsync(int userId);
     public Roles GetUserRole(int userId);
     public Task<bool> SetRoleAsync(int userId, Roles newRole);
