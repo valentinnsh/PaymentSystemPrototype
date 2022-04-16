@@ -12,9 +12,26 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using PaymentSystemPrototype.Models;
+using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Tests;
 
 public class AuthTests : TestBase
 {
+    public IUserOperationsService userOperationsService;
+    public IAuthService authService;
+    
+    [SetUp]
+    public void PrepareForAuthTests()
+    {
+        userOperationsService = new UserOperationsService(DbContext);
+        authService = new AuthService(userOperationsService);
+    }
+    
+    [TestCase("admin@gmail.com", "admin", false)]
+    public void LogInTest(string email, string password,bool expectedResult)
+    {
+        var result= authService.LogInAsync(email, password, new DefaultHttpContext());
+        result.Result.Should().Be(expectedResult);
+    }
 }

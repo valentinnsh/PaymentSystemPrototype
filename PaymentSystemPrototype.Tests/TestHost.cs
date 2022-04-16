@@ -15,7 +15,7 @@ namespace PaymentSystemPrototype.Tests;
 
 public class TestHost : IDisposable
 {
-    private TestServer _testServer;
+    public TestServer _testServer;
     public IServiceProvider Services => _testServer.Host.Services;
 
     public HttpClient Client;
