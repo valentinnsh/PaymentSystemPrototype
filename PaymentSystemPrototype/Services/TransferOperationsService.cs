@@ -18,7 +18,7 @@ public class TransferOperationsService : ITransferOperationsService
 
     public async Task<bool> CreateTransferRequestAsync(WithdrawalData data, int userId)
     {
-        var user = await _userOperationsService.FindUserByIdAsync(userId);
+        var user = await _userOperationsService.FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
         var balance = await _userOperationsService.GetUserBalanceAsync(userId);
         if (user == null || balance == null) throw new UserNotFoundException();
         lock (_balanceLock)
@@ -51,12 +51,8 @@ public class TransferOperationsService : ITransferOperationsService
         _context.Transfers.ToList().OrderByDescending(t=>t.Status).ToList();
     public IList<TransferRecord> GetTransfersForUser(int userId)
     {
-        var user =  _userOperationsService.FindUserByIdAsync(userId).Result;
-        if (user != null)
-        {
-            return _context.Transfers.Where(t => t.UserId == user.Id).ToList();
-        }
-        return new List<TransferRecord>();
+        var user =  _userOperationsService.FindUserByIdAsync(userId).Result ?? throw new UserNotFoundException();
+        return _context.Transfers.Where(t => t.UserId == user.Id).ToList();
     }
 
     public async Task<bool> CancelTransferAsync(int transferId)

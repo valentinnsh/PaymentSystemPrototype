@@ -83,14 +83,14 @@ public class UserOperationsService : IUserOperationsService
 
     public async Task<string> GetUserRoleAsStringAsync(int userId)
     {
-        var user =  await FindUserByIdAsync(userId);
+        var user =  await FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
         return _context.Roles.FirstOrDefault(
             r => r.Id == _context.UserRoles.FirstOrDefault(ur=>ur.UserId == user.Id).RoleId).Name;
     }
 
     public Roles GetUserRole(int userId)
     {
-        var user = FindUserByIdAsync(userId).Result;
+        var user = FindUserByIdAsync(userId).Result ?? throw new UserNotFoundException();
         return (Roles) _context.Roles.FirstOrDefault(
             r => r.Id == _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id).RoleId).Id-1;
     }

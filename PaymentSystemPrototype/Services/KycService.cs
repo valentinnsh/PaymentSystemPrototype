@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Server.HttpSys;
+using PaymentSystemPrototype.Exceptions;
 using PaymentSystemPrototype.Models;
 
 namespace PaymentSystemPrototype.Services;
@@ -16,8 +17,9 @@ public class KycService : IKycService
 
     public async Task CreateVerificationRequestAsync(int userId)
     {
-        var user = await _userOperationsService.FindUserByIdAsync(userId);
-        if (user != null && _context.Verefications.FirstOrDefault(v => v.UserId == user.Id) == null)
+        var user = await _userOperationsService.FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
+
+        if (_context.Verefications.FirstOrDefault(v => v.UserId == user.Id) == null)
         {
             await _context.Verefications.AddAsync(
                 new VereficationRecord
@@ -29,6 +31,8 @@ public class KycService : IKycService
                 });
             await _context.SaveChangesAsync();
         }
+        else
+            throw new RequestAlreadyExistsException();
     }
 
     public IList<VereficationRecord> GetVerificationRequests() =>
@@ -36,15 +40,15 @@ public class KycService : IKycService
 
     public async Task UpdateRequestStatusAsync(int userId, string reviewerEmail, int status)
     {
-        var user = await _userOperationsService.FindUserByIdAsync(userId);
-        var request = _context.Verefications.FirstOrDefault(v => v.UserId == user.Id);
-        if (request != null)
-        {
-            request.Reviewer = reviewerEmail;
-            request.Status = status;
-            request.LastChangeDate = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now);
-            await _context.SaveChangesAsync();
-        }
+        var user = await _userOperationsService.FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
+        var request = _context.Verefications.FirstOrDefault(v => v.UserId == user.Id) 
+                      ?? throw new RequestNotFoundException();
+        
+        request.Reviewer = reviewerEmail;
+        request.Status = status;
+        request.LastChangeDate = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now);
+        await _context.SaveChangesAsync();
+        
     }
     
 }
