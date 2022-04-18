@@ -24,24 +24,21 @@ public class AuthService : IAuthService
             throw new UserNotFoundException();
         }
         var account = await _userOperationsService.CheckLoginInfoAsync(userEmail, userPassword);
-        if (account != null)
+        if (account == null) return false;
+        var claims = new List<Claim>
         {
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.Name, account.Email),
-                new(ClaimTypes.Role, await _userOperationsService.GetUserRoleAsStringAsync(account.Id)),
-                new(ClaimTypes.NameIdentifier, account.Id.ToString())
-            };
+            new(ClaimTypes.Name, account.Email),
+            new(ClaimTypes.Role, await _userOperationsService.GetUserRoleAsStringAsync(account.Id)),
+            new(ClaimTypes.NameIdentifier, account.Id.ToString())
+        };
 
-            var claimsIdentity = new ClaimsIdentity(claims, "ApplicationCookie",
-                ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+        var claimsIdentity = new ClaimsIdentity(claims, "ApplicationCookie",
+            ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
-            await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
-                new ClaimsPrincipal(claimsIdentity));
+        await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
+            new ClaimsPrincipal(claimsIdentity));
                 
-            return true;
-        }
-        return false;
+        return true;
     }
 
     public async Task LogOutAsync(HttpContext httpContext)
