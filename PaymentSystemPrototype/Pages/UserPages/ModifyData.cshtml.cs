@@ -16,7 +16,7 @@ public class ModifyData : AlteredPageModel
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] 
         SignUpData newData)
     {
-        var result = await userOperationsService.ModifyUserAsync(newData, User.Identity.Name);
+        var result = await userOperationsService.ModifyUserAsync(newData, GetUsersId());
         return result switch
         {
             true => RedirectToPage("../Auth/LogIn"),

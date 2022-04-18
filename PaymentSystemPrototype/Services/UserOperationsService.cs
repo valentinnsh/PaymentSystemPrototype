@@ -37,9 +37,9 @@ public class UserOperationsService : IUserOperationsService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<bool> ModifyUserAsync(SignUpData user, string previousEmail)
+    public async Task<bool> ModifyUserAsync(SignUpData user, int userId)
     {
-        var target = _context.Users.SingleOrDefault(u => u.Email == previousEmail);
+        var target = await FindUserByIdAsync(userId);
         if (target != null)
         {
             target.FirstName = user.FirstName;

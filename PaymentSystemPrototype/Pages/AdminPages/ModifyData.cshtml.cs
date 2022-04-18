@@ -13,17 +13,16 @@ public class ModifyData : PageModel
 {
     public string UserEmail = "";
     public UserRecord? PresentedUser;
-    public static string PreviousEmail = "";
     public async Task OnGet([FromServices] IUserOperationsService userOperationsService, int userId)
     {
-        PresentedUser =  await userOperationsService.FindUserByIdAsync(userId);
-        UserEmail = PreviousEmail = PresentedUser.Email;
+        PresentedUser =  await userOperationsService.FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
+        UserEmail = PresentedUser.Email;
     }
     
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] 
-        SignUpData newData)
+        SignUpData newData, int userId)
     {
-        var result = await userOperationsService.ModifyUserAsync(newData, PreviousEmail);
+        var result = await userOperationsService.ModifyUserAsync(newData, userId);
         return result switch
         {
             true => RedirectToPage("UserList"),
