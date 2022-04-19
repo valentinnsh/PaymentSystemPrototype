@@ -53,22 +53,19 @@ public class UserOperationsService : IUserOperationsService
     }
 
     public async Task<UserRecord?> FindByEmailAsync(string userEmail) =>
-        await _context.Users.FirstOrDefaultAsync(u =>  EF.Functions.ILike(u.Email, $"{userEmail}"));
-
-    public UserRecord? FindUserById(int userId) =>
-        _context.Users.FirstOrDefault(u => u.Id == userId);
+        await _context.Users.FirstOrDefaultAsync(u =>  EF.Functions.ILike(u.Email, "userEmail"));
 
     public async Task<UserRecord?> FindUserByIdAsync(int userId) =>
         await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
     
     public async Task<UserRecord?> CheckLoginInfoAsync(string userEmail, string userPassword) =>
         await _context.Users.FirstOrDefaultAsync(u =>
-            EF.Functions.ILike(u.Email, $"{userEmail}") && u.Password == userPassword);
+            EF.Functions.ILike(u.Email, "userEmail") && u.Password == userPassword);
 
     public async Task<bool> AddFundsAsync(string userEmail, decimal amount)
     {
         var balanceUpdate =  _context.Balances.FirstOrDefault(b => 
-            EF.Functions.ILike(b.UserRecord.Email, $"{userEmail}"));
+            EF.Functions.ILike(b.UserRecord.Email, "userEmail"));
         if (balanceUpdate != null)
         {
             balanceUpdate.Amount += amount;

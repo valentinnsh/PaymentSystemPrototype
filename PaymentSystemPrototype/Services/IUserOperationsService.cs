@@ -7,7 +7,6 @@ public interface IUserOperationsService
 {
     public Task<UserRecord?> FindByEmailAsync(string userEmail);
     public Task<UserRecord?> FindUserByIdAsync(int userId);
-    public UserRecord? FindUserById(int userId);
     public Task<UserRecord?> CheckLoginInfoAsync(string userEmail, string userPassword);
     Task AddUserAsync(UserRecord user);
     public Task<bool> ModifyUserAsync(SignUpData user, int userId);
