@@ -29,7 +29,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         };
     });
 
-builder.Services.AddMvc();
+builder.Services.AddMvc().AddRazorPagesOptions(options =>
+{
+    options.Conventions.AddPageRoute("/Auth/LogIn", "");
+});;
 var app = builder.Build();
 
 app.UseStaticFiles();
