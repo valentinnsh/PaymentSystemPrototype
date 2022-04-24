@@ -21,7 +21,7 @@ public class AssignRole : PageModel
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] int assignedRole)
     {
         
-        var result = await userOperationsService.SetRoleAsync(UserId, (Roles)assignedRole-1);
+        var result = await userOperationsService.SetRoleAsync(UserId, (Roles)assignedRole);
         return result switch
         {
             true => RedirectToPage("UserList"),

@@ -76,14 +76,14 @@ public class UserOperationsService : IUserOperationsService
     {
         var user = FindUserByIdAsync(userId).Result ?? throw new UserNotFoundException();
         return (Roles) _context.Roles.FirstOrDefault(
-            r => r.Id == _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id).RoleId).Id-1;
+            r => r.Id == _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id).RoleId).Id;
     }
     public async Task<bool> SetRoleAsync(int userId, Roles newRole)
     {
         var user = await FindUserByIdAsync(userId);
         if (user != null)
         {
-            var roleToSet = await _context.Roles.FirstOrDefaultAsync(b => b.Id == (int) newRole + 1);
+            var roleToSet = await _context.Roles.FirstOrDefaultAsync(b => b.Id == (int) newRole);
             var userRoleToChange = await _context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == user.Id);
             if (roleToSet != null)
                 if (userRoleToChange != null)
