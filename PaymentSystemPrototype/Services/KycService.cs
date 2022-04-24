@@ -38,13 +38,13 @@ public class KycService : IKycService
     public IList<VereficationRecord> GetVerificationRequests() =>
         _context.Verefications.ToList();
 
-    public async Task UpdateRequestStatusAsync(int userId, string reviewerEmail, int status)
+    public async Task UpdateRequestStatusAsync(int userId, int reviewerId, int status)
     {
         var user = await _userOperationsService.FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
         var request = _context.Verefications.FirstOrDefault(v => v.UserId == user.Id) 
                       ?? throw new RequestNotFoundException();
         
-        request.Reviewer = reviewerEmail;
+        request.Reviewer = reviewerId;
         request.Status = status;
         request.LastChangeDate = DateTime.UtcNow;
         await _context.SaveChangesAsync();

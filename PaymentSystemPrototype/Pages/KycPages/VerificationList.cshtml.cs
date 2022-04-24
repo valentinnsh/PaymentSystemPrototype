@@ -7,7 +7,7 @@ using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.KycPages;
 [Authorize(Roles = "KycManager, Admin")]
-public class VerificationList : PageModel
+public class VerificationList : AlteredPageModel
 {
     public IList<UserRecord> ListUsers;
     public IList<VereficationRecord> ListVerrifivcations;
@@ -19,7 +19,7 @@ public class VerificationList : PageModel
 
     public async Task<IActionResult> OnPostReview([FromServices] IKycService kycService, int userId, int status)
     {
-        await kycService.UpdateRequestStatusAsync(userId, User.Identity.Name, status);
+        await kycService.UpdateRequestStatusAsync(userId, GetUsersId(), status);
         return RedirectToPage("VerificationList");
     }
 }

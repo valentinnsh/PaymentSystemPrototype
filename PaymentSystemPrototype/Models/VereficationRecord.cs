@@ -18,5 +18,6 @@ public class VereficationRecord
     public DateTime LastChangeDate { get; set; }
     
     [Column("reviewer")]
-    public string? Reviewer { get; set; }
+    public int? Reviewer { get; set; }
+    public UserRecord? ReviewerRecord { get; set; }
 }

@@ -51,6 +51,11 @@ public class AppDbContext : DbContext
             .HasForeignKey(t => t.ConfirmedBy)
             .IsRequired(false);
 
+        modelBuilder.Entity<UserRecord>()
+            .HasOne(u => u.ReviewerForVereficationRecord)
+            .WithOne(b => b.ReviewerRecord)
+            .HasForeignKey<VereficationRecord>(b => b.Reviewer);
+
         modelBuilder.Entity<UserRecord>().HasData(
         new UserRecord { Id = 1, FirstName = "Admin", LastName = "Admin", Email = "admin@gmail.com",
             Password = "admin", RegisteredAt = new DateTime(2022, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)},

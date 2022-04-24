@@ -88,7 +88,7 @@
             else
             {
                 <td>
-                    @userVerifications.Reviewer
+                    @Model.ListUsers.FirstOrDefault(u => u.Id == userVerifications.Reviewer)?.Email
                 </td>
             }
             <td>
