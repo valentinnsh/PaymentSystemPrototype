@@ -7,7 +7,7 @@ namespace PaymentSystemPrototype.Services;
 
 public class TransferOperationsService : ITransferOperationsService
 {
-    private readonly object _balanceLock = new();
+    private static readonly object BalanceLock = new();
     private readonly IUserOperationsService _userOperationsService;
     private readonly AppDbContext _context;
     public TransferOperationsService(AppDbContext context, IUserOperationsService userOperationsService)
@@ -21,7 +21,7 @@ public class TransferOperationsService : ITransferOperationsService
         var user = await _userOperationsService.FindByEmailAsync(userEmail) ?? throw new UserNotFoundException();
         var balanceUpdate = _context.Balances.FirstOrDefault(b => b.UserId == user.Id) 
                             ?? throw new BalanceNotFoundException();
-        lock (_balanceLock)
+        lock (BalanceLock)
         {
             if (balanceUpdate.Amount + amount < 0)
             {
@@ -50,7 +50,7 @@ public class TransferOperationsService : ITransferOperationsService
         var user = await _userOperationsService.FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
         var balance = await _userOperationsService.GetUserBalanceAsync(userId);
         if (user == null || balance == null) throw new UserNotFoundException();
-        lock (_balanceLock)
+        lock (BalanceLock)
         {
             if (balance.Amount + data.Amount < 0)
             {
@@ -107,7 +107,7 @@ public class TransferOperationsService : ITransferOperationsService
                 var user = _context.Users.FirstOrDefault(u => u.Id == transfer.UserId);
                 var balance = _context.Balances.FirstOrDefault(b => user != null && b.UserId == user.Id);
                 if (user == null || balance == null) throw new UserNotFoundException();
-                lock (_balanceLock)
+                lock (BalanceLock)
                 {
                     if (balance.Amount + transfer.Amount > 0)
                     {
