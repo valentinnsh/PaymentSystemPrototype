@@ -10,9 +10,9 @@ namespace PaymentSystemPrototype.Pages.FundsPages;
 [Authorize(Roles = "FundsManager, Admin")]
 public class TransferList : AlteredPageModel
 {
-    public IList<TransferRecord> ListRequests;
-    public IList<UserRecord> ListUsers;
-    public IList<BalanceRecord> ListBalances;
+    public IQueryable<TransferRecord> ListRequests;
+    public IQueryable<UserRecord> ListUsers;
+    public IQueryable<BalanceRecord> ListBalances;
     public string Message = "";
     public void OnGet([FromServices] ITransferOperationsService transferOperationsService, 
         [FromServices] IUserOperationsService userOperationsService, string msg = "")

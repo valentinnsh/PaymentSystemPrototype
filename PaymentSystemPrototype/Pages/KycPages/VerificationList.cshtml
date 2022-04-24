@@ -55,7 +55,7 @@
             }
             );
     }
-    @foreach (var userVerifications in query)
+    @foreach (var userVerifications in query.ToList())
     {
         <tr>
             <td>

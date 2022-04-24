@@ -10,8 +10,8 @@ namespace PaymentSystemPrototype.Pages.UserPages;
 [Authorize(Roles = "User")]
 public class TransferList : AlteredPageModel
 {
-    public IList<TransferRecord> UserTransfers;
-    public IList<UserRecord> UserList; 
+    public IQueryable<TransferRecord> UserTransfers;
+    public IQueryable<UserRecord> UserList; 
     public void OnGet([FromServices] ITransferOperationsService transferOperationsService,
         [FromServices] IUserOperationsService userOperationsService)
     {

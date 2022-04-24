@@ -30,7 +30,7 @@
     </thead>
     <tbody>
     
-    @foreach (var user in Model.ListUsers)
+    @foreach (var user in Model.ListUsers.ToList())
     {
         <tr>
             <td>

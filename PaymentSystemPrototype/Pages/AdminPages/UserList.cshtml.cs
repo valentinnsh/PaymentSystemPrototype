@@ -9,9 +9,9 @@ namespace PaymentSystemPrototype.Pages.Profiles;
 [Authorize(Roles = "Admin")]
 public class UserList : PageModel
 {
-    public IList<UserRecord> ListUsers = new List<UserRecord>();
-    public IList<RoleRecord> ListRoles = new List<RoleRecord>();
-    public IList<UserRoleRecord> ListUserRoles = new List<UserRoleRecord>();
+    public IQueryable<UserRecord> ListUsers;
+    public IQueryable<RoleRecord> ListRoles;
+    public IQueryable<UserRoleRecord> ListUserRoles;
     public void OnGet([FromServices] IUserOperationsService userOperationsService)
     {
         ListUsers = userOperationsService.GetUsers();

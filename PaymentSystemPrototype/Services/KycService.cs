@@ -35,8 +35,8 @@ public class KycService : IKycService
             throw new RequestAlreadyExistsException();
     }
 
-    public IList<VereficationRecord> GetVerificationRequests() =>
-        _context.Verefications.ToList();
+    public IQueryable<VereficationRecord> GetVerificationRequests() =>
+        _context.Verefications;
 
     public async Task UpdateRequestStatusAsync(int userId, int reviewerId, int status)
     {

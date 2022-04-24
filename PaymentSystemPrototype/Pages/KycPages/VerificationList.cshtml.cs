@@ -9,8 +9,8 @@ namespace PaymentSystemPrototype.Pages.KycPages;
 [Authorize(Roles = "KycManager, Admin")]
 public class VerificationList : AlteredPageModel
 {
-    public IList<UserRecord> ListUsers;
-    public IList<VereficationRecord> ListVerrifivcations;
+    public IQueryable<UserRecord> ListUsers;
+    public IQueryable<VereficationRecord> ListVerrifivcations;
     public void OnGet([FromServices] IUserOperationsService userOperationsService, [FromServices] IKycService kycService)
     {
         ListUsers = userOperationsService.GetUsers();

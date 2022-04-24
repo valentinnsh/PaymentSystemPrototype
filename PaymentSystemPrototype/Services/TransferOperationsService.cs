@@ -73,15 +73,15 @@ public class TransferOperationsService : ITransferOperationsService
         }
     }
 
-    public IList<TransferRecord> GetTransfers() =>
-        _context.Transfers.ToList();
+    public IQueryable<TransferRecord> GetTransfers() =>
+        _context.Transfers;
 
-    public IList<TransferRecord> GetTransfersUnreviewedFirst() =>
-        _context.Transfers.ToList().OrderByDescending(t=>t.Status).ToList();
-    public IList<TransferRecord> GetTransfersForUser(int userId)
+    public IQueryable<TransferRecord> GetTransfersUnreviewedFirst() =>
+        _context.Transfers.OrderByDescending(t=>t.Status);
+    public IQueryable<TransferRecord> GetTransfersForUser(int userId)
     {
         var user =  _userOperationsService.FindUserByIdAsync(userId).Result ?? throw new UserNotFoundException();
-        return _context.Transfers.Where(t => t.UserId == user.Id).ToList();
+        return _context.Transfers.Where(t => t.UserId == user.Id);
     }
 
     public async Task<bool> CancelTransferAsync(int transferId)

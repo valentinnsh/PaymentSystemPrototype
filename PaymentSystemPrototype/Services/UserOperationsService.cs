@@ -95,17 +95,17 @@ public class UserOperationsService : IUserOperationsService
         return false;
     }
 
-    public IList<UserRecord> GetUsers() =>
-        _context.Users.ToList();
+    public IQueryable<UserRecord> GetUsers() =>
+        _context.Users;
 
-    public IList<UserRoleRecord> GetUserRoles() =>
-        _context.UserRoles.ToList();
+    public IQueryable<UserRoleRecord> GetUserRoles() =>
+        _context.UserRoles;
 
-    public IList<RoleRecord> GetRoles() =>
-        _context.Roles.ToList();
+    public IQueryable<RoleRecord> GetRoles() =>
+        _context.Roles;
     
-    public IList<BalanceRecord> GetBalances() =>
-        _context.Balances.ToList();
+    public IQueryable<BalanceRecord> GetBalances() =>
+        _context.Balances;
 
     public async Task<bool> IsUserBlocked(int userId)
     {
