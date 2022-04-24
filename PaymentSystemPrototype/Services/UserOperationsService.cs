@@ -53,14 +53,14 @@ public class UserOperationsService : IUserOperationsService
     }
 
     public async Task<UserRecord?> FindByEmailAsync(string userEmail) =>
-        await _context.Users.FirstOrDefaultAsync(u =>  EF.Functions.ILike(u.Email, "userEmail"));
+        await _context.Users.FirstOrDefaultAsync(u =>  u.Email == userEmail.ToLower());
 
     public async Task<UserRecord?> FindUserByIdAsync(int userId) =>
         await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
     
     public async Task<UserRecord?> CheckLoginInfoAsync(string userEmail, string userPassword) =>
-        await _context.Users.FirstOrDefaultAsync(u =>
-            EF.Functions.ILike(u.Email, "userEmail") && u.Password == userPassword);
+        await _context.Users.FirstOrDefaultAsync(u => 
+            u.Email == userEmail.ToLower() && u.Password == userPassword);
 
     public async Task<bool> AddFundsAsync(string userEmail, decimal amount)
     {
