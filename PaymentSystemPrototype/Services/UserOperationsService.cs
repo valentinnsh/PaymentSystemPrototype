@@ -65,12 +65,8 @@ public class UserOperationsService : IUserOperationsService
     public async Task<BalanceRecord?> GetUserBalanceAsync(int userId) =>
         await _context.Balances.FirstOrDefaultAsync(b => b.UserRecord.Id == userId);
 
-    public async Task<string> GetUserRoleAsStringAsync(int userId)
-    {
-        var user =  await FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
-        return _context.Roles.FirstOrDefault(
-            r => r.Id == _context.UserRoles.FirstOrDefault(ur=>ur.UserId == user.Id).RoleId).Name;
-    }
+    public string GetUserRoleAsString(int userId) =>
+        GetUserRole(userId).ToString();
 
     public Roles GetUserRole(int userId)
     {

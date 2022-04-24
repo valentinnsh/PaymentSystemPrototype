@@ -28,7 +28,7 @@ public class AuthService : IAuthService
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, account.Email),
-            new(ClaimTypes.Role, await _userOperationsService.GetUserRoleAsStringAsync(account.Id)),
+            new(ClaimTypes.Role,  _userOperationsService.GetUserRoleAsString(account.Id)),
             new(ClaimTypes.NameIdentifier, account.Id.ToString())
         };
 

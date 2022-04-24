@@ -11,7 +11,7 @@ public interface IUserOperationsService
     Task AddUserAsync(UserRecord user);
     public Task<bool> ModifyUserAsync(SignUpData user, int userId);
     public Task<BalanceRecord?> GetUserBalanceAsync(int userId);
-    public Task<string> GetUserRoleAsStringAsync(int userId);
+    public string GetUserRoleAsString(int userId);
     public Roles GetUserRole(int userId);
     public Task<bool> SetRoleAsync(int userId, Roles newRole);
     public IQueryable<UserRecord> GetUsers();
