@@ -26,7 +26,7 @@ public class KycService : IKycService
                 {
                     UserId = user.Id,
                     Status = (int) ReviewStatus.InReview,
-                    LastChangeDate = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now),
+                    LastChangeDate = DateTime.UtcNow,
                     Reviewer = null
                 });
             await _context.SaveChangesAsync();
@@ -46,7 +46,7 @@ public class KycService : IKycService
         
         request.Reviewer = reviewerEmail;
         request.Status = status;
-        request.LastChangeDate = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now);
+        request.LastChangeDate = DateTime.UtcNow;
         await _context.SaveChangesAsync();
         
     }

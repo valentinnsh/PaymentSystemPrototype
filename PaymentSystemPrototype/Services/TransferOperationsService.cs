@@ -33,7 +33,7 @@ public class TransferOperationsService : ITransferOperationsService
                 {
                     UserId = user.Id,
                     CardNumber = data.CardNumber,
-                    CreatedAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now),
+                    CreatedAt = DateTime.UtcNow,
                     ConfirmedAt = null,
                     ConfirmedBy = null,
                     Amount = data.Amount,
