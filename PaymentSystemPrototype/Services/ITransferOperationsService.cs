@@ -11,4 +11,5 @@ public interface ITransferOperationsService
     public Task<bool> CancelTransferAsync(int transferId);
     public IList<TransferRecord> GetTransfersUnreviewedFirst();
     public Task<bool> SetStatusAsync(ReviewStatus status, int reviewerId, int transferId);
+    public Task<bool> AddFundsAsync(string userEmail, decimal amount, int reviewerId);
 }

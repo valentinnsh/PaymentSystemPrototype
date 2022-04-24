@@ -15,7 +15,36 @@ public class TransferOperationsService : ITransferOperationsService
         _context = context;
         _userOperationsService = userOperationsService;
     }
+    
+    public async Task<bool> AddFundsAsync(string userEmail, decimal amount, int reviewerId)
+    {
+        var user = await _userOperationsService.FindByEmailAsync(userEmail) ?? throw new UserNotFoundException();
+        var balanceUpdate = _context.Balances.FirstOrDefault(b => b.UserId == user.Id) 
+                            ?? throw new BalanceNotFoundException();
+        lock (_balanceLock)
+        {
+            if (balanceUpdate.Amount + amount < 0)
+            {
+                return false;
+            }
 
+            _context.Transfers.Add(
+                new TransferRecord()
+                {
+                    UserId = user.Id,
+                    CardNumber = null,
+                    CreatedAt = DateTime.UtcNow,
+                    ConfirmedAt = DateTime.UtcNow,
+                    ConfirmedBy = reviewerId,
+                    Amount = amount,
+                    Status = (int) ReviewStatus.Accepted
+                });
+            balanceUpdate.Amount += amount;
+            _context.SaveChanges();
+            return true;
+        }
+    }
+    
     public async Task<bool> CreateTransferRequestAsync(WithdrawalData data, int userId)
     {
         var user = await _userOperationsService.FindUserByIdAsync(userId) ?? throw new UserNotFoundException();

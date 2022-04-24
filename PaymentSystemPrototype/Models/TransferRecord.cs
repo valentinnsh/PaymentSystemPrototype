@@ -15,7 +15,7 @@ public class TransferRecord
     public UserRecord UserRecord { get; set; }
     
     [Column("card_number")]
-    public long CardNumber { get; set; }
+    public long? CardNumber { get; set; }
     
     [Column("confirmed_by")]
     public int? ConfirmedBy { get; set; }

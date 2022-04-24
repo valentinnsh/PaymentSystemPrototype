@@ -61,20 +61,7 @@ public class UserOperationsService : IUserOperationsService
     public async Task<UserRecord?> CheckLoginInfoAsync(string userEmail, string userPassword) =>
         await _context.Users.FirstOrDefaultAsync(u => 
             u.Email == userEmail.ToLower() && u.Password == userPassword);
-
-    public async Task<bool> AddFundsAsync(string userEmail, decimal amount)
-    {
-        var balanceUpdate =  _context.Balances.FirstOrDefault(b => 
-            EF.Functions.ILike(b.UserRecord.Email, "userEmail"));
-        if (balanceUpdate != null)
-        {
-            balanceUpdate.Amount += amount;
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        return false;
-    }
+    
     public async Task<BalanceRecord?> GetUserBalanceAsync(int userId) =>
         await _context.Balances.FirstOrDefaultAsync(b => b.UserRecord.Id == userId);
 

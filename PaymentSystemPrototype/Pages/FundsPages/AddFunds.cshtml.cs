@@ -7,7 +7,7 @@ using PaymentSystemPrototype.Services;
 namespace PaymentSystemPrototype.Pages.FundsPages;
 
 [Authorize(Roles = "FundsManager")]
-public class AddFunds : PageModel
+public class AddFunds : AlteredPageModel
 {
     public string Message = "";
     public void OnGet(string msg)
@@ -15,10 +15,10 @@ public class AddFunds : PageModel
         Message = msg;
     }
 
-    public Task<IActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, string userEmail,
+    public Task<IActionResult> OnPost([FromServices] ITransferOperationsService transferOperations, string userEmail,
         int amountAdded)
     {
-        var result = userOperationsService.AddFundsAsync(userEmail, amountAdded).Result;
+        var result =transferOperations.AddFundsAsync(userEmail, amountAdded, GetUsersId()).Result;
         return Task.FromResult<IActionResult>(result switch
         {
             true => RedirectToPage("AddFunds", new {msg = $"Done adding {amountAdded} to {userEmail}"}),
