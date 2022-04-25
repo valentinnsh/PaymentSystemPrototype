@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.Net.Http;
@@ -27,9 +28,6 @@ public class TestBase
     {
         Env = new TestEnvironment();
         Env.Start();
-        DbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
-            .UseInMemoryDatabase("database_name").Options);
-        userOperationsService = new UserOperationsService(DbContext);
     }
     
     [OneTimeTearDown]
@@ -44,6 +42,26 @@ public class TestBase
     {
         Env.Prepare();
         Client = Env.WebAppHost.GetClient();
+        DbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase("database_name").Options);
+        DbContext.Database.EnsureCreated();
+        userOperationsService = new UserOperationsService(DbContext);
+
+        DbContext.Users.Add(new UserRecord
+        {
+            FirstName = "Igor", LastName = "Igorev", Email = "igor@gmail.com",
+            Password = "igor", RegisteredAt = new DateTime(2020, 3, 29, 17, 29, 3, 605, DateTimeKind.Utc)
+        });
+        
+        DbContext.UserRoles.Add(new UserRoleRecord 
+            {UserId = 6, RoleId = 1});
+        DbContext.SaveChanges();
+    }
+
+    [TearDown]
+    public void TeatDown()
+    {
+        DbContext.Dispose();
     }
 
 }
