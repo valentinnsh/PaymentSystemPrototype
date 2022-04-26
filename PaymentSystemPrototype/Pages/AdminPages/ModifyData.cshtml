@@ -7,13 +7,13 @@
 
 <h2>Enter New Data for user @Model.UserEmail</h2>
 
-<form method="post">
+<form asp-route-userId = "@Model.PresentedUser.Id" method="post">
     <label for="FirstName">First Name</label> <br/>
-    <input name="FirstName" type="text"/><br/>
+    <input name="FirstName" type="text" placeholder="@Model.PresentedUser.FirstName"/><br/>
     <label for="LastName">Last Name</label> <br/>
-    <input name="LastName" type="text"/><br/>
+    <input name="LastName" type="text" placeholder="@Model.PresentedUser.LastName"/><br/>
     <label for="email">Email</label> <br/>
-    <input name="email" type="email"/><br/>
+    <input name="email" type="email" placeholder="@Model.PresentedUser.Email"/><br/>
     <label for="password">Password</label> <br/>
     <input name="password" type="password"/><br/>
     <input type="submit" value="Apply Changes"/><br/>

@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PaymentSystemPrototype.Models;
@@ -6,8 +7,11 @@ using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.UserPages;
 
-public class CreateWithdrawal : PageModel
+[Authorize(Roles = "User")]
+public class CreateWithdrawal : AlteredPageModel
 {
+    [BindProperty]
+    public WithdrawalData? WithdrawalData { get; set; }
     public string Message = "";
     public void OnGet(string msg)
     {
@@ -15,15 +19,18 @@ public class CreateWithdrawal : PageModel
     }
 
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService,
-        [FromServices] ITransferOperationsService transferOperationsService, [FromForm] TransferData transferData)
+        [FromServices] ITransferOperationsService transferOperationsService, [FromForm] WithdrawalData withdrawalData)
     {
-        transferData.Amount *= -1;
-        var result = transferOperationsService.CreateTransferRequest(transferData, User.Identity.Name).Result;
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
+        withdrawalData.Amount *= -1;
+        var result = transferOperationsService.CreateTransferRequestAsync(withdrawalData, GetUsersId()).Result;
         return result switch
         {
-            HttpStatusCode.OK => RedirectToPage("/UserPages/UserProfile"),
-            HttpStatusCode.Forbidden => RedirectToPage("CreateWithdrawal", new {msg = "Balance is too low"}),
-            _ => RedirectToPage("CreateDeposit", new {msg = "Unknown Error, try again"})
+            true => RedirectToPage("/UserPages/UserProfile"),
+            false => RedirectToPage("CreateWithdrawal", new {msg = "Balance is too low"})
         };
     }
 }

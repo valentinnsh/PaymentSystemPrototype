@@ -30,7 +30,7 @@
     </thead>
     <tbody>
     
-    @foreach (var user in Model.ListUsers)
+    @foreach (var user in Model.ListUsers.ToList())
     {
         <tr>
             <td>
@@ -54,17 +54,17 @@
                 @user.RegisteredAt
             </td>
             <td>
-                <a asp-page="ModifyData" asp-route-email="@user.Email">Edit Data</a> |
-                <a asp-page="AssignRole" asp-route-email="@user.Email">Set Role</a> |
+                <a asp-page="ModifyData" asp-route-userId="@user.Id">Edit Data</a> |
+                <a asp-page="AssignRole" asp-route-id="@user.Id">Set Role</a> |
                 @if (!user.Block)
                 {
-                    var statusEmail = "Block " + user.Email;
-                    <a asp-page="InvertBlockStatus" asp-route-userId="@user.Id" asp-route-statusEmail = "@statusEmail">Block</a>
+                    <a asp-page="InvertBlockStatus" asp-route-userId="@user.Id" asp-route-email = "@user.Email"
+                       asp-route-status = "true">Block</a>
                 }
                 else
                 {
-                    var statusEmail = "Unblock " + user.Email;
-                    <a asp-page="InvertBlockStatus" asp-route-userId="@user.Id" asp-route-statusEmail = "@statusEmail">Unblock</a>
+                    <a asp-page="InvertBlockStatus" asp-route-userId="@user.Id" asp-route-email = "@user.Email"
+                       asp-route-status = "false">Unblock</a>
                 }
             </td>
         </tr>

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
+using PaymentSystemPrototype.Exceptions;
 using PaymentSystemPrototype.Models;
 
 namespace PaymentSystemPrototype.Services;
@@ -16,43 +17,41 @@ public class AuthService : IAuthService
         _userOperationsService = userOperationsService;
     }
     
-    public async Task<HttpStatusCode> LogInAsync(string userEmail, string userPassword, HttpContext httpContext)
+    public async Task<bool> LogInAsync(string userEmail, string userPassword, HttpContext httpContext)
     {
-        if (_userOperationsService.FindByEmail(userEmail) == null)
+        if (await _userOperationsService.FindByEmailAsync(userEmail) == null)
         {
-            return HttpStatusCode.NotFound;
+            throw new UserNotFoundException();
         }
-        var account = await _userOperationsService.CheckLoginInfo(userEmail, userPassword);
-        if (account != null)
+        var account = await _userOperationsService.CheckLoginInfoAsync(userEmail, userPassword);
+        if (account == null) return false;
+        var claims = new List<Claim>
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, account.Email),
-                new Claim(ClaimTypes.Role, _userOperationsService.GetUserRoleAsString(account.Email))
-            };
+            new(ClaimTypes.Name, account.Email),
+            new(ClaimTypes.Role,  _userOperationsService.GetUserRoleAsString(account.Id)),
+            new(ClaimTypes.NameIdentifier, account.Id.ToString())
+        };
 
-            var claimsIdentity = new ClaimsIdentity(claims, "ApplicationCookie",
-                ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+        var claimsIdentity = new ClaimsIdentity(claims, "ApplicationCookie",
+            ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
-            await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
-                new ClaimsPrincipal(claimsIdentity));
+        await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
+            new ClaimsPrincipal(claimsIdentity));
                 
-            return HttpStatusCode.OK;
-        }
-        return HttpStatusCode.Forbidden;
+        return true;
     }
 
-    public Task LogOutAsync(HttpContext httpContext)
+    public async Task LogOutAsync(HttpContext httpContext)
     {
-        return httpContext.SignOutAsync();
+        await httpContext.SignOutAsync();
     }
 
-    public async Task<HttpStatusCode> SignUpAsync(SignUpData signUpData)
+    public async Task<bool> SignUpAsync(SignUpData signUpData)
     {
         // Check if email is already in use
-        if (_userOperationsService.FindByEmail(signUpData.Email) != null)
+        if (await _userOperationsService.FindByEmailAsync(signUpData.Email) != null)
         {
-            return HttpStatusCode.Conflict;
+            return false;
         }
 
         var newUser = new UserRecord
@@ -61,9 +60,10 @@ public class AuthService : IAuthService
             LastName = signUpData.LastName,
             Email = signUpData.Email,
             Password = signUpData.Password,
-            RegisteredAt = TimeZoneInfo.ConvertTimeToUtc(DateTime.Now)
+            RegisteredAt = DateTime.UtcNow
         };
         await _userOperationsService.AddUserAsync(newUser);
-        return HttpStatusCode.OK;
+        return true;
     }
+    
 }

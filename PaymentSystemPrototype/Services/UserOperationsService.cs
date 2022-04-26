@@ -1,10 +1,5 @@
-using System.Data.Entity;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Reflection.Metadata.Ecma335;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using PaymentSystemPrototype.Exceptions;
 using PaymentSystemPrototype.Models;
 
 namespace PaymentSystemPrototype.Services;
@@ -19,12 +14,14 @@ public class UserOperationsService : IUserOperationsService
 
     public async Task AddUserAsync(UserRecord user)
     {
-        var newUserBalance = new BalanceRecord();
-        newUserBalance.Amount = 0;
-        newUserBalance.UserId = user.Id;
-        newUserBalance.UserRecord = user;
         await _context.AddAsync(user);
-        await _context.AddAsync(newUserBalance);
+        await _context.SaveChangesAsync();
+        await _context.AddAsync(new BalanceRecord
+        {
+            Amount = 0,
+            UserId = user.Id,
+            UserRecord = user
+        });
         await _context.AddAsync(new UserRoleRecord
         {
             UserId = user.Id,
@@ -34,15 +31,15 @@ public class UserOperationsService : IUserOperationsService
         await _context.SaveChangesAsync();
     }
 
-    public async void DeleteUser(int id)
+    public async Task DeleteUserAsync(int id)
     {
-        _context.Remove(_context.Users.Single(u => u != null && u.Id == 1));
+        _context.Remove(_context.Users.Single(u => u != null && u.Id == id));
         await _context.SaveChangesAsync();
     }
 
-    public async Task<HttpStatusCode> ModifyUser(SignUpData user, string previousEmail)
+    public async Task<bool> ModifyUserAsync(SignUpData user, int userId)
     {
-        var target = _context.Users.SingleOrDefault(u => u.Email == previousEmail);
+        var target = await FindUserByIdAsync(userId);
         if (target != null)
         {
             target.FirstName = user.FirstName;
@@ -50,89 +47,78 @@ public class UserOperationsService : IUserOperationsService
             target.Email = user.Email;
             target.Password = user.Password;
             await _context.SaveChangesAsync();
-            return HttpStatusCode.OK;
+            return true;
         }
-        return HttpStatusCode.NotFound;
-    }
-    public UserRecord? FindByEmail(string userEmail) =>
-       _context.Users.FirstOrDefault(b =>  b.Email == userEmail);
-
-    public Task<UserRecord?> CheckLoginInfo(string userEmail, string userPassword) =>
-        Task.FromResult(_context.Users.FirstOrDefault(u => u != null && u.Email == userEmail &&
-                                                                                u.Password == userPassword));
-
-    public async Task<HttpStatusCode> AddFunds(string userEmail, int amount)
-    {
-        var balanceUpdate =  _context.Balances.FirstOrDefault(b => 
-            b.UserRecord.Email == userEmail);
-        if (balanceUpdate != null)
-        {
-            balanceUpdate.Amount += amount;
-            await _context.SaveChangesAsync();
-            return HttpStatusCode.OK;
-        }
-
-        return HttpStatusCode.NotFound;
-    }
-    public BalanceRecord? GetUserBalance(string userEmail) =>
-        _context.Balances.FirstOrDefault(b => b.UserRecord.Email == userEmail);
-
-    public string? GetUserRoleAsString(string userEmail)
-    {
-        var user = FindByEmail(userEmail);
-        return _context.Roles.FirstOrDefault(
-            r => r.Id == _context.UserRoles.FirstOrDefault(ur=>ur.UserId == user.Id).RoleId).Name;
+        return false;
     }
 
-    public Roles GetUserRole(string userEmail)
+    public async Task<UserRecord?> FindByEmailAsync(string userEmail) =>
+        await _context.Users.FirstOrDefaultAsync(u =>  u.Email == userEmail.ToLower());
+
+    public async Task<UserRecord?> FindUserByIdAsync(int userId) =>
+        await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+    
+    public async Task<UserRecord?> CheckLoginInfoAsync(string userEmail, string userPassword) =>
+        await _context.Users.FirstOrDefaultAsync(u => 
+            u.Email == userEmail.ToLower() && u.Password == userPassword);
+    
+    public async Task<BalanceRecord?> GetUserBalanceAsync(int userId) =>
+        await _context.Balances.FirstOrDefaultAsync(b => b.UserRecord.Id == userId);
+
+    public string GetUserRoleAsString(int userId) =>
+        GetUserRole(userId).ToString();
+
+    public Roles GetUserRole(int userId)
     {
-        var user = FindByEmail(userEmail);
-        var userRole = _context.UserRoles.FirstOrDefault(ur => user != null && ur.UserId == user.Id);
+        var user = FindUserByIdAsync(userId).Result ?? throw new UserNotFoundException();
         return (Roles) _context.Roles.FirstOrDefault(
-            r => r.Id == _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id).RoleId).Id-1;
+            r => r.Id == _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id).RoleId).Id;
     }
-    public async Task<HttpStatusCode> SetRole(string userEmail, Roles newRole)
+    public async Task<bool> SetRoleAsync(int userId, Roles newRole)
     {
-        var user = FindByEmail(userEmail);
+        var user = await FindUserByIdAsync(userId);
         if (user != null)
         {
-            var roleToSet = _context.Roles.FirstOrDefault(b => b.Id == (int) newRole + 1);
-            var userRoleToChange = _context.UserRoles.FirstOrDefault(ur => ur.UserId == user.Id);
+            var roleToSet = await _context.Roles.FirstOrDefaultAsync(b => b.Id == (int) newRole);
+            var userRoleToChange = await _context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == user.Id);
             if (roleToSet != null)
-                userRoleToChange.RoleId = roleToSet.Id;
+                if (userRoleToChange != null)
+                    userRoleToChange.RoleId = roleToSet.Id;
             await _context.SaveChangesAsync();
-            return HttpStatusCode.OK;
+            return true;
         }
 
-        return HttpStatusCode.NotFound;
+        return false;
     }
 
-    public List<UserRecord> GetUsers() =>
-        _context.Users.ToList();
+    public IQueryable<UserRecord> GetUsers() =>
+        _context.Users;
 
-    public List<UserRoleRecord> GetUserRoles() =>
-        _context.UserRoles.ToList();
+    public IQueryable<UserRoleRecord> GetUserRoles() =>
+        _context.UserRoles;
 
-    public List<RoleRecord> GetRoles() =>
-        _context.Roles.ToList();
+    public IQueryable<RoleRecord> GetRoles() =>
+        _context.Roles;
     
-    public List<BalanceRecord> GetBalances() =>
-        _context.Balances.ToList();
+    public IQueryable<BalanceRecord> GetBalances() =>
+        _context.Balances;
 
-    public bool IsUserBlocked(string userEmail) =>
-        _context.Users.FirstOrDefault(b => b.Email == userEmail).Block;
-
-    public async Task<HttpStatusCode> RevertBlockStatus(int userId)
+    public async Task<bool> IsUserBlocked(int userId)
     {
-        var user = _context.Users.FirstOrDefault(b => b.Id == userId);
-        if (user != null)
-        {
-            user.Block = !user.Block;
-            await _context.SaveChangesAsync();
-            return HttpStatusCode.OK;
-        }
-
-        return HttpStatusCode.NotFound;
+        var user =  await _context.Users.FirstOrDefaultAsync(b => b.Id == userId) ?? throw new UserNotFoundException();
+        return user.Block;
     }
-    
+
+    public async Task BlockUserAsync(int userId)
+    {
+        var user = await FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
+        user.Block = true;
+        await _context.SaveChangesAsync();
+    }
+    public async Task UnblockUserAsync(int userId)
+    {
+        var user = await FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
+        user.Block = false;
+        await _context.SaveChangesAsync();
+    }
 }

@@ -4,7 +4,7 @@ namespace PaymentSystemPrototype.Services;
 
 public interface IKycService
 {
-    public  Task CreateVerificationRequest(string userEmail);
-    public List<VereficationRecord> GetVerificationRequests();
-    public Task UpdateRequestStatus(string userEmail, string reviewerEmail, int status);
+    public  Task CreateVerificationRequestAsync(int userId);
+    public IQueryable<VereficationRecord> GetVerificationRequests();
+    public Task UpdateRequestStatusAsync(int userId, int reviewerId, int status);
 }

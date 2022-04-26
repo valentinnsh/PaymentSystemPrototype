@@ -25,16 +25,17 @@
 <form asp-page-handler="ModifyUser" method="post">
         <button class = "button">Modify user Info</button> 
     </form>
-
+@if (Model.UserRole == Roles.User)
+{
     <form asp-page-handler="RequestKYCVerification" method="post">
-        <button class = "button">Request Verification</button>
+        <button class="button">Request Verification</button>
     </form>
 
     <form method="get">
-        <button asp-page="CreateDeposit" class = "button">Create Deposit</button>
+        <button asp-page="CreateDeposit" class="button">Create Deposit</button>
     </form>
 
     <form method="get">
-        <button asp-page = "CreateWithdrawal" class = "button">Create Withdrawal</button>
+        <button asp-page="CreateWithdrawal" class="button">Create Withdrawal</button>
     </form>
-    
+}   

@@ -28,8 +28,8 @@ namespace PaymentSystemPrototype.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("user_id");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("integer")
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric")
                         .HasColumnName("amount");
 
                     b.HasKey("UserId");
@@ -40,27 +40,27 @@ namespace PaymentSystemPrototype.Migrations
                         new
                         {
                             UserId = 1,
-                            Amount = 100
+                            Amount = 100m
                         },
                         new
                         {
                             UserId = 2,
-                            Amount = 100
+                            Amount = 100m
                         },
                         new
                         {
                             UserId = 3,
-                            Amount = 100
+                            Amount = 100m
                         },
                         new
                         {
                             UserId = 4,
-                            Amount = 100
+                            Amount = 100m
                         },
                         new
                         {
                             UserId = 5,
-                            Amount = 100
+                            Amount = 100m
                         });
                 });
 
@@ -113,11 +113,11 @@ namespace PaymentSystemPrototype.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("integer")
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric")
                         .HasColumnName("amount");
 
-                    b.Property<long>("CardNumber")
+                    b.Property<long?>("CardNumber")
                         .HasColumnType("bigint")
                         .HasColumnName("card_number");
 
@@ -153,7 +153,7 @@ namespace PaymentSystemPrototype.Migrations
                         new
                         {
                             Id = 1,
-                            Amount = 100,
+                            Amount = 100m,
                             CardNumber = 1234567812345678L,
                             CreatedAt = new DateTime(2022, 3, 28, 14, 29, 3, 605, DateTimeKind.Utc),
                             Status = 2,
@@ -162,7 +162,7 @@ namespace PaymentSystemPrototype.Migrations
                         new
                         {
                             Id = 2,
-                            Amount = -10,
+                            Amount = -10m,
                             CardNumber = 8765432112345678L,
                             CreatedAt = new DateTime(2022, 3, 24, 11, 29, 3, 605, DateTimeKind.Utc),
                             Status = 2,
@@ -216,7 +216,7 @@ namespace PaymentSystemPrototype.Migrations
                         {
                             Id = 1,
                             Block = false,
-                            Email = "Admin@gmail.com",
+                            Email = "admin@gmail.com",
                             FirstName = "Admin",
                             LastName = "Admin",
                             Password = "admin",
@@ -226,7 +226,7 @@ namespace PaymentSystemPrototype.Migrations
                         {
                             Id = 2,
                             Block = false,
-                            Email = "Kyc@gmail.com",
+                            Email = "kyc@gmail.com",
                             FirstName = "Kyc",
                             LastName = "Kyc",
                             Password = "kyc",
@@ -236,7 +236,7 @@ namespace PaymentSystemPrototype.Migrations
                         {
                             Id = 3,
                             Block = false,
-                            Email = "Funds@gmail.com",
+                            Email = "funds@gmail.com",
                             FirstName = "Funds",
                             LastName = "Funds",
                             Password = "funds",
@@ -246,7 +246,7 @@ namespace PaymentSystemPrototype.Migrations
                         {
                             Id = 4,
                             Block = false,
-                            Email = "User1@gmail.com",
+                            Email = "user1@gmail.com",
                             FirstName = "User1",
                             LastName = "User1",
                             Password = "user1",
@@ -256,7 +256,7 @@ namespace PaymentSystemPrototype.Migrations
                         {
                             Id = 5,
                             Block = false,
-                            Email = "User2@gmail.com",
+                            Email = "user2@gmail.com",
                             FirstName = "User2",
                             LastName = "User2",
                             Password = "user2",
@@ -333,8 +333,8 @@ namespace PaymentSystemPrototype.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_change_date");
 
-                    b.Property<string>("Reviewer")
-                        .HasColumnType("text")
+                    b.Property<int?>("Reviewer")
+                        .HasColumnType("integer")
                         .HasColumnName("reviewer");
 
                     b.Property<int>("Status")
@@ -342,6 +342,9 @@ namespace PaymentSystemPrototype.Migrations
                         .HasColumnName("status");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("Reviewer")
+                        .IsUnique();
 
                     b.ToTable("verefications");
 
@@ -409,11 +412,17 @@ namespace PaymentSystemPrototype.Migrations
 
             modelBuilder.Entity("PaymentSystemPrototype.Models.VereficationRecord", b =>
                 {
+                    b.HasOne("PaymentSystemPrototype.Models.UserRecord", "ReviewerRecord")
+                        .WithOne("ReviewerForVereficationRecord")
+                        .HasForeignKey("PaymentSystemPrototype.Models.VereficationRecord", "Reviewer");
+
                     b.HasOne("PaymentSystemPrototype.Models.UserRecord", "UserRecord")
                         .WithOne("VereficationRecord")
                         .HasForeignKey("PaymentSystemPrototype.Models.VereficationRecord", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ReviewerRecord");
 
                     b.Navigation("UserRecord");
                 });
@@ -429,6 +438,9 @@ namespace PaymentSystemPrototype.Migrations
                         .IsRequired();
 
                     b.Navigation("ManagerTransferRecords");
+
+                    b.Navigation("ReviewerForVereficationRecord")
+                        .IsRequired();
 
                     b.Navigation("TransferRecords");
 

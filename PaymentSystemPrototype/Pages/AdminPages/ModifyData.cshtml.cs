@@ -1,29 +1,32 @@
+using System.Diagnostics;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PaymentSystemPrototype.Exceptions;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.AdminPages;
-
+[Authorize(Roles = "Admin")]
 public class ModifyData : PageModel
 {
     public string UserEmail = "";
-    public static string PreviousEmail = "";
-    public void OnGet(string email)
+    public UserRecord? PresentedUser;
+    public async Task OnGet([FromServices] IUserOperationsService userOperationsService, int userId)
     {
-        UserEmail = PreviousEmail = email;
+        PresentedUser =  await userOperationsService.FindUserByIdAsync(userId) ?? throw new UserNotFoundException();
+        UserEmail = PresentedUser.Email;
     }
     
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] 
-        SignUpData newData)
+        SignUpData newData, int userId)
     {
-        
-        var result = await userOperationsService.ModifyUser(newData, PreviousEmail);
-        if (result is HttpStatusCode.OK)
+        var result = await userOperationsService.ModifyUserAsync(newData, userId);
+        return result switch
         {
-            return RedirectToPage("UserList");
-        }
-        return RedirectToPage("../Auth/WelcomeRazor", new {msg = $"Error: {(int)result}"});
+            true => RedirectToPage("UserList"),
+            false => throw new UserNotFoundException()
+        };
     }
 }

@@ -1,25 +1,25 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.KycPages;
-
-public class VerificationList : PageModel
+[Authorize(Roles = "KycManager, Admin")]
+public class VerificationList : AlteredPageModel
 {
-    public List<UserRecord> ListUsers;
-    public List<VereficationRecord> ListVerrifivcations;
+    public IQueryable<UserRecord> ListUsers;
+    public IQueryable<VereficationRecord> ListVerrifivcations;
     public void OnGet([FromServices] IUserOperationsService userOperationsService, [FromServices] IKycService kycService)
     {
         ListUsers = userOperationsService.GetUsers();
         ListVerrifivcations = kycService.GetVerificationRequests();
     }
 
-    public async Task<IActionResult> OnPostReview([FromServices] IKycService kycService, string email, int status)
+    public async Task<IActionResult> OnPostReview([FromServices] IKycService kycService, int userId, int status)
     {
-        //return RedirectToPage("../Auth/WelcomeRazor", new {msg =$"{status}"});
-        await kycService.UpdateRequestStatus(email, User.Identity.Name, status);
+        await kycService.UpdateRequestStatusAsync(userId, GetUsersId(), status);
         return RedirectToPage("VerificationList");
     }
 }

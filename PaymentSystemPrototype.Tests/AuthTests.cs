@@ -9,44 +9,26 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using PaymentSystemPrototype.Models;
+using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Tests;
 
+[TestFixture]
 public class AuthTests : TestBase
 {
-    [TestCase("Igor@gmail.com","password", HttpStatusCode.OK)]
-    [TestCase("Igor@gmail.com","WrongPassword", HttpStatusCode.Forbidden)]
-    [TestCase("NotIgor@gmail.com", "notapassword", HttpStatusCode.NotFound)]
-    public void LogInTest(string email, string password,HttpStatusCode expectedResult)
+    [TestCase("admin@gmail.com", "admin")]
+    public async Task LogInIntegrationTest(string email, string password)
     {
-        var data = new LogInData {Email = email, Password = password};
-        var result =  Client.PostAsJsonAsync("log_in", data);
-        result.Result.StatusCode.Should().Be(expectedResult);
-    }
+        var logInData = new FormUrlEncodedContent(new Dictionary<string, string> {{"Email", email}, {"Password", password}});
+        var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/Auth/LogIn/") {Content = logInData};
 
-    [Test]
-    public void LogOutTest()
-    {
-        var result = AuthUserClient.PostAsync("auth/log_out", null).Result;
-        result.StatusCode.Should().Be(HttpStatusCode.Accepted);
-    }
-    
-    [TestCase("Ivan","Ivanov","ivan@gmail.com", "qwerty", HttpStatusCode.OK)]
-    [TestCase("Ivan","Ivanov","ivan@gmail.com", "qwerty", HttpStatusCode.Conflict)]
-    public void SignUpTest(string firstName, string lastName, string email, string password,
-        HttpStatusCode expectedResult)
-    {
-        var signUpData = new SignUpData
-        {
-            FirstName = firstName,
-            LastName = lastName,
-            Email = email,
-            Password = password
-        };
-        var result = Client.PostAsJsonAsync("/sign_up", signUpData);
-        result.Result.StatusCode.Should().Be(expectedResult);
+        var response = await Client.SendAsync(requestMessage);
+        
+        // Does not work. Local path is "/Auth/LogIn/" instead 
+        response.RequestMessage?.RequestUri?.LocalPath.Should().Be("/Auth/UserProfile/"); 
     }
 }

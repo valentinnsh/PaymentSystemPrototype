@@ -10,6 +10,8 @@ namespace PaymentSystemPrototype.Pages.Auth;
 [IgnoreAntiforgeryToken]
 public class SignUp : PageModel
 {
+    [BindProperty]
+    public SignUpData signUpData { get; set; }
     public string Message = "";
     public async Task<PageResult> OnGet(string msg)
     {
@@ -18,12 +20,15 @@ public class SignUp : PageModel
     }
     public async Task<ActionResult> OnPost([FromServices] IAuthService authService, [FromForm] SignUpData signUpData)
     {
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
         var result = await authService.SignUpAsync(signUpData);
         return result switch
         {
-            HttpStatusCode.OK => RedirectToPage("LogIn"),
-            HttpStatusCode.Conflict => RedirectToPage("SignUp", new {msg = "Email is already in use."}),
-            _ => RedirectToPage("SignUp", new {msg = "Unknown error. Please try again."})
+            true => RedirectToPage("LogIn"),
+            false => RedirectToPage("SignUp", new {msg = "Email is already in use."})
         };
     }
 }

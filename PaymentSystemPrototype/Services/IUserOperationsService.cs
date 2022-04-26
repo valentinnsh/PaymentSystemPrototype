@@ -5,20 +5,21 @@ namespace PaymentSystemPrototype.Services;
 
 public interface IUserOperationsService
 {
-    UserRecord? FindByEmail(string userEmail);
-    public Task<UserRecord?> CheckLoginInfo(string userEmail, string userPassword);
+    public Task<UserRecord?> FindByEmailAsync(string userEmail);
+    public Task<UserRecord?> FindUserByIdAsync(int userId);
+    public Task<UserRecord?> CheckLoginInfoAsync(string userEmail, string userPassword);
     Task AddUserAsync(UserRecord user);
-    public Task<HttpStatusCode> ModifyUser(SignUpData user, string previousEmail);
-    public BalanceRecord? GetUserBalance(string userEmail);
-    public Task<HttpStatusCode> AddFunds(string userEmail, int amount);
-    public string? GetUserRoleAsString(string userEmail);
-    public Roles GetUserRole(string userEmail);
-    public Task<HttpStatusCode> SetRole(string userEmail, Roles newRole);
-    public List<UserRecord> GetUsers();
-    public List<UserRoleRecord> GetUserRoles();
-    public List<RoleRecord> GetRoles();
-    public List<BalanceRecord> GetBalances();
-    public bool IsUserBlocked(string userEmail);
-    public Task<HttpStatusCode> RevertBlockStatus(int userId);
-    void DeleteUser(int id);
+    public Task<bool> ModifyUserAsync(SignUpData user, int userId);
+    public Task<BalanceRecord?> GetUserBalanceAsync(int userId);
+    public string GetUserRoleAsString(int userId);
+    public Roles GetUserRole(int userId);
+    public Task<bool> SetRoleAsync(int userId, Roles newRole);
+    public IQueryable<UserRecord> GetUsers();
+    public IQueryable<UserRoleRecord> GetUserRoles();
+    public IQueryable<RoleRecord> GetRoles();
+    public IQueryable<BalanceRecord> GetBalances();
+    public Task<bool> IsUserBlocked(int userId);
+    public Task BlockUserAsync(int userId);
+    public Task UnblockUserAsync(int userId);
+    Task DeleteUserAsync(int id);
 }

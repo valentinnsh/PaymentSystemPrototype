@@ -5,10 +5,11 @@ namespace PaymentSystemPrototype.Services;
 
 public interface ITransferOperationsService
 {
-    public Task<HttpStatusCode> CreateTransferRequest(TransferData data, string userEmail);
-    public List<TransferRecord> GetTransfersForUser(string userEmail);
-    public List<TransferRecord> GetTransfers();
-    public Task<HttpStatusCode> CancelTransfer(int transferId);
-    public List<TransferRecord> GetTransfersUnreviewedFirst();
-    public Task<HttpStatusCode> SetStatus(ReviewStatus status, string reviewerEmail, int transferId);
+    public Task<bool> CreateTransferRequestAsync(WithdrawalData data, int userId);
+    public IQueryable<TransferRecord> GetTransfersForUser(int userId);
+    public IQueryable<TransferRecord> GetTransfers();
+    public Task<bool> CancelTransferAsync(int transferId);
+    public IQueryable<TransferRecord> GetTransfersUnreviewedFirst();
+    public Task<bool> SetStatusAsync(ReviewStatus status, int reviewerId, int transferId);
+    public Task<bool> AddFundsAsync(string userEmail, decimal amount, int reviewerId);
 }

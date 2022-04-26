@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PaymentSystemPrototype;
@@ -7,13 +6,8 @@ using PaymentSystemPrototype.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
-// builder.Services.AddDbContext<AppDbContext>(o =>
-//     o.UseNpgsql(
-//         connectionString
-//     )
-// );
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
+                       throw new Exception("Couldn't get connection string");
 builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseNpgsql(connectionString));
 
@@ -35,10 +29,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         };
     });
 
-builder.Services.AddMvc();
+builder.Services.AddMvc().AddRazorPagesOptions(options =>
+{
+    options.Conventions.AddPageRoute("/Auth/LogIn", "");
+});
 var app = builder.Build();
-
-//app.MapGet("/", () => "Hello World!");
 
 app.UseStaticFiles();
 app.MapRazorPages();

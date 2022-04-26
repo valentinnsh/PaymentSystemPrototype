@@ -1,21 +1,23 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PaymentSystemPrototype.Exceptions;
 using PaymentSystemPrototype.Models;
 using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.UserPages;
 [Authorize]
-public class UserProfile : PageModel
+public class UserProfile : AlteredPageModel
 {
     public UserRecord? PresentedUser = new UserRecord();
     public BalanceRecord? UserBalance = new BalanceRecord();
     public Roles UserRole;
-    public void OnGet([FromServices] IUserOperationsService userOperationsService)
+    public async Task OnGet([FromServices] IUserOperationsService userOperationsService)
     {
-        PresentedUser = userOperationsService.FindByEmail(User.Identity.Name);
-        UserBalance = userOperationsService.GetUserBalance(User.Identity.Name);
-        UserRole = userOperationsService.GetUserRole(User.Identity.Name);
+        PresentedUser = await userOperationsService.FindUserByIdAsync(GetUsersId());
+        if (PresentedUser != null) UserBalance = await userOperationsService.GetUserBalanceAsync(PresentedUser.Id);
+        UserRole = userOperationsService.GetUserRole(GetUsersId());
     }
     
     public async Task<IActionResult> OnPostModifyUser()
@@ -24,7 +26,7 @@ public class UserProfile : PageModel
     }
     public async Task<IActionResult> OnPostRequestKYCVerification([FromServices] IKycService kycService)
     {
-        await kycService.CreateVerificationRequest(User.Identity.Name);
+        await kycService.CreateVerificationRequestAsync(GetUsersId());
         return RedirectToPage("UserProfile");
     }
     

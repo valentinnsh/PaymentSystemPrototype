@@ -1,15 +1,18 @@
-@page "/log_in"
+@page
 @model PaymentSystemPrototype.Pages.Auth.LogIn
 
 @{
     Layout = "_Layout";
 }
 
-<form method = "post">
-    <label for="email">Email</label> <br/>
-    <input name="email" type="email"/><br/>
-    <label for="password">Password</label> <br/>
-    <input name="password" type="password"/><br/>
+<form method="post">
+    
+    <label>Email</label> <br/>
+    <input type = "email" asp-for="@Model.LoginContent.Email"/> <span asp-validation-for="@Model.LoginContent.Email" class="error"></span><br/>
+    <label>Password</label> <br/>
+    <input type="password" asp-for="@Model.LoginContent.Password"/> <span asp-validation-for="@Model.LoginContent.Password" class="error"></span><br/>
+    
+    
     <input type="submit" value="Log In"/><br/>
 </form>
 

@@ -6,19 +6,21 @@ using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Pages.UserPages;
 
-public class ModifyData : PageModel
+public class ModifyData : AlteredPageModel
 {
-    public void OnGet()
+    public UserRecord? PresentedUser;
+    public async Task OnGet([FromServices] IUserOperationsService userOperationsService)
     {
+        PresentedUser = await userOperationsService.FindUserByIdAsync(GetUsersId());
     }
     public async Task<ActionResult> OnPost([FromServices] IUserOperationsService userOperationsService, [FromForm] 
         SignUpData newData)
     {
-        var result = await userOperationsService.ModifyUser(newData, User.Identity.Name);
-        if (result is HttpStatusCode.OK)
+        var result = await userOperationsService.ModifyUserAsync(newData, GetUsersId());
+        return result switch
         {
-            return RedirectToPage("../Auth/LogIn");
-        }
-        return RedirectToPage("../Auth/WelcomeRazor", new {msg = $"{(int)result}"});
+            true => RedirectToPage("../Auth/LogIn"),
+            false => RedirectToPage("../Auth/WelcomeRazor", new {msg = $"{result}"})
+        };
     }
 }

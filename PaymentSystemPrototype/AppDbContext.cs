@@ -18,29 +18,13 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.Entity<UserRecord>().Property(x => x.Id).ValueGeneratedOnAdd();
-        modelBuilder.Entity<UserRecord>().Property(x => x.Email);
-        modelBuilder.Entity<UserRecord>().Property(x => x.FirstName);
-        modelBuilder.Entity<UserRecord>().Property(x => x.LastName);
-        modelBuilder.Entity<UserRecord>().Property(x => x.Password);
-        modelBuilder.Entity<UserRecord>().Property(x => x.RegisteredAt);
-        modelBuilder.Entity<UserRecord>().Property(x => x.Block);
-
-        modelBuilder.Entity<BalanceRecord>().Property(x => x.Amount);
-        modelBuilder.Entity<BalanceRecord>().Property(x => x.UserId);
-
+        modelBuilder.Entity<UserRecord>().Property(it => it.Email).
+            HasConversion(v => v.ToLowerInvariant(), v => v);
         modelBuilder.Entity<UserRecord>()
             .HasOne(u => u.BalanceRecord)
             .WithOne(b => b.UserRecord)
             .HasForeignKey<BalanceRecord>(b => b.UserId);
-        
-        modelBuilder.Entity<RoleRecord>().Property(x => x.Id).ValueGeneratedOnAdd();
-        modelBuilder.Entity<RoleRecord>().Property(x => x.Name);
-        
-        modelBuilder.Entity<UserRoleRecord>().Property(x => x.Id).ValueGeneratedOnAdd();
-        modelBuilder.Entity<UserRoleRecord>().Property(x => x.UserId);
-        modelBuilder.Entity<UserRoleRecord>().Property(x => x.RoleId);
-        
+
         modelBuilder.Entity<UserRecord>()
             .HasOne(u => u.UserRoleRecord)
             .WithOne(b => b.UserRecord)
@@ -51,24 +35,11 @@ public class AppDbContext : DbContext
             .WithMany(ur => ur.UserRoleRecord)
             .HasForeignKey(fk=> fk.RoleId);
 
-        modelBuilder.Entity<VereficationRecord>().Property(x => x.UserId);
-        modelBuilder.Entity<VereficationRecord>().Property(x => x.Status);
-        modelBuilder.Entity<VereficationRecord>().Property(x => x.LastChangeDate);
-        modelBuilder.Entity<VereficationRecord>().Property(x => x.Reviewer);
-        
         modelBuilder.Entity<UserRecord>()
             .HasOne(u => u.VereficationRecord)
             .WithOne(b => b.UserRecord)
             .HasForeignKey<VereficationRecord>(b => b.UserId);
-
-        modelBuilder.Entity<TransferRecord>().Property(x => x.Id);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.Amount);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.CardNumber);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.ConfirmedAt);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.ConfirmedBy);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.CreatedAt);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.UserId);
-        modelBuilder.Entity<TransferRecord>().Property(x => x.Status);
+        
         modelBuilder.Entity<TransferRecord>()
             .HasOne(t => t.UserRecord)
             .WithMany(u => u.TransferRecords)
@@ -80,16 +51,21 @@ public class AppDbContext : DbContext
             .HasForeignKey(t => t.ConfirmedBy)
             .IsRequired(false);
 
+        modelBuilder.Entity<UserRecord>()
+            .HasOne(u => u.ReviewerForVereficationRecord)
+            .WithOne(b => b.ReviewerRecord)
+            .HasForeignKey<VereficationRecord>(b => b.Reviewer);
+
         modelBuilder.Entity<UserRecord>().HasData(
-        new UserRecord { Id = 1, FirstName = "Admin", LastName = "Admin", Email = "Admin@gmail.com",
+        new UserRecord { Id = 1, FirstName = "Admin", LastName = "Admin", Email = "admin@gmail.com",
             Password = "admin", RegisteredAt = new DateTime(2022, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)},
-        new UserRecord { Id = 2, FirstName = "Kyc", LastName = "Kyc", Email = "Kyc@gmail.com",
+        new UserRecord { Id = 2, FirstName = "Kyc", LastName = "Kyc", Email = "kyc@gmail.com",
             Password = "kyc", RegisteredAt = new DateTime(2021, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)},
-        new UserRecord { Id = 3, FirstName = "Funds", LastName = "Funds", Email = "Funds@gmail.com",
+        new UserRecord { Id = 3, FirstName = "Funds", LastName = "Funds", Email = "funds@gmail.com",
             Password = "funds", RegisteredAt = new DateTime(2020, 3, 31, 17, 29, 3, 605, DateTimeKind.Utc)},
-        new UserRecord { Id = 4, FirstName = "User1", LastName = "User1", Email = "User1@gmail.com",
+        new UserRecord { Id = 4, FirstName = "User1", LastName = "User1", Email = "user1@gmail.com",
             Password = "user1", RegisteredAt = new DateTime(2022, 3, 30, 17, 29, 3, 605, DateTimeKind.Utc)},
-        new UserRecord { Id = 5, FirstName = "User2", LastName = "User2", Email = "User2@gmail.com",
+        new UserRecord { Id = 5, FirstName = "User2", LastName = "User2", Email = "user2@gmail.com",
             Password = "user2", RegisteredAt = new DateTime(2022, 3, 29, 17, 29, 3, 605, DateTimeKind.Utc)}
         );
         
