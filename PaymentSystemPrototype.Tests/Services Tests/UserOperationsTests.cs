@@ -8,7 +8,7 @@ using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Tests.Services_Tests;
 
-public class UserOperationsTests : TestBase
+public class UserOperationsTests : UnitTestBase
 {
 
     [TestCase(6, "igor@gmail.com")]
@@ -19,7 +19,7 @@ public class UserOperationsTests : TestBase
         result?.Email.Should().Be(expectedEmail);
     }
 
-    [TestCase("igor@gmail.com", "igor", 4)]
+    [TestCase("igor@gmail.com", "igor", 6)]
     public async Task CheckLoginInfo_Succeeds(string userEmail, string password, int expectedUserId)
     {
         var result = await userOperationsService.CheckLoginInfoAsync(userEmail, password);
@@ -27,7 +27,7 @@ public class UserOperationsTests : TestBase
         result?.Id.Should().Be(expectedUserId);
     }
 
-    [TestCase("IgOr@gMail.com", "igor", 4)]
+    [TestCase("IgOr@gMail.com", "igor", 6)]
     public async Task CheckLoginInfo_Succeeds_EmailInMixedCase(string userEmail, string password, int expectedUserId)
     {
         var result = await userOperationsService.CheckLoginInfoAsync(userEmail, password);
