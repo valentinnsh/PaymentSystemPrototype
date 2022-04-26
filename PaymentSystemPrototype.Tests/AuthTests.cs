@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using PaymentSystemPrototype.Models;
@@ -16,22 +17,18 @@ using PaymentSystemPrototype.Services;
 
 namespace PaymentSystemPrototype.Tests;
 
+[TestFixture]
 public class AuthTests : TestBase
 {
-    public IUserOperationsService userOperationsService;
-    public IAuthService authService;
-    
-    [SetUp]
-    public void PrepareForAuthTests()
+    [TestCase("admin@gmail.com", "admin")]
+    public async Task LogInIntegrationTest(string email, string password)
     {
-        userOperationsService = new UserOperationsService(DbContext);
-        authService = new AuthService(userOperationsService);
-    }
-    
-    [TestCase("admin@gmail.com", "admin", false)]
-    public void LogInTest(string email, string password,bool expectedResult)
-    {
-        var result= authService.LogInAsync(email, password, new DefaultHttpContext());
-        result.Result.Should().Be(expectedResult);
+        var logInData = new FormUrlEncodedContent(new Dictionary<string, string> {{"Email", email}, {"Password", password}});
+        var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/Auth/LogIn/") {Content = logInData};
+
+        var response = await Client.SendAsync(requestMessage);
+        
+        // Does not work. Local path is "/Auth/LogIn/" instead 
+        response.RequestMessage?.RequestUri?.LocalPath.Should().Be("/Auth/UserProfile/"); 
     }
 }
